@@ -1,0 +1,122 @@
+[
+  {
+    "id": "bmw0vyfa5",
+    "name": "Uriel",
+    "cat": "Warframe",
+    "item": "/Lotus/Powersuits/DemonFrame/DemonFrame",
+    "note": "-1 forma daha atmak isterseniz Aura yuvasına Corrosive Porejection takın\n-1 açıp shift bastığınızda uçarsınız, etrafa ateş topları saçar ve 4ü doldurur\n-2 can yeniler petleri yollar ve bol bol enerji/can orbu düşürmemizi sağlar \nNot: 2 attığınızda petler düşmanı keser ve mini mapte rünler çıkar bu buffı alıp 1 ile uçtuğunuzda >> 1 güçlenir ve 4 çok hızlı bir şekilde dolar (buff arcane concentrationdan etkilenir, buffı aldığınızda 1. skille basarsanız buff sıfırlanır ve etkisi olmaz)\n-3 te roar takılır\n-4, 1 ile uçarak düşman keseriz bunlar 4ü doldurur, Arcane Concentration çalıştırmak için bu skilli atmadan önce 2 basıp 3sn içinde tekrar 4 basın böylece maksimum sürede atmış olursunuz (Arcane Concentration süre buffı diğer skiller içinde geçerlidir)\n1 ile çok hızlı gitmek istiyorsanız, ikincil silahınıza Amalgam Barrel Diffision takın, normal hızdan biraz daha fazla hızlı gitmek istiyorsanız Melee silahınıza evrimlerde parkur hızı seçilmiş Praedos takın, ikisini birden kullanmayın fazla hızlı olur ve çok takılırsınız\n-Madurai takılı ise iki kere dash atıp yetenek gücü ve yetenek hızı kazanabilirsiniz ",
+    "imgs": [],
+    "riv": [],
+    "cfgs": [
+      {
+        "n": "Config 1",
+        "d": {
+          "aura": {
+            "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestCritToAbilityAuraMod",
+            "r": 5
+          },
+          "ex": {
+            "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+            "r": 10
+          },
+          "st": null,
+          "apol": "madurai",
+          "expol": "zenurik",
+          "stpol": "",
+          "pols": [
+            "naramon",
+            "vazarin",
+            "madurai",
+            "vazarin",
+            "madurai",
+            "",
+            "naramon",
+            ""
+          ],
+          "slots": [
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Powersuits/DemonFrame/DemonFrameFireBallAugmentCard",
+              "r": 3
+            }
+          ],
+          "arcs": [
+            "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
+            "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+          ],
+          "elem": "",
+          "bonus": 25,
+          "reactor": true,
+          "helm": {},
+          "shards": [
+            "Crimson|1",
+            "Crimson|1",
+            "Crimson|0",
+            "Crimson|0",
+            "Violet|3"
+          ],
+          "exs": {
+            "/Lotus/Powersuits/Ninja/NinjaStormWeapon": {
+              "cat": "Melee",
+              "slots": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "pols": [
+                "madurai",
+                "madurai",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "reactor": true
+            }
+          },
+          "evo": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ]
+        }
+      }
+    ]
+  }
+]
