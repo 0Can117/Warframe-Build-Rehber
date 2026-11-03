@@ -1,16 +1,16 @@
 [
   {
     "id": "bmw1a29th",
-    "name": "shadow",
+    "name": "Ash Prime",
     "cname": "",
     "cat": "Warframe",
-    "item": "/Lotus/Powersuits/Ninja/AshPrime",
+    "item": "/Lotus/Powersuits/Ninja/Ninja",
     "note": "",
     "imgs": [],
     "riv": [],
     "cfgs": [
       {
-        "n": "Config 1",
+        "n": "Fury",
         "d": {
           "aura": null,
           "au2": null,
@@ -21,9 +21,9 @@
           "expol": "",
           "stpol": "",
           "pols": [
-            "naramon",
             "madurai",
             "madurai",
+            "",
             "",
             "",
             "",
@@ -111,6 +111,103 @@
               "arcs": [
                 null
               ]
+            },
+            "/Lotus/Powersuits/Khora/KhoraWhipclawWeaponPrime": {
+              "cat": "Melee",
+              "n": "",
+              "slots": [
+                {
+                  "u": "/Lotus/Upgrades/Mods/PvPMods/Melee/AirborneMeleeAutoTargetBonus",
+                  "r": 3
+                },
+                {
+                  "u": "/Lotus/Upgrades/Mods/DualSource/Melee/CritDamageChargeSpeedMod",
+                  "r": 5
+                },
+                {
+                  "u": "/Lotus/Upgrades/Mods/Melee/Beginner/WeaponCritFireRateBonusModBeginner",
+                  "r": 3
+                },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "pols": [
+                "madurai",
+                "vazarin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "reactor": true,
+              "ex": null,
+              "st": null,
+              "expol": "",
+              "stpol": "zenurik",
+              "arcs": [
+                "/Lotus/Upgrades/CosmeticEnhancers/Offensive/MeleeProcsSpread"
+              ]
+            },
+            "/Lotus/Powersuits/Ninja/NinjaStormWeapon": {
+              "cat": "Melee",
+              "n": "",
+              "slots": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "pols": [
+                "madurai",
+                "madurai",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "reactor": true,
+              "ex": null,
+              "st": null,
+              "expol": "",
+              "stpol": "zenurik",
+              "arcs": [
+                null
+              ]
             }
           },
           "evo": [
@@ -123,609 +220,8 @@
           "ccap": 60,
           "cn": 12,
           "parts": {
-            "Link": "Vargeet Ii Ruhang"
+            "Link": ""
           }
-        }
-      }
-    ]
-  },
-  {
-    "id": "bmw0wf31n",
-    "name": "Titania",
-    "cat": "Warframe",
-    "item": "/Lotus/Powersuits/Fairy/Fairy",
-    "note": "",
-    "imgs": [],
-    "riv": [],
-    "cfgs": [
-      {
-        "n": "Xatas Whisper",
-        "d": {
-          "aura": {
-            "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
-            "r": 5
-          },
-          "ex": {
-            "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-            "r": 10
-          },
-          "st": null,
-          "apol": "omni",
-          "expol": "zenurik",
-          "stpol": "",
-          "pols": [
-            "madurai",
-            "naramon",
-            "naramon",
-            "vazarin",
-            "",
-            "vazarin",
-            "madurai",
-            "umbra"
-          ],
-          "slots": [
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Beginner/AvatarAbilityEfficiencyModBeginner",
-              "r": 3
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
-              "r": 3
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedDurationRangeWarframe",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
-              "r": 10
-            }
-          ],
-          "arcs": [
-            "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
-            "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
-          ],
-          "elem": "",
-          "bonus": 25,
-          "reactor": true,
-          "helm": {
-            "2": "/Lotus/Powersuits/BrokenFrame/Abilities/BrokenRotAbility"
-          },
-          "shards": [
-            "Crimson|0",
-            "Crimson|0",
-            "Crimson|0",
-            "Crimson|0",
-            "Violet|3"
-          ],
-          "exs": {
-            "/Lotus/Powersuits/Fairy/FlightPistols": {
-              "cat": "Secondary",
-              "slots": [
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/IceEventPistolMod",
-                  "r": 3
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/WeaponStatusChanceSPMod",
-                  "r": 10
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/WeaponFireIterationsSPMod",
-                  "r": 10
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/Expert/PrimedWeaponCritDamageMod",
-                  "r": 10
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/Expert/WeaponFireDamageModExpert",
-                  "r": 10
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/CriticalDamagePunchThroughMod",
-                  "r": 5
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/PistolStatusDamageDuoMod",
-                  "r": 5
-                },
-                {
-                  "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/PoisonEventPistolMod",
-                  "r": 3
-                }
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            },
-            "/Lotus/Powersuits/Fairy/FlightSword": {
-              "cat": "Melee",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            }
-          },
-          "evo": [
-            "",
-            "",
-            "",
-            "",
-            ""
-          ]
-        }
-      },
-      {
-        "n": "Config 2",
-        "d": {
-          "aura": null,
-          "ex": null,
-          "st": null,
-          "apol": "",
-          "expol": "",
-          "stpol": "",
-          "pols": [
-            "madurai",
-            "vazarin",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-          ],
-          "slots": [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "arcs": [
-            null,
-            null
-          ],
-          "elem": "",
-          "bonus": 25,
-          "reactor": true,
-          "helm": {},
-          "shards": [
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "exs": {
-            "/Lotus/Powersuits/Fairy/FlightPistols": {
-              "cat": "Secondary",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            },
-            "/Lotus/Powersuits/Fairy/FlightSword": {
-              "cat": "Melee",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            }
-          },
-          "evo": [
-            "",
-            "",
-            "",
-            "",
-            ""
-          ]
-        }
-      },
-      {
-        "n": "Config 3",
-        "d": {
-          "aura": null,
-          "ex": null,
-          "st": null,
-          "apol": "",
-          "expol": "",
-          "stpol": "",
-          "pols": [
-            "madurai",
-            "vazarin",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-          ],
-          "slots": [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "arcs": [
-            null,
-            null
-          ],
-          "elem": "",
-          "bonus": 25,
-          "reactor": true,
-          "helm": {},
-          "shards": [
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "exs": {
-            "/Lotus/Powersuits/Fairy/FlightPistols": {
-              "cat": "Secondary",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            },
-            "/Lotus/Powersuits/Fairy/FlightSword": {
-              "cat": "Melee",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            }
-          },
-          "evo": [
-            "",
-            "",
-            "",
-            "",
-            ""
-          ]
-        }
-      },
-      {
-        "n": "Config 4",
-        "d": {
-          "aura": null,
-          "ex": null,
-          "st": null,
-          "apol": "",
-          "expol": "",
-          "stpol": "",
-          "pols": [
-            "madurai",
-            "vazarin",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-          ],
-          "slots": [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "arcs": [
-            null,
-            null
-          ],
-          "elem": "",
-          "bonus": 25,
-          "reactor": true,
-          "helm": {},
-          "shards": [
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "exs": {
-            "/Lotus/Powersuits/Fairy/FlightPistols": {
-              "cat": "Secondary",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            },
-            "/Lotus/Powersuits/Fairy/FlightSword": {
-              "cat": "Melee",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "naramon",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            }
-          },
-          "evo": [
-            "",
-            "",
-            "",
-            "",
-            ""
-          ]
-        }
-      }
-    ]
-  },
-  {
-    "id": "bmw0vyfa5",
-    "name": "Uriel",
-    "cat": "Warframe",
-    "item": "/Lotus/Powersuits/DemonFrame/DemonFrame",
-    "note": "-1 forma daha atmak isterseniz Aura yuvasına Corrosive Porejection takın\n-1 açıp shift bastığınızda uçarsınız, etrafa ateş topları saçar ve 4ü doldurur\n-2 can yeniler petleri yollar ve bol bol enerji/can orbu düşürmemizi sağlar \nNot: 2 attığınızda petler düşmanı keser ve mini mapte rünler çıkar bu buffı alıp 1 ile uçtuğunuzda >> 1 güçlenir ve 4 çok hızlı bir şekilde dolar (buff arcane concentrationdan etkilenir, buffı aldığınızda 1. skille basarsanız buff sıfırlanır ve etkisi olmaz)\n-3 te roar takılır\n-4, 1 ile uçarak düşman keseriz bunlar 4ü doldurur, Arcane Concentration çalıştırmak için bu skilli atmadan önce 2 basıp 3sn içinde tekrar 4 basın böylece maksimum sürede atmış olursunuz (Arcane Concentration süre buffı diğer skiller içinde geçerlidir)\n1 ile çok hızlı gitmek istiyorsanız, ikincil silahınıza Amalgam Barrel Diffision takın, normal hızdan biraz daha fazla hızlı gitmek istiyorsanız Melee silahınıza evrimlerde parkur hızı seçilmiş Praedos takın, ikisini birden kullanmayın fazla hızlı olur ve çok takılırsınız\n-Madurai takılı ise iki kere dash atıp yetenek gücü ve yetenek hızı kazanabilirsiniz ",
-    "imgs": [],
-    "riv": [],
-    "cfgs": [
-      {
-        "n": "Config 1",
-        "d": {
-          "aura": {
-            "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestCritToAbilityAuraMod",
-            "r": 5
-          },
-          "ex": {
-            "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-            "r": 10
-          },
-          "st": null,
-          "apol": "madurai",
-          "expol": "zenurik",
-          "stpol": "",
-          "pols": [
-            "naramon",
-            "vazarin",
-            "madurai",
-            "vazarin",
-            "madurai",
-            "",
-            "naramon",
-            ""
-          ],
-          "slots": [
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
-              "r": 5
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
-              "r": 5
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
-              "r": 10
-            },
-            {
-              "u": "/Lotus/Powersuits/DemonFrame/DemonFrameFireBallAugmentCard",
-              "r": 3
-            }
-          ],
-          "arcs": [
-            "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
-            "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
-          ],
-          "elem": "",
-          "bonus": 25,
-          "reactor": true,
-          "helm": {
-            "2": "/Lotus/Powersuits/Rhino/Abilities/RhinoRoarAbility"
-          },
-          "shards": [
-            "Crimson|1",
-            "Crimson|1",
-            "Crimson|0",
-            "Crimson|0",
-            "Violet|3"
-          ],
-          "exs": {
-            "/Lotus/Powersuits/Ninja/NinjaStormWeapon": {
-              "cat": "Melee",
-              "slots": [
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              ],
-              "pols": [
-                "madurai",
-                "madurai",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-              ],
-              "reactor": true
-            }
-          },
-          "evo": [
-            "",
-            "",
-            "",
-            "",
-            ""
-          ]
         }
       }
     ]
