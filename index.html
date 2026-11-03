@@ -217,7 +217,7 @@ function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)
 function fitArcs(){S.arcs=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null})}
 function cleanMods(){for(const k of ALLK){const s=getS(k),m=s&&M.get(s.u);if(m&&(!hasK(k)||!modRe().test(m.type)))setS(k,null)}}
 function selectCat(c){
-  S.cat=c;const list=DATA.items[c]||[];
+  if(S.cat!==c)S.parts={};S.cat=c;const list=DATA.items[c]||[];
   if(!list.some(i=>i.uniqueName===S.item)){S.item=list[0]?.uniqueName||null;applyPols()}
   if(!special())S.elem='';
   cleanMods();fitArcs();
@@ -253,10 +253,10 @@ function renderBuilder(){
   if(RO)document.querySelectorAll('#builder input,#builder select').forEach(n=>n.disabled=true);
 }
 const baseP=k=>{const it=IT.get(S.item);return (typeof k==='number'?it?.polarities?.[k]:it?.[{aura:'auraPolarity',ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
-const stash=()=>{leaveTgt();S.cfgs[S.ci].d=Object.fromEntries(CF.map(k=>[k,S[k]]))};
+const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun')d.parts={};S.cfgs[S.ci].d=d};
 function loadCfg(i,skip){
   if(!skip)stash();S.ci=i;S.shards=Array(5).fill(null);S.helm={};S.exs={};S.evo=['','','','',''];S.ccap=60;S.cn=12;S.au2=null;S.a2pol='';S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));
-  S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};fitArcs();
+  S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};fitArcs();
 }
 function renderCfg(){
   $('#cfgrow').innerHTML=S.cfgs.map((c,i)=>`<button data-cfg="${i}" class="${i===S.ci?'on':''}">${esc(c.n)}</button>`).join('')
@@ -308,11 +308,10 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  const nm=u=>S.tgt===u?S.exn:(S.exs?.[u]?.n||'');
   box.innerHTML='<h2 style="margin-top:.8rem">Exalted silahlar</h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'Warframe')}</button>`
-   +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name)}${nm(u)?' · '+esc(nm(u)):''}</button>`).join('')
-   +(S.tgt?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select><input type="text" id="exn" value="${esc(S.exn)}" placeholder="Config adı">`:'')
+   +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name)}</button>`).join('')
+   +(S.tgt?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>'+(S.tgt?`<h2>${esc(IT.get(S.tgt).name)}</h2>`:'');
 }
 function renderEvo(){
@@ -324,7 +323,7 @@ function renderParts(){
   const box=$('#partbox'),spec=S.cat==='Zaw'?[['Strike',ZP.Strike],['Grip',ZP.Grip],['Link',ZP.Link]]:S.cat==='Kitgun'?[['Chamber',KP.Chamber],['Grip',KP.Grip[S.item==='kg-s'?'Secondary':'Primary']],['Loader',KP.Loader]]:null;
   if(!spec||S.tgt){box.innerHTML='';return}
   box.innerHTML=`<div class="row">${spec.map(([k,l])=>`<label>${k} <select data-part="${k}"><option value="">—</option>${l.map(n=>`<option ${S.parts[k]===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`).join('')}</div>`
-   +`<div class="notev">${spec.map(([k])=>S.parts[k]?`<b>${esc(S.parts[k])}</b> <span class="muted">(${k})</span>`:'').filter(Boolean).join(' · ')}</div>`;
+   +`<div class="notev">${spec.map(([k,l])=>l.includes(S.parts[k])?`<b>${esc(S.parts[k])}</b> <span class="muted">(${k})</span>`:'').filter(Boolean).join(' · ')}</div>`;
 }
 const SH={
  Crimson:['+%15 Yetenek Gücü','+%15 Yetenek Süresi','+%37.5 Yakın Dövüş Kritik Hasarı','+%37.5 Birincil Durum Şansı','+%37.5 İkincil Kritik Şansı'],
@@ -360,7 +359,7 @@ function renderList(){
 function renderSaved(){
   const q=($('#bq')?.value||'').trim().toLowerCase();
   const rows=saved.filter(b=>!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q));
-  $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${(()=>{const q=Object.values(b.cfgs?.[0]?.d?.parts||{}).filter(Boolean).join(' / ');return q?' · '+esc(q):''})()}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
+  $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${(()=>{const q=(b.cat==='Zaw'||b.cat==='Kitgun'?Object.values(b.cfgs?.[0]?.d?.parts||{}):[]).filter(Boolean).join(' / ');return q?' · '+esc(q):''})()}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
     <button data-load="${b.id}">Aç</button><button data-share="${b.id}">Bağlantı kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
 }
 
@@ -411,7 +410,7 @@ function loadBuild(b){
   if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];
   S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];
   if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}
-  selectCat(S.cat);
+  selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};
 }
 const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
 
@@ -508,7 +507,7 @@ document.addEventListener('change',e=>{
     renderNote();return}
   if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
 });
-$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();cleanMods();if(!special())S.elem='';fitArcs();renderAll()});
+$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
 $('#elem').addEventListener('change',e=>{S.elem=e.target.value});
 $('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus});
 $('#name').addEventListener('input',e=>S.name=e.target.value);
