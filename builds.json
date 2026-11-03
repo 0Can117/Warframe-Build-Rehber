@@ -1,5 +1,135 @@
 [
   {
+    "id": "bmw1a29th",
+    "name": "shadow",
+    "cname": "",
+    "cat": "Warframe",
+    "item": "/Lotus/Powersuits/Ninja/AshPrime",
+    "note": "",
+    "imgs": [],
+    "riv": [],
+    "cfgs": [
+      {
+        "n": "Config 1",
+        "d": {
+          "aura": null,
+          "au2": null,
+          "a2pol": "",
+          "ex": null,
+          "st": null,
+          "apol": "",
+          "expol": "",
+          "stpol": "",
+          "pols": [
+            "naramon",
+            "madurai",
+            "madurai",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "slots": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "arcs": [
+            null,
+            null
+          ],
+          "elem": "",
+          "bonus": 25,
+          "reactor": true,
+          "helm": {},
+          "shards": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "exs": {
+            "/Lotus/Powersuits/Ninja/NinjaStormWeaponPrime": {
+              "cat": "Melee",
+              "n": "",
+              "slots": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "pols": [
+                "madurai",
+                "madurai",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "reactor": true,
+              "ex": null,
+              "st": null,
+              "expol": "",
+              "stpol": "zenurik",
+              "arcs": [
+                null
+              ]
+            }
+          },
+          "evo": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "ccap": 60,
+          "cn": 12,
+          "parts": {
+            "Link": "Vargeet Ii Ruhang"
+          }
+        }
+      }
+    ]
+  },
+  {
     "id": "bmw0wf31n",
     "name": "Titania",
     "cat": "Warframe",
