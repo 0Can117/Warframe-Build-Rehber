@@ -74,7 +74,8 @@ textarea{width:100%;font:inherit;color:var(--tx);background:#0f2229;border:1px s
 .dis{font-size:.78rem;color:var(--cy)}.rs{display:flex;justify-content:space-between;background:#1b3a46;border-radius:4px;padding:.15rem .4rem;font-size:.85rem}
 .rs.neg{color:var(--bad)}.rs.sp{border:1px solid var(--cy)}.rs button,.riv .x2{border:0;background:none;padding:0 .3rem;color:var(--mu)}
 .ro .x2,.ro .rs button,.ro #addriv,.ro #omni{display:none}
-.shards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem}.shards select{width:100%}.shards>div{border-left:4px solid var(--ln);padding-left:.4rem}
+.shards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.6rem}.shd{font-size:.85rem;color:var(--mu);margin-top:.25rem;line-height:1.35}
+.ro #custrow{display:none}.shards select{width:100%}.shards>div{border-left:4px solid var(--ln);padding-left:.4rem}
 .intgt #cats,.intgt #item,.intgt #elrow,.intgt #timg{display:none}
 .evl{display:block;margin:.4rem 0;font-weight:600}.evl textarea{margin-top:.2rem;font-weight:400}
 details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-serif}
@@ -93,7 +94,8 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
     <div class="row" id="cats"></div>
     <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya silah"></select></div>
     <div class="row" id="cfgrow"></div>
-    <div class="row" id="custrow" hidden><label>Yuva sayısı <input type="number" id="cn" min="1" max="14" style="width:5rem"></label><label>Kapasite <input type="number" id="ccap" min="0" max="999" style="width:5rem"></label></div>
+    <div id="partbox"></div>
+    <div class="row" id="custrow" hidden><input type="text" id="cname" placeholder="Custom item adı"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button><label>Yuva sayısı <input type="number" id="cn" min="1" max="14" style="width:5rem"></label><label>Kapasite <input type="number" id="ccap" min="0" max="999" style="width:5rem"></label></div>
     <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
     <div class="row"><input type="text" id="name" placeholder="Build adı"><label><input type="checkbox" id="reactor" checked> Reaktör/katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
@@ -142,16 +144,17 @@ const ARC={Warframe:/^Warframe Arcane/,Primary:/^(Primary|Shotgun|Bow) Arcane/,S
 const SL={Warframe:['Warframe','Warframe'],Primary:['Primary'],Secondary:['Secondary'],Melee:['Melee'],Archgun:['Primary','Secondary'],Zaw:['Melee','Zaw']};
 const POLS=['','madurai','vazarin','naramon','zenurik','unairu','penjaga','umbra','omni'];
 const PSYM={'':'·',madurai:'V',vazarin:'D',naramon:'—',zenurik:'Z',unairu:'U',penjaga:'P',umbra:'Ω',omni:'✦'};
+const ZP={Strike:[],Grip:[],Link:[]},KP={Chamber:[],Grip:{Primary:[],Secondary:[]},Loader:[]};
 const ELEMS=['Impact','Heat','Cold','Electricity','Toxin','Magnetic','Radiation'];
 const M=new Map(),A=new Map(),IT=new Map(),AB=new Map();
-const CF=['aura','ex','st','apol','expol','stpol','pols','slots','arcs','elem','bonus','reactor','helm','shards','exs','evo','ccap','cn'];
+const CF=['aura','au2','a2pol','ex','st','apol','expol','stpol','pols','slots','arcs','elem','bonus','reactor','helm','shards','exs','evo','ccap','cn','parts'];
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
  ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
  melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
  spl:['Status Damage','Gas Damage','Corrosive Damage','Viral Damage','Radiation Damage','Blast Damage','Magnetic Damage','Damage vs Orokin','Damage vs Techrot','Damage vs Scaldra'],
  splr:['Weak Point Damage','Weak Point Critical Chance','Ammo Efficiency','Magazine Reload While Holstered'],splm:['Heavy Attack Damage']};
 let DATA={mods:[],arcanes:[],items:{}};
-const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),ccap:60,cn:12,exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
+const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),ccap:60,cn:12,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
 let S=blank(),tab='mods',drag=null,sup=false,abPick=null,omniOn=false;
 const msg=t=>{$('#msg').textContent=t||''};
 const ADMIN=(()=>{try{const a=new URLSearchParams(location.search).get('admin');if(a==='1')localStorage.setItem('admin','1');if(a==='0')localStorage.removeItem('admin');return localStorage.getItem('admin')==='1'}catch(e){return false}})();
@@ -160,14 +163,14 @@ const openView=()=>{if(RO)document.body.classList.add('open')};
 let saved=[];if(ADMIN)try{saved=JSON.parse(localStorage.getItem('builds')||'[]')}catch(e){}
 const persist=()=>{if(RO)return;try{localStorage.setItem('builds',JSON.stringify(saved))}catch(e){msg('Tarayıcı kaydı yazılamadı (görseller çok yer kaplıyor olabilir). builds.json olarak indir, görsel için bağlantı kullan.')}};
 const pk=k=>/^\d+$/.test(k)?+k:k;
-const KM={aura:['aura','apol'],ex:['ex','expol'],st:['st','stpol']};
+const KM={aura:['aura','apol'],au2:['au2','a2pol'],ex:['ex','expol'],st:['st','stpol']};
 const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]];
 const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
 const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
 const NG=()=>S.cat==='Custom'?(+S.cn||12):XC[S.cat]?.n||8;
-const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='st'?(S.cat==='Melee'||S.cat==='Custom'):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&S.cat!=='Archgun')):false;
-const ALLK=['aura','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
+const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&S.cat!=='Archgun')):false;
+const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
 const KEYS=()=>ALLK.filter(hasK);
 const arcSlots=()=>S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];
 const modRe=()=>XC[S.cat]?XC[S.cat].re:S.cat==='Kitgun'?(S.item==='kg-s'?MODRE.Secondary:MODRE.Primary):MODRE[S.cat];
@@ -175,7 +178,7 @@ const special=()=>/\b(Kuva|Tenet|Coda)\b/.test(IT.get(S.item)?.name||'');
 const statsOf=m=>{const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):(m.description||'')};
 const maxRank=m=>m.fusionLimit??0;
 const isAura=m=>(m.baseDrain||0)<0&&/^(Warframe|Companion|Plexus|Railjack) Mod$/.test(m.type||'');
-const canPlace=(m,k)=>k==='aura'?isAura(m):k==='st'?m.type==='Stance Mod':(isAura(m)||m.type==='Stance Mod')?false:(k==='ex'?(S.cat==='Custom'||!!m.isUtility):true);
+const canPlace=(m,k)=>(k==='aura'||k==='au2')?isAura(m):k==='st'?m.type==='Stance Mod':(isAura(m)||m.type==='Stance Mod')?false:(k==='ex'?(S.cat==='Custom'||!!m.isUtility):true);
 
 async function get(f){let err;for(const s of SRC){try{const r=await fetch(s(f));if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){err=e}}throw new Error(f+' yüklenemedi ('+(err&&err.message)+')')}
 async function init(){
@@ -189,6 +192,10 @@ async function init(){
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
+    mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
+    misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;
+      if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
+    [ZP.Strike,ZP.Grip,ZP.Link,KP.Chamber,KP.Grip.Primary,KP.Grip.Secondary,KP.Loader].forEach(a=>a.sort());
     DATA.items.Warframe.forEach(w=>(w.abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:w.name})));
     msg('');
     let pub=[];try{const r=await fetch('builds.json?'+Date.now());if(r.ok)pub=await r.json()}catch(e){}
@@ -203,7 +210,7 @@ async function init(){
 function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.ceil(d*1.25)}return neg?-d:d}
 function calc(){
   let cap=S.cat==='Custom'?+S.ccap||0:S.cat==='Necramech'?(S.reactor?80:40):(S.reactor?60:30),used=0;
-  for(const k of KEYS()){const s=getS(k),m=s&&M.get(s.u);if(!m||(S.cat==='Railjack'&&typeof k==='number'&&k>=8))continue;const d=drainOf(m,s.r,getP(k));if(k==='aura'||k==='st')cap-=d;else used+=d}
+  for(const k of KEYS()){const s=getS(k),m=s&&M.get(s.u);if(!m||(S.cat==='Railjack'&&typeof k==='number'&&k>=8))continue;const d=drainOf(m,s.r,getP(k));if(k==='aura'||k==='au2'||k==='st')cap-=d;else used+=d}
   return{cap,used}
 }
 function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=it?.auraPolarity||'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||''}
@@ -224,22 +231,22 @@ function renderBuilder(){
   $('#elrow').hidden=!special();
   $('#elem').innerHTML=['<option value="">Bonus element seç</option>',...ELEMS.map(x=>`<option ${x===S.elem?'selected':''}>${x}</option>`)].join('');
   $('#bonus').value=S.bonus;
-  renderCfg();renderAbil();renderShards();renderTgt();renderEvo();const it0=IT.get(S.item),tm=it0?.wikiaThumbnail||(it0?.imageName?IMG+it0.imageName:'');$('#timg').hidden=!tm;if(tm)$('#timg').src=tm;
+  renderCfg();renderAbil();renderShards();renderTgt();renderEvo();renderParts();const it0=IT.get(S.item),tm=it0?.wikiaThumbnail||(it0?.imageName?IMG+it0.imageName:'');$('#timg').hidden=!tm;if(tm)$('#timg').src=tm;
   const {cap,used}=calc();
   $('#capn').textContent=`${used} / ${cap}`;
   $('#bar').className='bar'+(used>cap?' over':'');$('#builder').classList.toggle('cfgover',used>cap);
   $('#bar i').style.width=Math.min(100,cap?Math.max(0,used)/cap*100:0)+'%';
   const cell=k=>{
-    const s=getS(k),m=s&&M.get(s.u),pv=getP(k),sp=typeof k==='string',lab=k==='ex'&&/Melee|Zaw/.test(S.cat)?'Exilus / Tennokai':({aura:'Aura',ex:'Exilus',st:'Stance'}[k]||'boş');
+    const s=getS(k),m=s&&M.get(s.u),pv=getP(k),sp=typeof k==='string',lab=k==='ex'&&/Melee|Zaw/.test(S.cat)?'Exilus / Tennokai':({aura:'Aura',au2:'Aura 2',ex:'Exilus',st:'Stance'}[k]||'boş');
     const pb=`<select class="pb${pv!==baseP(k)?' fm':''}" data-pol="${k}" aria-label="Polarite">${POLS.map(p=>`<option value="${p}" ${p===pv?'selected':''}>${PSYM[p]} ${p||'nötr'}</option>`).join('')}</select>`;
     if(!m)return `<div class="slot ${sp?'sp':''}" data-key="${k}">${pb}<span class="muted">${lab}</span></div>`;
     return `<div class="slot f ${sp?'sp':''}" data-key="${k}" title="${esc(statsOf(m))}">${pb}<button class="x" data-rm="${k}" aria-label="Kaldır">×</button><div><img src="${IMG+esc(m.imageName)}" alt="" loading="lazy" draggable="false"><b>${esc(m.name)}</b></div>
       <span class="pol">mod: ${esc(m.polarity||'-')}</span><label>Rank <input type="number" min="0" max="${maxRank(m)}" value="${s.r}" data-rank="${k}"></label></div>`};
   renderNote();
-  $('#sp').innerHTML=['aura','ex','st'].filter(hasK).map(cell).join('');
+  $('#sp').innerHTML=['aura','au2','ex','st'].filter(hasK).map(cell).join('');
   $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
   $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh">${n} (kapasite kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
-  $('#custrow').hidden=S.cat!=='Custom';$('#cn').value=S.cn;$('#ccap').value=S.ccap;
+  $('#custrow').hidden=S.cat!=='Custom';$('#cname').value=S.cname||'';$('#cn').value=S.cn;$('#ccap').value=S.ccap;
   $('#arcs').innerHTML=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);
     return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b>${esc(a.name)}</b><br><span class="muted">${t}</span></div>`
       :`<div class="aslot" data-ai="${i}"><span class="muted">${t} arcane</span></div>`}).join('');
@@ -248,7 +255,7 @@ function renderBuilder(){
 const baseP=k=>{const it=IT.get(S.item);return (typeof k==='number'?it?.polarities?.[k]:it?.[{aura:'auraPolarity',ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
 const stash=()=>{leaveTgt();S.cfgs[S.ci].d=Object.fromEntries(CF.map(k=>[k,S[k]]))};
 function loadCfg(i,skip){
-  if(!skip)stash();S.ci=i;S.shards=Array(5).fill(null);S.helm={};S.exs={};S.evo=['','','','',''];S.ccap=60;S.cn=12;Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));
+  if(!skip)stash();S.ci=i;S.shards=Array(5).fill(null);S.helm={};S.exs={};S.evo=['','','','',''];S.ccap=60;S.cn=12;S.au2=null;S.a2pol='';S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));
   S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};fitArcs();
 }
 function renderCfg(){
@@ -277,7 +284,7 @@ function openByName(n){
   if(ADMIN&&!confirm('Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
   loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
 }
-const PF=['cat','item','slots','pols','aura','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
+const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
 function guessCat(u){
   if(DATA.items.Archgun.some(i=>i.uniqueName===u))return 'Archgun';
   const n=IT.get(u)?.name||'';return /Bow|Balefire|Neutralizer|Noctua/.test(n)?'Primary':/Regulators|Pixia/.test(n)?'Secondary':'Melee';
@@ -289,7 +296,7 @@ function enterTgt(u){
   const e=(S.exs=S.exs||{})[u]||{},it=IT.get(u);
   S.tgt=u;S.item=u;S.cat=e.cat||guessCat(u);S.exn=e.n||'';
   S.slots=e.slots||Array(14).fill(null);S.pols=e.pols||Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
-  S.reactor=e.reactor??true;S.aura=null;S.ex=e.ex||null;S.st=e.st||null;S.arcs=e.arcs||[];S.elem='';
+  S.reactor=e.reactor??true;S.aura=null;S.au2=null;S.ex=e.ex||null;S.st=e.st||null;S.arcs=e.arcs||[];S.elem='';
   S.expol=e.expol??(it?.exilusPolarity||'');S.stpol=e.stpol??(it?.stancePolarity||'');fitArcs();
 }
 function leaveTgt(){
@@ -313,6 +320,12 @@ function renderEvo(){
   $('#evs').innerHTML=S.evo.map((t,i)=>`<label class="evl">Evo ${i+1}<textarea data-evo="${i}" rows="2" placeholder="Evo ${i+1} açıklaması">${esc(t)}</textarea></label>`).join('');
   if(RO)document.querySelectorAll('#evs textarea').forEach(n=>n.readOnly=true);
 }
+function renderParts(){
+  const box=$('#partbox'),spec=S.cat==='Zaw'?[['Strike',ZP.Strike],['Grip',ZP.Grip],['Link',ZP.Link]]:S.cat==='Kitgun'?[['Chamber',KP.Chamber],['Grip',KP.Grip[S.item==='kg-s'?'Secondary':'Primary']],['Loader',KP.Loader]]:null;
+  if(!spec||S.tgt){box.innerHTML='';return}
+  box.innerHTML=`<div class="row">${spec.map(([k,l])=>`<label>${k} <select data-part="${k}"><option value="">—</option>${l.map(n=>`<option ${S.parts[k]===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`).join('')}</div>`
+   +`<div class="notev">${spec.map(([k])=>S.parts[k]?`<b>${esc(S.parts[k])}</b> <span class="muted">(${k})</span>`:'').filter(Boolean).join(' · ')}</div>`;
+}
 const SH={
  Crimson:['+%15 Yetenek Gücü','+%15 Yetenek Süresi','+%37.5 Yakın Dövüş Kritik Hasarı','+%37.5 Birincil Durum Şansı','+%37.5 İkincil Kritik Şansı'],
  Amber:['Doğuşta Max Enerjinin %45\'i dolu','+%150 Can Küresi Etkinliği','+%75 Enerji Küresi Etkinliği','+%37.5 Büyü Hızı','+%22.5 Parkur Hızı'],
@@ -325,7 +338,7 @@ function renderShards(){
   $('#shbox').hidden=S.cat!=='Warframe';
   const opts=Object.keys(SH).map(c=>`<optgroup label="Tauforged ${c}">${SH[c].map((d,i)=>`<option value="${c}|${i}">${c}: ${esc(d)}</option>`).join('')}</optgroup>`).join('');
   $('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],c=v?v.split('|')[0]:'';
-    return `<div style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select></div>`}).join('');
+    return `<div style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select>${v?`<div class="shd">${esc(SH[c][+v.split('|')[1]])}</div>`:''}</div>`}).join('');
 }
 function renderNote(){
   $('#note').value=S.note||'';$('#note').readOnly=RO;
@@ -347,7 +360,7 @@ function renderList(){
 function renderSaved(){
   const q=($('#bq')?.value||'').trim().toLowerCase();
   const rows=saved.filter(b=>!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q));
-  $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
+  $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${(()=>{const q=Object.values(b.cfgs?.[0]?.d?.parts||{}).filter(Boolean).join(' / ');return q?' · '+esc(q):''})()}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
     <button data-load="${b.id}">Aç</button><button data-share="${b.id}">Bağlantı kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
 }
 
@@ -358,7 +371,7 @@ function place(u,k){
   msg('');setS(k,{u,r:maxRank(m)});return true;
 }
 function autoKey(m){
-  if(isAura(m))return 'aura';if(m.type==='Stance Mod')return 'st';
+  if(isAura(m))return !S.aura||!hasK('au2')?'aura':!S.au2?'au2':'aura';if(m.type==='Stance Mod')return 'st';
   if(m.isUtility&&hasK('ex')&&!getS('ex'))return 'ex';
   for(let i=0;i<NG();i++)if(!S.slots[i])return i;return null;
 }
@@ -392,7 +405,7 @@ function drop(src,t,inBrowser){
   renderBuilder();
 }
 
-const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
+const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cname:S.cname,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
 function loadBuild(b){
   const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};
   if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];
@@ -454,6 +467,8 @@ document.addEventListener('click',e=>{
   else if(d.arc)addArc(d.arc);
   else if(d.pol!==undefined){const k=pk(d.pol);setP(k,omniOn?'omni':POLS[(POLS.indexOf(getP(k))+1)%POLS.length]);renderBuilder()}
   else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
+  else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);renderAll()}
+  else if(d.cdel){S.cn=Math.max(1,(+S.cn||12)-1);cleanMods();renderAll()}
   else if(d.back){document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
   else if(d.cfg!==undefined){loadCfg(+d.cfg);renderBuilder()}
@@ -475,9 +490,11 @@ document.addEventListener('change',e=>{
   const t=e.target;
   if(t.dataset.sh!==undefined){S.shards[+t.dataset.sh]=t.value||null;renderShards();return}
   if(t.dataset.pol!==undefined){setP(pk(t.dataset.pol),t.value);renderBuilder();return}
+  if(t.id==='cname'){S.cname=t.value.trim();renderAll();return}
   if(t.id==='cn'){S.cn=Math.max(1,Math.min(14,+t.value||12));cleanMods();renderAll();return}
   if(t.id==='ccap'){S.ccap=Math.max(0,+t.value||0);renderBuilder();return}
   if(t.id==='exn'){S.exn=t.value.trim();renderTgt();return}
+  if(t.dataset.part!==undefined){S.parts[t.dataset.part]=t.value;renderParts();return}
   if(t.id==='excat'){S.cat=t.value;cleanMods();renderAll();return}
   if(t.id==='hsel'){if(t.value)S.helm[abPick]=t.value;else delete S.helm[abPick];abPick=null;renderAbil();return}
   if(t.id==='cfgname'){S.cfgs[S.ci].n=t.value.trim()||'Config';renderCfg();return}
@@ -491,14 +508,14 @@ document.addEventListener('change',e=>{
     renderNote();return}
   if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
 });
-$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();if(!special())S.elem='';fitArcs();renderAll()});
+$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();cleanMods();if(!special())S.elem='';fitArcs();renderAll()});
 $('#elem').addEventListener('change',e=>{S.elem=e.target.value});
 $('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus});
 $('#name').addEventListener('input',e=>S.name=e.target.value);
 $('#reactor').addEventListener('change',e=>{S.reactor=e.target.checked;renderBuilder()});
 $('#q').addEventListener('input',renderList);
 $('#save').addEventListener('click',()=>{
-  const b=cur();S.id=b.id;if(!b.name)b.name=S.name=(IT.get(b.item)?.name||'Build');
+  const b=cur();S.id=b.id;if(!b.name)b.name=S.name=(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'Build');
   const i=saved.findIndex(x=>x.id===b.id);i<0?saved.unshift(b):saved[i]=b;persist();renderAll();msg('Build kaydedildi.')
 });
 $('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);renderAll();msg('')});
