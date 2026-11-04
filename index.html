@@ -92,6 +92,7 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
 .ro #name{font:700 1.2rem Rajdhani,sans-serif;padding-left:0}
 .arcs{display:flex!important;justify-content:center;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}.aslot{width:150px;min-height:104px}
 .ro #autof{display:none}
+.ro .topbar{display:none}
 </style>
 </head>
 <body>
@@ -101,6 +102,7 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
   <section id="builder" class="panel">
     <button id="back" data-back="1">← Kayıtlı buildlere dön</button>
     <h2>Build</h2>
+    <div class="row topbar"><button data-fwd="save" class="pri">Kaydet</button><button data-fwd="new">Yeni build</button><button data-fwd="reset">Tümünü sıfırla</button><button data-fwd="autof">Oto forma</button></div>
     <div class="row" id="cats"></div>
     <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya silah"></select></div>
     <div class="row" id="cfgrow"></div>
@@ -121,7 +123,7 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
       <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı ekle</button><button id="addfile">Görsel yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
       <div class="gal" id="gal"></div></div>
     <div id="rivbox"><h2 style="margin-top:1rem">Riven önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven ekle</button></div>
-    <details id="evbox" open><summary>Incarnon evrimleri (elle yaz)</summary><div id="evs"></div></details>
+    <details id="evbox" open><summary>Incarnon Evrimleri</summary><div id="evs"></div></details>
     <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni build</button><button id="reset">Tümünü sıfırla</button><button id="autof">Oto forma</button></div>
   </section>
 
@@ -499,7 +501,7 @@ document.addEventListener('click',e=>{
   if(e.target.matches('#gal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
   if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&d.bc===undefined)return;
-  if(d.cat){selectCat(d.cat);renderAll()}
+  if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build olarak başladı, önceki kayıt korundu.')}selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod);
   else if(d.arc)addArc(d.arc);
@@ -507,6 +509,7 @@ document.addEventListener('click',e=>{
   else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
   else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);renderAll()}
   else if(d.cdel){S.cn=Math.max(1,(+S.cn||12)-1);cleanMods();renderAll()}
+  else if(d.fwd){$('#'+d.fwd).click()}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
@@ -547,7 +550,7 @@ document.addEventListener('change',e=>{
     renderNote();return}
   if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
 });
-$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
+$('#item').addEventListener('change',e=>{const nv=e.target.value;if(S.id){const c=S.cat;S=blank();S.cat=c;msg('Yeni build olarak başladı, önceki kayıt korundu.')}S.item=nv;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
 $('#elem').addEventListener('change',e=>{S.elem=e.target.value});
 $('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus});
 $('#name').addEventListener('input',e=>S.name=e.target.value);
