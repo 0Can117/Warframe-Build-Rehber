@@ -255,11 +255,17 @@
                 null,
                 null,
                 null,
+                {
+                  "u": "/Lotus/Upgrades/Mods/Melee/Event/Nightwave/NightwaveStalkerScytheAugmentMod",
+                  "r": 5
+                },
                 null,
                 null,
                 null,
-                null,
-                null,
+                {
+                  "u": "/Lotus/Upgrades/Mods/Sets/Ashen/AshenMandibleMod",
+                  "r": 5
+                },
                 null,
                 null,
                 null,
@@ -302,9 +308,7 @@
           ],
           "ccap": 60,
           "cn": 12,
-          "parts": {
-            "Link": ""
-          }
+          "parts": {}
         }
       }
     ]
