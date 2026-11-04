@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build Rehberi (OCR deneme)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f2229;--pn:#16303a;--ln:#27495a;--tx:#e8efe9;--mu:#93aab0;--gold:#d9a441;--cy:#6fd0c8;--bad:#e0655a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.45 "Source Sans 3",system-ui,sans-serif}
+h1,h2{font-family:Rajdhani,system-ui,sans-serif;margin:0}
+h1{font-size:2rem;color:var(--gold);letter-spacing:.02em}
+h2{font-size:1.25rem;margin-bottom:.6rem}
+header{padding:1.2rem 1rem .4rem;max-width:1300px;margin:auto}
+header p{margin:.2rem 0 0;color:var(--mu)}
+main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1rem;padding:1rem;max-width:1300px;margin:auto}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.panel{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:1rem}
+#saved{grid-column:1/-1}
+button,select,input{font:inherit;color:var(--tx);background:#0f2229;border:1px solid var(--ln);border-radius:6px;padding:.45rem .7rem}
+button{cursor:pointer}button:hover{border-color:var(--gold)}
+button.pri{background:var(--gold);color:#1b1405;border-color:var(--gold);font-weight:600}
+button.on{border-color:var(--gold);color:var(--gold)}
+:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.7rem;align-items:center}
+.row>select,.row>input[type=text],.row>input[type=search]{flex:1;min-width:140px}
+.bar{height:10px;background:#0f2229;border-radius:3px;overflow:hidden;border:1px solid var(--ln)}
+.bar i{display:block;height:100%;background:var(--cy)}.bar.over i{background:var(--bad)}
+.capt{display:flex;justify-content:space-between;margin:.8rem 0 .3rem;font-weight:600}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.8rem 0}
+@media(max-width:560px){.slots{grid-template-columns:repeat(2,1fr)}}
+.slot select{padding:.1rem .2rem;font-size:.8rem;width:100%}
+.slot{min-height:128px;border:1px dashed var(--ln);border-radius:8px;padding:.4rem;font-size:.85rem;display:flex;flex-direction:column;gap:.25rem;position:relative}
+.slot.f{border-style:solid;border-color:#3b6477;background:#1b3a46}
+.slot.aura{border-color:var(--gold)}
+.slot b{font-weight:600;line-height:1.2}
+.slot img,.card img{width:38px;height:38px;object-fit:contain;float:left;margin-right:.4rem}
+.slot .x{position:absolute;right:3px;top:3px;padding:0 .35rem;border:0;background:none;color:var(--mu)}
+.slot input{width:3.6rem;padding:.15rem .3rem}
+.pol{color:var(--cy);font-size:.78rem}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem;max-height:70vh;overflow:auto}
+.card{text-align:left;border-radius:6px;padding:.45rem;font-size:.85rem;min-height:62px}
+.card small{display:block;color:var(--mu)}
+.arcs{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
+.aslot{min-height:64px;border:1px dashed var(--ln);border-radius:8px;padding:.4rem;font-size:.85rem;position:relative}
+.aslot.f{border:1px solid var(--gold)}.aslot img{width:34px;height:34px;float:left;margin-right:.4rem}.aslot .x{position:absolute;right:3px;top:3px;padding:0 .35rem;border:0;background:none;color:var(--mu)}
+.slot.sp,.sp3 .slot{border-color:var(--gold)}.sp3{grid-template-columns:repeat(3,1fr);margin-bottom:0}
+.pb{align-self:flex-start;padding:.05rem .4rem;font-size:.75rem;color:var(--cy)}
+.card,.slot,.aslot{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.dragging{opacity:.4}.over{outline:2px solid var(--gold)}
+.ghost{position:fixed!important;z-index:99;pointer-events:none;opacity:.92;margin:0;box-shadow:0 6px 18px #0008}
+.bl{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--ln)}
+.bl span{flex:1;min-width:160px}
+.muted{color:var(--mu)}#msg{padding:.4rem 0;color:var(--gold)}
+textarea{width:100%;font:inherit;color:var(--tx);background:#0f2229;border:1px solid var(--ln);border-radius:6px;padding:.5rem;resize:vertical}
+.gal{display:flex;flex-wrap:wrap;gap:.5rem}.gal figure{margin:0;position:relative}
+.gal img{max-width:200px;max-height:160px;border-radius:6px;cursor:zoom-in;border:1px solid var(--ln)}
+.gal img.big{max-width:100%;max-height:none;cursor:zoom-out}.gal figure:has(img.big){flex-basis:100%}
+.gal .x{position:absolute;right:4px;top:4px;background:#0f2229cc;border:1px solid var(--ln);border-radius:4px;padding:0 .4rem}
+.ro #browser,.ro #cats,.ro #save,.ro #new,.ro #admrow,.ro #imgctl,.ro .x{display:none}
+.ro main{grid-template-columns:1fr}.ro:not(.open) #builder{display:none}.ro .pb{pointer-events:none}
+.ti{width:44px;height:44px;object-fit:contain}
+.pb{color:var(--mu)}.pb.fm{background:var(--gold);color:#1b1405;border-color:var(--gold);font-weight:600}
+.cfgover{border-color:var(--bad)!important;box-shadow:0 0 0 2px var(--bad)}
+.bwrap{display:flex;gap:.6rem}.bwrap>div:first-child{flex:1;min-width:0}
+#abil:empty{display:none}#abil{display:flex;flex-direction:column;gap:.4rem;width:86px}#abil select{width:100%}
+.ab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.3rem;font-size:.72rem;text-align:center;color:var(--mu)}
+.ab img{width:44px;height:44px;object-fit:contain;filter:grayscale(1);opacity:.8}.ab.sw{border-color:var(--gold);color:var(--gold)}.ab.sw img{filter:none;opacity:1}.ab s{color:var(--mu)}
+#omni.on{border-color:var(--gold);color:var(--gold)}
+.notev{margin:.5rem 0;line-height:1.5}.notev a{color:var(--gold)}.ro #note{display:none}
+.rivs{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.6rem}.riv{flex:1 1 200px;border:1px solid var(--gold);border-radius:8px;padding:.5rem;display:flex;flex-direction:column;gap:.35rem}
+.dis{font-size:.78rem;color:var(--cy)}.rs{display:flex;justify-content:space-between;background:#1b3a46;border-radius:4px;padding:.15rem .4rem;font-size:.85rem}
+.rs.neg{color:var(--bad)}.rs.sp{border:1px solid var(--cy)}.rs button,.riv .x2{border:0;background:none;padding:0 .3rem;color:var(--mu)}
+.ro .x2,.ro .rs button,.ro #addriv,.ro #omni{display:none}
+.shards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.6rem}.shd{font-size:.85rem;color:var(--mu);margin-top:.25rem;line-height:1.35}
+.ro #custrow{display:none}.shards select{width:100%}.shards>div{border-left:4px solid var(--ln);padding-left:.4rem}
+.intgt #cats,.intgt #item,.intgt #elrow,.intgt #timg{display:none}
+.evl{display:block;margin:.4rem 0;font-weight:600}.evl textarea{margin-top:.2rem;font-weight:400}
+details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-serif}
+.slots.sp3{display:flex;justify-content:center;flex-wrap:wrap}.sp3 .slot{width:150px}.xh{margin:.6rem 0 .2rem;text-align:center;font-size:1rem}
+.ro #elrow,.ro #reactor,.ro label:has(#reactor){display:none}
+#back{display:none}.ro.open #back{display:inline-block;margin-bottom:.6rem}.ro.open #saved{display:none}.intgt #custrow{display:none}
+.shards{grid-template-columns:1fr!important}
+.shards>div{padding:.6rem .8rem!important;background:#1b3a46;border-radius:8px;min-height:96px}
+.shd{font-size:1rem!important;line-height:1.5!important;margin-top:.4rem!important;color:var(--tx)!important}
+.ro #reset{display:none}
+.ro select,.ro input[type=text],.ro input[type=number]{appearance:none;-webkit-appearance:none;background-image:none;border-color:transparent;opacity:1;color:var(--tx)}
+.ro select:disabled,.ro input:disabled{opacity:1;color:var(--tx)}
+.ro .shards select,.ro .aslot:not(.f),.ro .shards>div:not(.sf){display:none}
+.ro #name{font:700 1.2rem Rajdhani,sans-serif;padding-left:0}
+#ocrres label{display:block;margin:.2rem 0}#ocrbox{margin-bottom:.8rem}.ro #ocrbox{display:none}
+</style>
+</head>
+<body>
+<header><h1>Build Rehberi</h1></header>
+<div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
+<main>
+  <section id="builder" class="panel">
+    <button id="back" data-back="1">← Kayıtlı buildlere dön</button>
+    <h2>Build</h2>
+    <div class="row" id="cats"></div>
+    <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya silah"></select></div>
+    <div class="row" id="cfgrow"></div>
+    <div id="partbox"></div>
+    <div class="row" id="custrow" hidden><input type="text" id="cname" placeholder="Custom item adı"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button><label>Yuva sayısı <input type="number" id="cn" min="1" max="14" style="width:5rem"></label><label>Kapasite <input type="number" id="ccap" min="0" max="999" style="width:5rem"></label></div>
+    <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
+    <div class="row"><input type="text" id="name" placeholder="Build adı"><label><input type="checkbox" id="reactor" checked> Reaktör/katalizör (60)</label></div>
+    <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="bwrap"><div><div class="slots sp3" id="sp"></div>
+    <div class="slots" id="slots"></div></div><div id="abil"></div></div>
+    <div id="xs"></div>
+    <div id="tgtrow"></div>
+    <h2>Arcane</h2>
+    <div class="arcs" id="arcs"></div>
+    <div id="shbox"><h2 style="margin-top:1rem">Archon Shard (Tauforged)</h2><div class="shards" id="shards"></div></div>
+    <div id="notebox"><h2 style="margin-top:1rem">Not</h2>
+      <textarea id="note" rows="4" placeholder="Build notu. Başka build'e köprü için [[Build adı]] yaz."></textarea><div id="notev" class="notev"></div>
+      <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı ekle</button><button id="addfile">Görsel yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
+      <div class="gal" id="gal"></div></div>
+    <div id="rivbox"><h2 style="margin-top:1rem">Riven önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven ekle</button></div>
+    <details id="evbox" open><summary>Incarnon evrimleri (elle yaz)</summary><div id="evs"></div></details>
+    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni build</button><button id="reset">Tümünü sıfırla</button></div>
+  </section>
+
+  <section id="browser" class="panel">
+    <div class="row"><button data-tab="mods" class="on">Modlar</button><button data-tab="arcanes">Arcane'ler</button></div>
+    <p class="muted" style="margin:0 0 .6rem">Modu veya arcane'i yuvaya sürükle (dokunmatikte basılı tut) ya da dokun. Yuvadan listeye sürüklersen kaldırılır. Polarite rozetine dokununca değişir.</p>
+    <details id="ocrbox"><summary style="font-size:1rem;margin-top:0">Görselden mod bul (OCR, deneme)</summary>
+      <input type="file" id="ocrfile" accept="image/*"><div id="ocrst" class="muted"></div><div id="ocrres"></div>
+      <button id="ocrgo" hidden>Seçilenleri yerleştir</button></details>
+    <div class="row"><input type="search" id="q" placeholder="Ara..." aria-label="Ara"></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="saved" class="panel">
+    <h2>Kayıtlı buildler</h2>
+    <div class="row"><input type="search" id="bq" placeholder="Build ara (ad, silah, element, not)" aria-label="Build ara"><button id="bgo">Ara</button></div>
+    <div class="row" id="admrow"><button id="exp">builds.json indir (yayınlamak için)</button><button id="imp">JSON içe aktar</button><button id="adminoff">Yönetici modundan çık</button><input type="file" id="file" accept=".json" hidden></div>
+    <div id="bl"></div>
+  </section>
+</main>
+
+<script>
+const CDN='https://cdn.jsdelivr.net/gh/WFCD/warframe-items@master/data/json/';
+const SRC=[f=>'https://raw.githubusercontent.com/WFCD/warframe-items/master/data/json/'+f+'.json',f=>CDN+f+'.json'];
+const IMG='https://cdn.warframestat.us/img/';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CATS=['Warframe','Primary','Secondary','Melee','Archgun','Zaw','Kitgun','Companion','Companion Weapon','Necramech','K-Drive','Railjack','Custom'];
+const XC={Companion:{n:8,aura:true,re:/^Companion Mod/},'Companion Weapon':{n:8,re:/^(Primary|Secondary|Melee|Pistol|Rifle|Shotgun|Bow|Sniper) Mod/},Necramech:{n:12,re:/^Necramech Mod/},'K-Drive':{n:8,re:/^K-Drive Mod/},Railjack:{n:8,aura:true,re:/^(Plexus|Railjack) Mod/},Custom:{n:12,re:/./}};
+const MODRE={Warframe:/^Warframe Mod/,Primary:/^(Primary|Shotgun|Rifle|Bow|Sniper) Mod/,Secondary:/^(Secondary|Pistol) Mod/,Melee:/^(Melee|Stance) Mod/,Archgun:/^Arch-Gun Mod/,Zaw:/^Melee Mod/};
+const ARC={Warframe:/^Warframe Arcane/,Primary:/^(Primary|Shotgun|Bow) Arcane/,Secondary:/^Secondary Arcane/,Melee:/^Melee Arcane/,Zaw:/^Zaw Arcane/,Kitgun:/^Kitgun Arcane/};
+const SL={Warframe:['Warframe','Warframe'],Primary:['Primary'],Secondary:['Secondary'],Melee:['Melee'],Archgun:['Primary','Secondary'],Zaw:['Melee','Zaw']};
+const POLS=['','madurai','vazarin','naramon','zenurik','unairu','penjaga','umbra','omni'];
+const PSYM={'':'·',madurai:'V',vazarin:'D',naramon:'—',zenurik:'Z',unairu:'U',penjaga:'P',umbra:'Ω',omni:'✦'};
+const ZP={Strike:[],Grip:[],Link:[]},KP={Chamber:[],Grip:{Primary:[],Secondary:[]},Loader:[]};
+const ELEMS=['Impact','Heat','Cold','Electricity','Toxin','Magnetic','Radiation'];
+const M=new Map(),A=new Map(),IT=new Map(),AB=new Map();
+const CF=['aura','au2','a2pol','ex','st','apol','expol','stpol','pols','slots','arcs','elem','bonus','reactor','helm','shards','exs','evo','ccap','cn','parts'];
+const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
+ ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
+ melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
+ spl:['Status Damage','Gas Damage','Corrosive Damage','Viral Damage','Radiation Damage','Blast Damage','Magnetic Damage','Damage vs Orokin','Damage vs Techrot','Damage vs Scaldra'],
+ splr:['Weak Point Damage','Weak Point Critical Chance','Ammo Efficiency','Magazine Reload While Holstered'],splm:['Heavy Attack Damage']};
+let DATA={mods:[],arcanes:[],items:{}};
+const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),ccap:60,cn:12,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
+let S=blank(),tab='mods',drag=null,sup=false,abPick=null,omniOn=false;
+const msg=t=>{$('#msg').textContent=t||''};
+const ADMIN=(()=>{try{const a=new URLSearchParams(location.search).get('admin');if(a==='1')localStorage.setItem('admin','1');if(a==='0')localStorage.removeItem('admin');return localStorage.getItem('admin')==='1'}catch(e){return false}})();
+const RO=!ADMIN;document.body.classList.toggle('ro',RO);
+const openView=()=>{if(RO)document.body.classList.add('open')};
+let saved=[];if(ADMIN)try{saved=JSON.parse(localStorage.getItem('builds')||'[]')}catch(e){}
+const persist=()=>{if(RO)return;try{localStorage.setItem('builds',JSON.stringify(saved))}catch(e){msg('Tarayıcı kaydı yazılamadı (görseller çok yer kaplıyor olabilir). builds.json olarak indir, görsel için bağlantı kullan.')}};
+const pk=k=>/^\d+$/.test(k)?+k:k;
+const KM={aura:['aura','apol'],au2:['au2','a2pol'],ex:['ex','expol'],st:['st','stpol']};
+const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]];
+const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
+const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
+const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
+const NG=()=>S.cat==='Custom'?(+S.cn||12):XC[S.cat]?.n||8;
+const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&S.cat!=='Archgun'&&!(S.tgt&&S.cat==='Melee'))):false;
+const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
+const KEYS=()=>ALLK.filter(hasK);
+const arcSlots=()=>S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];
+const modRe=()=>XC[S.cat]?XC[S.cat].re:S.cat==='Kitgun'?(S.item==='kg-s'?MODRE.Secondary:MODRE.Primary):MODRE[S.cat];
+const special=()=>/\b(Kuva|Tenet|Coda)\b/.test(IT.get(S.item)?.name||'');
+const statsOf=m=>{const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):(m.description||'')};
+const maxRank=m=>m.fusionLimit??0;
+const isAura=m=>(m.baseDrain||0)<0&&/^(Warframe|Companion|Plexus|Railjack) Mod$/.test(m.type||'');
+const canPlace=(m,k)=>(k==='aura'||k==='au2')?isAura(m):k==='st'?m.type==='Stance Mod':(isAura(m)||m.type==='Stance Mod')?false:(k==='ex'?(S.cat==='Custom'||!!m.isUtility):true);
+
+async function get(f){let err;for(const s of SRC){try{const r=await fetch(s(f));if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){err=e}}throw new Error(f+' yüklenemedi ('+(err&&err.message)+')')}
+async function init(){
+  try{
+    const [mods,arc,wf,pri,sec,mel,ag,misc,pets,sen,sw]=await Promise.all(['Mods','Arcanes','Warframes','Primary','Secondary','Melee','Arch-Gun','Misc','Pets','Sentinels','SentinelWeapons'].map(get));
+    DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
+    DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
+    DATA.items={Warframe:wf.filter(i=>i.type==='Warframe'),Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,
+      Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],
+      Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:wf.filter(i=>i.type==='Necramech'),'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
+    for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
+    DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
+    misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
+    mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
+    misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;
+      if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
+    [ZP.Strike,ZP.Grip,ZP.Link,KP.Chamber,KP.Grip.Primary,KP.Grip.Secondary,KP.Loader].forEach(a=>a.sort());
+    DATA.items.Warframe.forEach(w=>(w.abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:w.name})));
+    msg('');
+    let pub=[];try{const r=await fetch('builds.json?'+Date.now());if(r.ok)pub=await r.json()}catch(e){}
+    if(!Array.isArray(pub))pub=[];
+    if(RO)saved=pub;else if(!saved.length&&pub.length){saved=pub;persist()}
+    const h=location.hash.match(/^#b=(.+)$/);
+    if(h){try{loadBuild(JSON.parse(decodeURIComponent(escape(atob(h[1])))));openView()}catch(e){msg('Paylaşım bağlantısı okunamadı.')}}
+    selectCat(S.cat);renderAll();
+  }catch(e){msg('Veri alınamadı: '+e.message+'. Sayfa GitHub Pages üzerinden ya da yerel dosya olarak açılmalı; Claude önizlemesi dış bağlantıları engelleyebilir.')}
+}
+
+function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.ceil(d*1.25)}return neg?-d:d}
+function calc(){
+  let cap=S.cat==='Custom'?+S.ccap||0:S.cat==='Necramech'?(S.reactor?80:40):(S.reactor?60:30),used=0;
+  for(const k of KEYS()){const s=getS(k),m=s&&M.get(s.u);if(!m||(S.cat==='Railjack'&&typeof k==='number'&&k>=8))continue;const d=drainOf(m,s.r,getP(k));if(k==='aura'||k==='au2'||k==='st')cap-=d;else used+=d}
+  return{cap,used}
+}
+function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=it?.auraPolarity||'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||''}
+function fitArcs(){S.arcs=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null})}
+function cleanMods(){for(const k of ALLK){const s=getS(k),m=s&&M.get(s.u);if(m&&(!hasK(k)||!modRe().test(m.type)))setS(k,null)}}
+function selectCat(c){
+  if(S.cat!==c){S.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cat=c;const list=DATA.items[c]||[];
+  if(!list.some(i=>i.uniqueName===S.item)){S.item=list[0]?.uniqueName||null;applyPols()}
+  if(!special())S.elem='';
+  cleanMods();fitArcs();
+}
+
+function renderAll(){renderBuilder();renderList();renderSaved()}
+function renderBuilder(){
+  $('#cats').innerHTML=CATS.map(c=>`<button data-cat="${c}" class="${c===S.cat?'on':''}">${c}</button>`).join('');
+  $('#item').innerHTML=(DATA.items[S.cat]||[]).map(i=>`<option value="${esc(i.uniqueName)}" ${i.uniqueName===S.item?'selected':''}>${esc(i.name)}</option>`).join('');
+  $('#name').value=S.name;$('#reactor').checked=S.reactor;
+  $('#elrow').hidden=!special();
+  $('#elem').innerHTML=['<option value="">Bonus element seç</option>',...ELEMS.map(x=>`<option ${x===S.elem?'selected':''}>${x}</option>`)].join('');
+  $('#bonus').value=S.bonus;
+  renderCfg();renderAbil();renderShards();renderTgt();renderEvo();renderParts();const it0=IT.get(S.item),tm=it0?.wikiaThumbnail||(it0?.imageName?IMG+it0.imageName:'');$('#timg').hidden=!tm;if(tm)$('#timg').src=tm;
+  const {cap,used}=calc();
+  $('#capn').textContent=`${used} / ${cap}`;
+  $('#bar').className='bar'+(used>cap?' over':'');$('#builder').classList.toggle('cfgover',used>cap);
+  $('#bar i').style.width=Math.min(100,cap?Math.max(0,used)/cap*100:0)+'%';
+  const cell=k=>{
+    const s=getS(k),m=s&&M.get(s.u),pv=getP(k),sp=typeof k==='string',lab=k==='ex'&&/Melee|Zaw/.test(S.cat)?'Exilus / Tennokai':({aura:'Aura',au2:'Aura 2',ex:'Exilus',st:'Stance'}[k]||'boş');
+    const pb=`<select class="pb${pv!==baseP(k)?' fm':''}" data-pol="${k}" aria-label="Polarite">${POLS.map(p=>`<option value="${p}" ${p===pv?'selected':''}>${PSYM[p]} ${p||'nötr'}</option>`).join('')}</select>`;
+    if(!m)return `<div class="slot ${sp?'sp':''}" data-key="${k}">${pb}<span class="muted">${lab}</span></div>`;
+    return `<div class="slot f ${sp?'sp':''}" data-key="${k}" title="${esc(statsOf(m))}">${pb}<button class="x" data-rm="${k}" aria-label="Kaldır">×</button><div><img src="${IMG+esc(m.imageName)}" alt="" loading="lazy" draggable="false"><b>${esc(m.name)}</b></div>
+      <span class="pol">mod: ${esc(m.polarity||'-')}</span><label>Rank <input type="number" min="0" max="${maxRank(m)}" value="${s.r}" data-rank="${k}"></label></div>`};
+  renderNote();
+  $('#sp').innerHTML=['aura','au2',...(S.cat==='Melee'?['st','ex']:['ex','st'])].filter(hasK).map(cell).join('');
+  $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
+  $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh">${n} (kapasite kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
+  $('#custrow').hidden=S.cat!=='Custom';$('#cname').value=S.cname||'';$('#cn').value=S.cn;$('#ccap').value=S.ccap;
+  $('#arcs').innerHTML=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);
+    return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b>${esc(a.name)}</b><br><span class="muted">${t}</span></div>`
+      :`<div class="aslot" data-ai="${i}"><span class="muted">${t} arcane</span></div>`}).join('');
+  if(RO)document.querySelectorAll('#builder input,#builder select').forEach(n=>n.disabled=true);
+}
+const baseP=k=>{const it=IT.get(S.item);return (typeof k==='number'?it?.polarities?.[k]:it?.[{aura:'auraPolarity',ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
+const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
+function loadCfg(i,skip){
+  if(!skip)stash();S.ci=i;S.shards=Array(5).fill(null);S.helm={};S.exs={};S.evo=['','','','',''];S.ccap=60;S.cn=12;S.au2=null;S.a2pol='';S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));
+  S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};fitArcs();
+}
+function renderCfg(){
+  if(RO&&S.cfgs.length<2){$('#cfgrow').innerHTML='';return}
+  $('#cfgrow').innerHTML=S.cfgs.map((c,i)=>`<button data-cfg="${i}" class="${i===S.ci?'on':''}">${esc(c.n)}</button>`).join('')
+   +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(S.cfgs[S.ci].n)}" aria-label="Config adı"><button data-cfgdel="1">Sil</button>`);
+}
+function renderAbil(){
+  const it=IT.get(S.item),box=$('#abil');
+  if(S.cat!=='Warframe'||!it?.abilities){box.innerHTML='';return}
+  box.innerHTML=it.abilities.slice(0,4).map((a,i)=>{const h=AB.get(S.helm[i]),x=h||a;
+    return `<button class="ab ${h?'sw':''}" data-ab="${i}" title="${esc(x.description||'')}"><img src="${IMG+esc(x.imageName)}" alt="" draggable="false">${h?`<s>${esc(a.name)}</s><b>${esc(h.name)}</b>`:`<span>${esc(a.name)}</span>`}</button>`}).join('')
+   +(abPick!==null?`<select id="hsel"><option value="">Orijinal</option>${[...AB.values()].filter(x=>x.own!==it.name).sort((a,b)=>a.name.localeCompare(b.name)).map(x=>`<option value="${esc(x.uniqueName)}">${esc(x.name)} (${esc(x.own)})</option>`).join('')}</select>`:'');
+}
+function renderRiv(){
+  const mel=/Melee|Zaw/.test(S.cat),B=RS.common.concat(mel?RS.melee:RS.ranged),P=RS.spl.concat(mel?RS.splm:RS.splr);
+  const o=(p,l)=>l.map(x=>`<option value="${p}|${esc(x)}">${esc(x)}</option>`).join('');
+  const opts=`<option value="">+ Stat ekle</option><optgroup label="Pozitif">${o('p',B)}</optgroup><optgroup label="Spliced (pozitif)">${o('s',P)}</optgroup><optgroup label="Negatif">${o('n',B)}</optgroup>`;
+  $('#rivs').innerHTML=S.riv.map((r,i)=>`<div class="riv"><div class="row" style="margin:0"><input type="text" data-rivn="${i}" value="${esc(r.n)}" placeholder="Riven adı"><button class="x2" data-rmriv="${i}" aria-label="Rivenı sil">×</button></div>
+    <span class="dis">Disposition ×1.20 · S-tier (maks. roll)</span>
+    ${r.st.map((t,j)=>`<div class="rs ${t.s<0?'neg':''} ${t.sp?'sp':''}"><span>${t.s<0?'−':'+'} ${esc(t.k)}${t.sp?' (spliced)':''}</span><button data-rmst="${i}.${j}" aria-label="Kaldır">×</button></div>`).join('')}
+    <select data-rivadd="${i}">${opts}</select></div>`).join('');
+}
+function openByName(n){
+  const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());
+  if(!b){msg('Build bulunamadı: '+n);return}
+  if(ADMIN&&!confirm('Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
+  loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
+}
+const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
+function guessCat(u){
+  if(DATA.items.Archgun.some(i=>i.uniqueName===u))return 'Archgun';
+  const n=IT.get(u)?.name||'';return /Bow|Balefire|Neutralizer|Noctua/.test(n)?'Primary':/Regulators|Pixia/.test(n)?'Secondary':'Melee';
+}
+const exList=()=>{const it=IT.get(S.tgt?S.par.item:S.item);return(S.cat==='Warframe'||S.tgt)&&Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[]};
+function enterTgt(u){
+  if(S.tgt)leaveTgt();
+  S.par=Object.fromEntries(PF.map(k=>[k,S[k]]));
+  const e=(S.exs=S.exs||{})[u]||{},it=IT.get(u);
+  S.tgt=u;S.item=u;S.cat=e.cat||guessCat(u);S.exn=e.n||'';
+  S.slots=e.slots||Array(14).fill(null);S.pols=e.pols||Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
+  S.reactor=e.reactor??true;S.aura=null;S.au2=null;S.ex=e.ex||null;S.st=e.st||null;S.arcs=e.arcs||[];S.elem='';
+  S.expol=e.expol??(it?.exilusPolarity||'');S.stpol=e.stpol??(it?.stancePolarity||'');fitArcs();
+}
+function leaveTgt(){
+  if(!S.tgt)return;
+  (S.exs=S.exs||{})[S.tgt]={cat:S.cat,n:S.exn||'',slots:S.slots,pols:S.pols,reactor:S.reactor,ex:S.ex,st:S.st,expol:S.expol,stpol:S.stpol,arcs:S.arcs};
+  Object.assign(S,S.par);S.par=null;S.tgt=null;
+}
+function renderTgt(){
+  const l=exList(),box=$('#tgtrow');
+  $('#builder').classList.toggle('intgt',!!S.tgt);
+  if(!l.length){box.innerHTML='';return}
+  box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
+   +`<button data-tgt="" class="${S.tgt?'':'on'}">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'Warframe')}</button>`
+   +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name)}</button>`).join('')
+   +(S.tgt&&!RO?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +'</div>'+(S.tgt?`<h2>${esc(IT.get(S.tgt).name)}</h2>`:'');
+}
+function renderEvo(){
+  $('#evbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.evo.some(Boolean));
+  $('#evs').innerHTML=S.evo.map((t,i)=>`<label class="evl">Evo ${i+1}<textarea data-evo="${i}" rows="2" placeholder="Evo ${i+1} açıklaması">${esc(t)}</textarea></label>`).join('');
+  if(RO)document.querySelectorAll('#evs textarea').forEach(n=>n.readOnly=true);
+}
+function renderParts(){
+  const box=$('#partbox'),spec=S.cat==='Zaw'?[['Strike',ZP.Strike],['Grip',ZP.Grip],['Link',ZP.Link]]:S.cat==='Kitgun'?[['Chamber',KP.Chamber],['Grip',KP.Grip[S.item==='kg-s'?'Secondary':'Primary']],['Loader',KP.Loader]]:null;
+  if(!spec||S.tgt){box.innerHTML='';return}
+  box.innerHTML=`<div class="row">${spec.map(([k,l])=>`<label>${k} <select data-part="${k}"><option value="">—</option>${l.map(n=>`<option ${S.parts[k]===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`).join('')}</div>`
+   +`<div class="notev">${spec.map(([k,l])=>l.includes(S.parts[k])?`<b>${esc(S.parts[k])}</b> <span class="muted">(${k})</span>`:'').filter(Boolean).join(' · ')}</div>`;
+}
+const SH={
+ Crimson:['+%15 Yetenek Gücü','+%15 Yetenek Süresi','+%37.5 Yakın Dövüş Kritik Hasarı','+%37.5 Birincil Durum Şansı','+%37.5 İkincil Kritik Şansı'],
+ Amber:['Doğuşta Max Enerjinin %45\'i dolu','+%150 Can Küresi Etkinliği','+%75 Enerji Küresi Etkinliği','+%37.5 Büyü Hızı','+%22.5 Parkur Hızı'],
+ Azure:['+225 Max Can','+225 Kalkan Kapasitesi','+75 Max Enerji','+225 Zırh','+7.5 Can/sn Yenilenme'],
+ Topaz:['Blast ile öldürülen her düşman için +2 Max Can','Blast ile öldürünce +7.5 Kalkan','Heat durumlu düşman öldürünce +%1.5 İkincil Kritik Şansı (maks. %75)','Radiation durumlu düşmanlara +%15 Yetenek Hasarı'],
+ Violet:['Electricity durumlu düşmanlara +%15 Yetenek Hasarı','+%45 Birincil Electricity Hasarı (her ek Crimson/Azure/Violet shard için +%15)','+%37.5 Yakın Dövüş Kritik Hasarı','Can küreleri +%30 Enerji verir'],
+ Emerald:['Toxin durum etkileri +%45 daha fazla hasar','Toxin durum etkisiyle hasar alan düşmandan +3 Can','Corrosion durumlu düşmanlara +%15 Yetenek Hasarı','Corrosion en fazla +3 stack']};
+const SC={Crimson:'#c0443c',Amber:'#d9a441',Azure:'#4c9bd6',Topaz:'#e08a3c',Violet:'#9b6fd1',Emerald:'#4cb07a'};
+function renderShards(){
+  $('#shbox').hidden=S.cat!=='Warframe'||(RO&&!S.shards.some(Boolean));
+  const opts=Object.keys(SH).map(c=>`<optgroup label="Tauforged ${c}">${SH[c].map((d,i)=>`<option value="${c}|${i}">${c}: ${esc(d)}</option>`).join('')}</optgroup>`).join('');
+  $('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],c=v?v.split('|')[0]:'';
+    return `<div class="${v?'sf':''}" style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select>${v?`<div class="shd"><b style="color:${SC[c]}">${c}</b> · ${esc(SH[c][+v.split('|')[1]])}</div>`:''}</div>`}).join('');
+}
+function renderNote(){
+  $('#note').value=S.note||'';$('#note').readOnly=RO;
+  $('#notebox').hidden=RO&&!S.note&&!S.imgs.length;
+  $('#notev').innerHTML=esc(S.note).replace(/\n/g,'<br>').replace(/\[\[([^\]]+)\]\]/g,(m,n)=>`<a href="#" data-bl="${n}">${n}</a>`);
+  $('#rivbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.riv.length);renderRiv();
+  $('#gal').innerHTML=S.imgs.map((u,i)=>`<figure><img src="${esc(u)}" alt="Build görseli" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-rmimg="${i}" aria-label="Görseli kaldır">×</button></figure>`).join('');
+}
+function renderList(){
+  const q=$('#q').value.trim().toLowerCase();let rows;
+  if(tab==='mods')rows=DATA.mods.filter(m=>modRe().test(m.type||'')&&(!q||m.name.toLowerCase().includes(q)));
+  else{const sl=arcSlots();rows=DATA.arcanes.filter(a=>sl.some(t=>ARC[t].test(a.type||''))&&(!q||a.name.toLowerCase().includes(q)))}
+  const total=rows.length;rows=rows.slice(0,150);
+  $('#list').innerHTML=rows.map(m=>`<button class="card" data-${tab==='mods'?'mod':'arc'}="${esc(m.uniqueName)}" title="${esc(statsOf(m))}">
+    ${m.imageName?`<img src="${IMG+esc(m.imageName)}" alt="" loading="lazy" draggable="false">`:''}<b>${esc(m.name)}</b>
+    <small>${tab==='mods'?`${esc(m.polarity||'-')} · drain ${Math.abs(m.baseDrain||0)} · rank ${maxRank(m)}`:esc(m.type||'Arcane')}</small></button>`).join('')
+    +(total>150?`<p class="muted">${total} sonuçtan ilk 150 gösteriliyor. Aramayı daralt.</p>`:'')||'<p class="muted">Sonuç yok.</p>';
+}
+function renderSaved(){
+  const q=($('#bq')?.value||'').trim().toLowerCase();
+  const rows=saved.filter(b=>!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q));
+  $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${(()=>{const q=(b.cat==='Zaw'||b.cat==='Kitgun'?Object.values(b.cfgs?.[0]?.d?.parts||{}):[]).filter(Boolean).join(' / ');return q?' · '+esc(q):''})()}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
+    <button data-load="${b.id}">Aç</button><button data-share="${b.id}">Bağlantı kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
+}
+
+function place(u,k){
+  const m=M.get(u);if(!m)return false;
+  if(!hasK(k)||!canPlace(m,k)){msg('Bu mod bu yuvaya takılamaz.');return false}
+  if(KEYS().some(x=>x!==k&&getS(x)&&M.get(getS(x).u)?.name===m.name)){msg('Aynı mod bir build içinde iki kez kullanılamaz.');return false}
+  msg('');setS(k,{u,r:maxRank(m)});return true;
+}
+function autoKey(m){
+  if(isAura(m))return !S.aura||!hasK('au2')?'aura':!S.au2?'au2':'aura';if(m.type==='Stance Mod')return 'st';
+  if(m.isUtility&&hasK('ex')&&!getS('ex'))return 'ex';
+  for(let i=0;i<NG();i++)if(!S.slots[i])return i;return null;
+}
+function addMod(u){const m=M.get(u);if(!m)return;const k=autoKey(m);if(k===null){msg('Boş yuva kalmadı.');return}place(u,k);renderBuilder()}
+function swap(a,b){
+  const x=getS(a),y=getS(b),mx=x&&M.get(x.u),my=y&&M.get(y.u);
+  if(mx&&canPlace(mx,b)&&(!my||canPlace(my,a))){setS(a,y);setS(b,x)}else msg('Bu mod bu yuvaya takılamaz.');
+}
+function placeArc(u,i){
+  const a=A.get(u),t=arcSlots()[i];
+  if(!a||!ARC[t].test(a.type||'')){msg('Bu arcane bu yuvaya takılamaz.');return false}
+  if(S.arcs.some((x,j)=>x===u&&j!==i)){msg('Aynı arcane iki kez takılamaz.');return false}
+  msg('');S.arcs[i]=u;return true;
+}
+function addArc(u){
+  const a=A.get(u),sl=arcSlots(),ok=t=>ARC[t].test(a.type||'');
+  let i=sl.findIndex((t,j)=>!S.arcs[j]&&ok(t));if(i<0)i=sl.findIndex(ok);
+  if(i<0){msg('Bu build için uygun arcane yuvası yok.');return}
+  placeArc(u,i);renderBuilder();
+}
+function swapArc(a,b){
+  const sl=arcSlots(),x=S.arcs[a],y=S.arcs[b],ok=(u,i)=>!u||ARC[sl[i]].test(A.get(u)?.type||'');
+  if(ok(x,b)&&ok(y,a)){S.arcs[a]=y;S.arcs[b]=x}else msg('Bu arcane bu yuvaya takılamaz.');
+}
+function drop(src,t,inBrowser){
+  const tk=t?.dataset.key,ta=t?.dataset.ai;
+  if(src.k==='mod'){if(tk!==undefined)place(src.u,pk(tk))}
+  else if(src.k==='slot'){if(tk!==undefined){if(pk(tk)!==src.key)swap(src.key,pk(tk))}else if(inBrowser)setS(src.key,null)}
+  else if(src.k==='arc'){if(ta!==undefined)placeArc(src.u,+ta)}
+  else if(src.k==='aslot'){if(ta!==undefined){if(+ta!==src.i)swapArc(src.i,+ta)}else if(inBrowser)S.arcs[src.i]=null}
+  renderBuilder();
+}
+
+const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cname:S.cname,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
+function loadBuild(b){
+  const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};
+  if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];
+  S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];
+  if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}
+  selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};
+}
+const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
+
+/* sürükle-bırak: fare hemen, dokunmatik 300 ms basılı tutunca */
+const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
+function startDrag(){
+  drag.on=true;const g=drag.el.cloneNode(true);g.classList.add('ghost');g.style.width=drag.el.offsetWidth+'px';
+  document.body.append(g);drag.g=g;drag.el.classList.add('dragging');moveGhost(drag.x,drag.y);
+}
+function moveGhost(x,y){
+  drag.g.style.left=x-drag.g.offsetWidth/2+'px';drag.g.style.top=y-20+'px';
+  document.querySelectorAll('.over').forEach(n=>n.classList.remove('over'));
+  document.elementFromPoint(x,y)?.closest('.slot,.aslot')?.classList.add('over');
+}
+function endDrag(){
+  if(!drag)return;clearTimeout(drag.tm);drag.g?.remove();drag.el.classList.remove('dragging');
+  document.querySelectorAll('.over').forEach(n=>n.classList.remove('over'));drag=null;
+}
+document.addEventListener('pointerdown',e=>{
+  if(RO)return;
+  const el=e.target.closest(SELQ);if(!el||e.target.closest('input,.x,.pb'))return;
+  const d=el.dataset;
+  const src=d.mod?{k:'mod',u:d.mod}:d.arc?{k:'arc',u:d.arc}:d.key!==undefined?{k:'slot',key:pk(d.key)}:{k:'aslot',i:+d.ai};
+  drag={el,src,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=='mouse'};
+  if(drag.touch)drag.tm=setTimeout(()=>{if(drag)startDrag()},300);
+});
+document.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  if(!drag.on){
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<(drag.touch?12:6))return;
+    if(drag.touch){endDrag();return}
+    startDrag();
+  }
+  moveGhost(e.clientX,e.clientY);
+});
+document.addEventListener('pointerup',e=>{
+  if(!drag)return;
+  if(drag.on){const t=document.elementFromPoint(e.clientX,e.clientY);drop(drag.src,t?.closest('.slot,.aslot'),!!t?.closest('#browser'));sup=true;setTimeout(()=>sup=false,50)}
+  endDrag();
+});
+document.addEventListener('pointercancel',endDrag);
+document.addEventListener('touchmove',e=>{if(drag&&drag.on)e.preventDefault()},{passive:false});
+
+document.addEventListener('click',e=>{
+  if(sup)return;
+  const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();openByName(bl.dataset.bl);return}
+  if(e.target.matches('#gal img')){e.target.classList.toggle('big');return}
+  const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back)return;
+  if(d.cat){selectCat(d.cat);renderAll()}
+  else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
+  else if(d.mod)addMod(d.mod);
+  else if(d.arc)addArc(d.arc);
+  else if(d.pol!==undefined){const k=pk(d.pol);setP(k,omniOn?'omni':POLS[(POLS.indexOf(getP(k))+1)%POLS.length]);renderBuilder()}
+  else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
+  else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);renderAll()}
+  else if(d.cdel){S.cn=Math.max(1,(+S.cn||12)-1);cleanMods();renderAll()}
+  else if(d.back){document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
+  else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
+  else if(d.cfg!==undefined){loadCfg(+d.cfg);renderBuilder()}
+  else if(d.cfgadd){stash();const c=JSON.parse(JSON.stringify(S.cfgs[S.ci].d));S.cfgs.push({n:'Config '+(S.cfgs.length+1),d:c});loadCfg(S.cfgs.length-1);renderBuilder()}
+  else if(d.cfgdel){if(S.cfgs.length<2){msg('En az bir config kalmalı.');return}S.cfgs.splice(S.ci,1);loadCfg(0,true);renderBuilder()}
+  else if(d.omni){omniOn=!omniOn;t.classList.toggle('on',omniOn);t.textContent='Omni forma modu: '+(omniOn?'açık (polarite rozetine dokun)':'kapalı')}
+  else if(d.ab!==undefined){abPick=+d.ab;renderAbil()}
+  else if(d.addriv){S.riv.push({n:'',st:[]});renderNote()}
+  else if(d.rmriv!==undefined){S.riv.splice(+d.rmriv,1);renderNote()}
+  else if(d.rmst!==undefined){const [i,j]=d.rmst.split('.').map(Number);S.riv[i].st.splice(j,1);renderNote()}
+  else if(d.rmimg!==undefined){S.imgs.splice(+d.rmimg,1);renderNote()}
+  else if(d.rmarc!==undefined){S.arcs[+d.rmarc]=null;renderBuilder()}
+  else if(d.load){const b=saved.find(x=>x.id===d.load);if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}}
+  else if(d.del){saved=saved.filter(x=>x.id!==d.del);persist();renderSaved()}
+  else if(d.share){const b=saved.find(x=>x.id===d.share);if(!b)return;const u=link(b);
+    (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Bağlantı kopyalandı.')).catch(()=>prompt('Bağlantı:',u))}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.sh!==undefined){S.shards[+t.dataset.sh]=t.value||null;renderShards();return}
+  if(t.dataset.pol!==undefined){setP(pk(t.dataset.pol),t.value);renderBuilder();return}
+  if(t.id==='cname'){S.cname=t.value.trim();renderAll();return}
+  if(t.id==='cn'){S.cn=Math.max(1,Math.min(14,+t.value||12));cleanMods();renderAll();return}
+  if(t.id==='ccap'){S.ccap=Math.max(0,+t.value||0);renderBuilder();return}
+  if(t.id==='exn'){S.exn=t.value.trim();renderTgt();return}
+  if(t.dataset.part!==undefined){S.parts[t.dataset.part]=t.value;renderParts();return}
+  if(t.id==='excat'){S.cat=t.value;cleanMods();renderAll();return}
+  if(t.id==='hsel'){if(t.value)S.helm[abPick]=t.value;else delete S.helm[abPick];abPick=null;renderAbil();return}
+  if(t.id==='cfgname'){S.cfgs[S.ci].n=t.value.trim()||'Config';renderCfg();return}
+  if(t.dataset.rivn!==undefined){S.riv[+t.dataset.rivn].n=t.value;return}
+  if(t.dataset.rivadd!==undefined&&t.value){
+    const [ty,k]=t.value.split('|'),r=S.riv[+t.dataset.rivadd],pos=r.st.filter(x=>x.s>0).length,neg=r.st.length-pos;
+    if(r.st.some(x=>x.k===k))msg('Bu stat zaten ekli.');
+    else if(ty==='n'&&neg>=1)msg('En fazla 1 negatif stat.');
+    else if(ty!=='n'&&pos>=3)msg('En fazla 3 pozitif stat.');
+    else{r.st.push({k,s:ty==='n'?-1:1,sp:ty==='s'});msg('')}
+    renderNote();return}
+  if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
+});
+$('#item').addEventListener('change',e=>{S.item=e.target.value;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
+$('#elem').addEventListener('change',e=>{S.elem=e.target.value});
+$('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus});
+$('#name').addEventListener('input',e=>S.name=e.target.value);
+$('#reactor').addEventListener('change',e=>{S.reactor=e.target.checked;renderBuilder()});
+$('#q').addEventListener('input',renderList);
+$('#save').addEventListener('click',()=>{
+  const b=cur();S.id=b.id;if(!b.name)b.name=S.name=(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'Build');
+  const i=saved.findIndex(x=>x.id===b.id);i<0?saved.unshift(b):saved[i]=b;persist();renderAll();msg('Build kaydedildi.')
+});
+$('#reset').addEventListener('click',()=>{if(!confirm('Bu build\'deki tüm seçimler, configler, not ve görseller sıfırlanacak. Devam?'))return;S=blank();selectCat('Warframe');renderAll();msg('Build sıfırlandı. Kaydetmediysen kayıtlı hali değişmedi.')});
+$('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);renderAll();msg('')});
+$('#exp').addEventListener('click',()=>{
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(saved,null,2)],{type:'application/json'}));a.download='builds.json';a.click()
+});
+$('#imp').addEventListener('click',()=>$('#file').click());
+$('#file').addEventListener('change',async e=>{
+  try{const arr=JSON.parse(await e.target.files[0].text());if(!Array.isArray(arr))throw 0;
+    arr.forEach(b=>{if(b&&b.id){const i=saved.findIndex(x=>x.id===b.id);i<0?saved.push(b):saved[i]=b}});persist();renderSaved();msg('İçe aktarıldı.')}
+  catch(err){msg('Dosya geçerli bir build listesi değil.')}
+  e.target.value='';
+});
+function shrink(f){return new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.75))};im.onerror=bad;im.src=r.result};r.onerror=bad;r.readAsDataURL(f)})}
+$('#note').addEventListener('input',e=>{if(!RO)S.note=e.target.value});
+$('#addurl').addEventListener('click',()=>{const v=$('#imgurl').value.trim();if(!v)return;S.imgs.push(v);$('#imgurl').value='';renderNote()});
+$('#addfile').addEventListener('click',()=>$('#imgfile').click());
+$('#imgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{S.imgs.push(await shrink(f))}catch(err){msg('Görsel okunamadı: '+f.name)}}e.target.value='';renderNote()});
+$('#bq').addEventListener('input',renderSaved);$('#bgo').addEventListener('click',renderSaved);
+$('#adminoff').addEventListener('click',()=>{try{localStorage.removeItem('admin')}catch(e){}location.href=location.pathname});
+document.addEventListener('input',e=>{const d=e.target.dataset;if(d.evo!==undefined&&!RO)S.evo[+d.evo]=e.target.value});
+/* ---- OCR (deneme): ekran görüntüsünden mod isimlerini okur, eşleşenleri onay listesi olarak gösterir ---- */
+const norm=t=>t.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function loadTess(){return new Promise((ok,bad)=>{if(window.Tesseract)return ok();const t=document.createElement('script');t.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';t.onload=ok;t.onerror=()=>bad(new Error('OCR kütüphanesi yüklenemedi'));document.head.append(t)})}
+async function runOcr(f){
+  const st=$('#ocrst');$('#ocrres').innerHTML='';$('#ocrgo').hidden=true;
+  try{
+    st.textContent='Kütüphane yükleniyor...';await loadTess();
+    st.textContent='Görsel okunuyor (10-30 sn)...';
+    const r=await Tesseract.recognize(f,'eng',{logger:m=>{if(m.status==='recognizing text')st.textContent='Okunuyor %'+Math.round(m.progress*100)}});
+    const lines=r.data.text.split('\n').map(norm).filter(x=>x.length>=4);
+    const cand=DATA.mods.filter(m=>modRe().test(m.type||'')),hits=new Map();
+    for(const l of [...lines,...lines.slice(1).map((x,i)=>lines[i]+' '+x)]){
+      let best=null,bs=0;
+      for(const m of cand){const n=norm(m.name);if(!n)continue;
+        if(Math.abs(n.length-l.length)>Math.max(4,n.length*.4)&&!l.includes(n))continue;
+        const sc=(l.includes(n)&&n.length>=5)?1:1-lev(l,n)/Math.max(l.length,n.length);
+        if(sc>bs){bs=sc;best=m}}
+      if(best&&bs>=.8&&(hits.get(best.uniqueName)||0)<bs)hits.set(best.uniqueName,bs);
+    }
+    const arr=[...hits].sort((a,b)=>b[1]-a[1]);
+    st.textContent=arr.length?`${arr.length} mod bulundu. Yanlışları işaretten çıkar:`:'Eşleşen mod bulunamadı. Daha net/büyük bir görüntü dene.';
+    $('#ocrres').innerHTML=arr.map(([u,sc])=>`<label><input type="checkbox" data-oc="${esc(u)}" checked> ${esc(M.get(u).name)} <small class="muted">${Math.round(sc*100)}%</small></label>`).join('');
+    $('#ocrgo').hidden=!arr.length;
+  }catch(e){st.textContent='OCR hatası: '+e.message}
+}
+$('#ocrfile').addEventListener('change',e=>{const f=e.target.files[0];if(f)runOcr(f);e.target.value=''});
+$('#ocrgo').addEventListener('click',()=>{
+  let ok=0;document.querySelectorAll('#ocrres [data-oc]:checked').forEach(c=>{const m=M.get(c.dataset.oc),k=m&&autoKey(m);if(k!==null&&k!==undefined&&place(m.uniqueName,k))ok++});
+  renderBuilder();msg(ok+' mod yerleştirildi. Rank maksimum geldi, gerekirse düzelt.');$('#ocrres').innerHTML='';$('#ocrgo').hidden=true;
+});
+init();
+</script>
+</body>
+</html>
