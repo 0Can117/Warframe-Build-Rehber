@@ -113,9 +113,8 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
     <div class="bar" id="bar"><i></i></div>
     <div class="bwrap"><div><div class="slots sp3" id="sp"></div>
-    <div class="slots" id="slots"></div></div><div id="abil"></div></div>
+    <div class="slots" id="slots"></div><div class="arcs" id="arcs"></div></div><div id="abil"></div></div>
     <div id="xs"></div>
-    <div class="arcs" id="arcs"></div>
     <div id="tgtrow"></div>
     <div id="shbox"><h2 style="margin-top:1rem">Archon Shard (Tauforged)</h2><div class="shards" id="shards"></div></div>
     <div id="notebox"><h2 style="margin-top:1rem">Not</h2>
@@ -205,6 +204,7 @@ async function init(){
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
+    IT.set('venari',{uniqueName:'venari',name:'Venari'});IT.set('venariclaws',{uniqueName:'venariclaws',name:'Venari Claws'});IT.set('sevashadow',{uniqueName:'sevashadow',name:"Sevagoth's Shadow"});
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
     misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;
       if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
@@ -300,22 +300,23 @@ function openByName(n){
 }
 const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
 function guessCat(u){
+  if(u==='venari')return 'Companion';if(u==='venariclaws')return 'Companion Weapon';if(u==='sevashadow')return 'Warframe';
   if(DATA.items.Archgun.some(i=>i.uniqueName===u))return 'Archgun';
   const n=IT.get(u)?.name||'';return /Bow|Balefire|Neutralizer|Noctua/.test(n)?'Primary':/Regulators|Pixia/.test(n)?'Secondary':'Melee';
 }
-const exList=()=>{const it=IT.get(S.tgt?S.par.item:S.item);return(S.cat==='Warframe'||S.tgt)&&Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[]};
+const exList=()=>{const it=IT.get(S.tgt?S.par.item:S.item),nm=it?.name||'';if(!(S.cat==='Warframe'||S.tgt))return[];const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[];return ex.concat(/^Khora/.test(nm)?['venari','venariclaws']:/^Sevagoth/.test(nm)?['sevashadow']:[])};
 function enterTgt(u){
   if(S.tgt)leaveTgt();
   S.par=Object.fromEntries(PF.map(k=>[k,S[k]]));
   const e=(S.exs=S.exs||{})[u]||{},it=IT.get(u);
   S.tgt=u;S.item=u;S.cat=e.cat||guessCat(u);S.exn=e.n||'';
   S.slots=e.slots||Array(14).fill(null);S.pols=e.pols||Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
-  S.reactor=e.reactor??true;S.aura=null;S.au2=null;S.ex=e.ex||null;S.st=e.st||null;S.arcs=e.arcs||[];S.elem='';
+  S.reactor=e.reactor??true;S.aura=e.aura||null;S.apol=e.apol||'';S.au2=null;S.ex=e.ex||null;S.st=e.st||null;S.arcs=e.arcs||[];S.elem='';
   S.expol=e.expol??(it?.exilusPolarity||'');S.stpol=e.stpol??(it?.stancePolarity||'');fitArcs();
 }
 function leaveTgt(){
   if(!S.tgt)return;
-  (S.exs=S.exs||{})[S.tgt]={cat:S.cat,n:S.exn||'',slots:S.slots,pols:S.pols,reactor:S.reactor,ex:S.ex,st:S.st,expol:S.expol,stpol:S.stpol,arcs:S.arcs};
+  (S.exs=S.exs||{})[S.tgt]={cat:S.cat,n:S.exn||'',slots:S.slots,pols:S.pols,reactor:S.reactor,aura:S.aura,apol:S.apol,ex:S.ex,st:S.st,expol:S.expol,stpol:S.stpol,arcs:S.arcs};
   Object.assign(S,S.par);S.par=null;S.tgt=null;
 }
 function renderTgt(){
@@ -325,7 +326,7 @@ function renderTgt(){
   box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'Warframe')}</button>`
    +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name)}</button>`).join('')
-   +(S.tgt&&!RO?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +(S.tgt&&!RO&&!['venari','venariclaws','sevashadow'].includes(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>';
 }
 function renderEvo(){
@@ -373,7 +374,7 @@ const SH={
  Emerald:['Toxin durum etkileri +%45 daha fazla hasar','Toxin durum etkisiyle hasar alan düşmandan +3 Can','Corrosion durumlu düşmanlara +%15 Yetenek Hasarı','Corrosion en fazla +3 stack']};
 const SC={Crimson:'#c0443c',Amber:'#d9a441',Azure:'#4c9bd6',Topaz:'#e08a3c',Violet:'#9b6fd1',Emerald:'#4cb07a'};
 function renderShards(){
-  $('#shbox').hidden=S.cat!=='Warframe'||(RO&&!S.shards.some(Boolean));
+  $('#shbox').hidden=S.cat!=='Warframe'||!!S.tgt||(RO&&!S.shards.some(Boolean));
   const opts=Object.keys(SH).map(c=>`<optgroup label="Tauforged ${c}">${SH[c].map((d,i)=>`<option value="${c}|${i}">${c}: ${esc(d)}</option>`).join('')}</optgroup>`).join('');
   $('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],c=v?v.split('|')[0]:'';
     return `<div class="${v?'sf':''}" style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select>${v?`<div class="shd"><b style="color:${SC[c]}">${c}</b> · ${esc(SH[c][+v.split('|')[1]])}</div>`:''}</div>`}).join('');
@@ -398,7 +399,7 @@ function renderList(){
 function renderSaved(){
   const q=($('#bq')?.value||'').trim().toLowerCase();
   const bc=b=>b.cat==='Warframe'?'wf':/^(Primary|Secondary|Melee)$/.test(b.cat)?'wp':/^Companion/.test(b.cat)?'pet':'oth';
-  $('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Petler'],['oth','Diğer']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
+  $('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
   const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q)));
   $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${(()=>{const q=(b.cat==='Zaw'||b.cat==='Kitgun'?Object.values(b.cfgs?.[0]?.d?.parts||{}):[]).filter(Boolean).join(' / ');return q?' · '+esc(q):''})()}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
     <button data-load="${b.id}">Aç</button><button data-share="${b.id}">Bağlantı kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
