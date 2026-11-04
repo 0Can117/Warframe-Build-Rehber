@@ -1,0 +1,331 @@
+[
+  {
+    "id": "bmw23igpz",
+    "name": "Cyte-09",
+    "cname": "",
+    "cat": "Warframe",
+    "item": "/Lotus/Powersuits/Frumentarius/Frumentarius",
+    "note": "",
+    "imgs": [],
+    "riv": [],
+    "pols": [
+      "zenurik",
+      "zenurik",
+      "zenurik",
+      "zenurik",
+      "zenurik",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "apol": "",
+    "a2pol": "",
+    "expol": "",
+    "stpol": "",
+    "shards": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cfgs": [
+      {
+        "n": "Config 1",
+        "d": {
+          "aura": null,
+          "au2": null,
+          "ex": {
+            "u": "/Lotus/Powersuits/Nezha/NezhaDisablePassiveMod",
+            "r": 5
+          },
+          "st": null,
+          "slots": [
+            {
+              "u": "/Lotus/Powersuits/Mag/ShieldRegenAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Necro/TerrorTotemAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Saryn/WeaponPoisonAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Bard/BardCharmAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Ranger/RangerBowAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Frost/IceShieldAugmentTwoCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/OrokinChallenge/OrokinChallengeModCollaboration",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Powersuits/Excalibur/SwordOfDoomAugmentCard",
+              "r": 3
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "arcs": [
+            null,
+            null
+          ],
+          "elem": "",
+          "bonus": 25,
+          "reactor": true,
+          "helm": {},
+          "exs": {},
+          "evo": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "ccap": 60,
+          "cn": 12,
+          "parts": {}
+        }
+      }
+    ]
+  },
+  {
+    "id": "bmw23hrc0",
+    "name": "Acceltra",
+    "cname": "",
+    "cat": "Primary",
+    "item": "/Lotus/Weapons/Tenno/LongGuns/SapientPrimary/SapientPrimaryWeapon",
+    "note": "",
+    "imgs": [],
+    "riv": [],
+    "pols": [
+      "naramon",
+      "madurai",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "apol": "",
+    "a2pol": "",
+    "expol": "madurai",
+    "stpol": "",
+    "shards": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cfgs": [
+      {
+        "n": "Config 1",
+        "d": {
+          "aura": null,
+          "au2": null,
+          "ex": {
+            "u": "/Lotus/Upgrades/Mods/PvPMods/Rifle/SupraHigherAccuracyAiming",
+            "r": 3
+          },
+          "st": null,
+          "slots": [
+            {
+              "u": "/Lotus/Upgrades/Mods/Shotgun/Expert/WeaponImpactDamageModExpert",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/PvPMods/Rifle/MoreDamageonTripleTapRifleMod",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Syndicate/PantheraMod",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Rifle/DualStat/CorruptedReloadSpeedMaxClipRifle",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Syndicate/GrinlokMod",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Rifle/Beginner/WeaponFreezeDamageModBeginner",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/PvPMods/Rifle/FasterBulletJumponHeadshotRifleMod",
+              "r": 3
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "arcs": [
+            null
+          ],
+          "elem": "",
+          "bonus": 25,
+          "reactor": true,
+          "helm": {},
+          "exs": {},
+          "evo": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "ccap": 60,
+          "cn": 12,
+          "parts": {}
+        }
+      }
+    ]
+  },
+  {
+    "id": "bmw23he60",
+    "name": "Ash",
+    "cname": "",
+    "cat": "Warframe",
+    "item": "/Lotus/Powersuits/Ninja/Ninja",
+    "note": "",
+    "imgs": [],
+    "riv": [],
+    "pols": [
+      "zenurik",
+      "zenurik",
+      "",
+      "madurai",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "apol": "zenurik",
+    "a2pol": "",
+    "expol": "",
+    "stpol": "",
+    "shards": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cfgs": [
+      {
+        "n": "Config 1",
+        "d": {
+          "aura": {
+            "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+            "r": 5
+          },
+          "au2": null,
+          "ex": {
+            "u": "/Lotus/Powersuits/Devourer/DevourerBowlAugmentCard",
+            "r": 3
+          },
+          "st": null,
+          "slots": [
+            {
+              "u": "/Lotus/Powersuits/Fairy/FairyLightAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Frost/FrostPassiveAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Powersuits/Garuda/GarudaUnstoppableAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+              "r": 10
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Sets/Boreal/BorealWarframeMod",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Powersuits/Magician/TearInSpaceAugmentCard",
+              "r": 3
+            },
+            {
+              "u": "/Lotus/Upgrades/Mods/Sets/Ashen/AshenCarapaceMod",
+              "r": 5
+            },
+            {
+              "u": "/Lotus/Powersuits/Oraxia/BroodAugmentCard",
+              "r": 3
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "arcs": [
+            null,
+            null
+          ],
+          "elem": "",
+          "bonus": 25,
+          "reactor": true,
+          "helm": {},
+          "exs": {},
+          "evo": [
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "ccap": 60,
+          "cn": 12,
+          "parts": {}
+        }
+      }
+    ]
+  }
+]
