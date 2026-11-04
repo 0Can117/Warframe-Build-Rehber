@@ -82,6 +82,14 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
 .slots.sp3{display:flex;justify-content:center;flex-wrap:wrap}.sp3 .slot{width:150px}.xh{margin:.6rem 0 .2rem;text-align:center;font-size:1rem}
 .ro #elrow,.ro #reactor,.ro label:has(#reactor){display:none}
 #back{display:none}.ro.open #back{display:inline-block;margin-bottom:.6rem}.ro.open #saved{display:none}.intgt #custrow{display:none}
+.shards{grid-template-columns:1fr!important}
+.shards>div{padding:.6rem .8rem!important;background:#1b3a46;border-radius:8px;min-height:96px}
+.shd{font-size:1rem!important;line-height:1.5!important;margin-top:.4rem!important;color:var(--tx)!important}
+.ro #reset{display:none}
+.ro select,.ro input[type=text],.ro input[type=number]{appearance:none;-webkit-appearance:none;background-image:none;border-color:transparent;opacity:1;color:var(--tx)}
+.ro select:disabled,.ro input:disabled{opacity:1;color:var(--tx)}
+.ro .shards select,.ro .aslot:not(.f),.ro .shards>div:not(.sf){display:none}
+.ro #name{font:700 1.2rem Rajdhani,sans-serif;padding-left:0}
 </style>
 </head>
 <body>
@@ -113,7 +121,7 @@ details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-se
       <div class="gal" id="gal"></div></div>
     <div id="rivbox"><h2 style="margin-top:1rem">Riven önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven ekle</button></div>
     <details id="evbox" open><summary>Incarnon evrimleri (elle yaz)</summary><div id="evs"></div></details>
-    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni build</button></div>
+    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni build</button><button id="reset">Tümünü sıfırla</button></div>
   </section>
 
   <section id="browser" class="panel">
@@ -169,7 +177,7 @@ const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
 const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
 const NG=()=>S.cat==='Custom'?(+S.cn||12):XC[S.cat]?.n||8;
-const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&S.cat!=='Archgun')):false;
+const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&S.cat!=='Archgun'&&!(S.tgt&&S.cat==='Melee'))):false;
 const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
 const KEYS=()=>ALLK.filter(hasK);
 const arcSlots=()=>S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];
@@ -217,7 +225,7 @@ function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)
 function fitArcs(){S.arcs=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null})}
 function cleanMods(){for(const k of ALLK){const s=getS(k),m=s&&M.get(s.u);if(m&&(!hasK(k)||!modRe().test(m.type)))setS(k,null)}}
 function selectCat(c){
-  if(S.cat!==c)S.parts={};S.cat=c;const list=DATA.items[c]||[];
+  if(S.cat!==c){S.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cat=c;const list=DATA.items[c]||[];
   if(!list.some(i=>i.uniqueName===S.item)){S.item=list[0]?.uniqueName||null;applyPols()}
   if(!special())S.elem='';
   cleanMods();fitArcs();
@@ -243,7 +251,7 @@ function renderBuilder(){
     return `<div class="slot f ${sp?'sp':''}" data-key="${k}" title="${esc(statsOf(m))}">${pb}<button class="x" data-rm="${k}" aria-label="Kaldır">×</button><div><img src="${IMG+esc(m.imageName)}" alt="" loading="lazy" draggable="false"><b>${esc(m.name)}</b></div>
       <span class="pol">mod: ${esc(m.polarity||'-')}</span><label>Rank <input type="number" min="0" max="${maxRank(m)}" value="${s.r}" data-rank="${k}"></label></div>`};
   renderNote();
-  $('#sp').innerHTML=['aura','au2','ex','st'].filter(hasK).map(cell).join('');
+  $('#sp').innerHTML=['aura','au2',...(S.cat==='Melee'?['st','ex']:['ex','st'])].filter(hasK).map(cell).join('');
   $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
   $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh">${n} (kapasite kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
   $('#custrow').hidden=S.cat!=='Custom';$('#cname').value=S.cname||'';$('#cn').value=S.cn;$('#ccap').value=S.ccap;
@@ -253,12 +261,13 @@ function renderBuilder(){
   if(RO)document.querySelectorAll('#builder input,#builder select').forEach(n=>n.disabled=true);
 }
 const baseP=k=>{const it=IT.get(S.item);return (typeof k==='number'?it?.polarities?.[k]:it?.[{aura:'auraPolarity',ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
-const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun')d.parts={};S.cfgs[S.ci].d=d};
+const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
 function loadCfg(i,skip){
   if(!skip)stash();S.ci=i;S.shards=Array(5).fill(null);S.helm={};S.exs={};S.evo=['','','','',''];S.ccap=60;S.cn=12;S.au2=null;S.a2pol='';S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));
   S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};fitArcs();
 }
 function renderCfg(){
+  if(RO&&S.cfgs.length<2){$('#cfgrow').innerHTML='';return}
   $('#cfgrow').innerHTML=S.cfgs.map((c,i)=>`<button data-cfg="${i}" class="${i===S.ci?'on':''}">${esc(c.n)}</button>`).join('')
    +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(S.cfgs[S.ci].n)}" aria-label="Config adı"><button data-cfgdel="1">Sil</button>`);
 }
@@ -308,10 +317,10 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  box.innerHTML='<h2 style="margin-top:.8rem">Exalted silahlar</h2><div class="row">'
+  box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'Warframe')}</button>`
    +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name)}</button>`).join('')
-   +(S.tgt?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +(S.tgt&&!RO?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>'+(S.tgt?`<h2>${esc(IT.get(S.tgt).name)}</h2>`:'');
 }
 function renderEvo(){
@@ -334,10 +343,10 @@ const SH={
  Emerald:['Toxin durum etkileri +%45 daha fazla hasar','Toxin durum etkisiyle hasar alan düşmandan +3 Can','Corrosion durumlu düşmanlara +%15 Yetenek Hasarı','Corrosion en fazla +3 stack']};
 const SC={Crimson:'#c0443c',Amber:'#d9a441',Azure:'#4c9bd6',Topaz:'#e08a3c',Violet:'#9b6fd1',Emerald:'#4cb07a'};
 function renderShards(){
-  $('#shbox').hidden=S.cat!=='Warframe';
+  $('#shbox').hidden=S.cat!=='Warframe'||(RO&&!S.shards.some(Boolean));
   const opts=Object.keys(SH).map(c=>`<optgroup label="Tauforged ${c}">${SH[c].map((d,i)=>`<option value="${c}|${i}">${c}: ${esc(d)}</option>`).join('')}</optgroup>`).join('');
   $('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],c=v?v.split('|')[0]:'';
-    return `<div style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select>${v?`<div class="shd">${esc(SH[c][+v.split('|')[1]])}</div>`:''}</div>`}).join('');
+    return `<div class="${v?'sf':''}" style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}" aria-label="Shard ${i+1}"><option value="">Shard ${i+1}: boş</option>${opts.replace(`value="${v}"`,`value="${v}" selected`)}</select>${v?`<div class="shd"><b style="color:${SC[c]}">${c}</b> · ${esc(SH[c][+v.split('|')[1]])}</div>`:''}</div>`}).join('');
 }
 function renderNote(){
   $('#note').value=S.note||'';$('#note').readOnly=RO;
@@ -517,6 +526,7 @@ $('#save').addEventListener('click',()=>{
   const b=cur();S.id=b.id;if(!b.name)b.name=S.name=(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'Build');
   const i=saved.findIndex(x=>x.id===b.id);i<0?saved.unshift(b):saved[i]=b;persist();renderAll();msg('Build kaydedildi.')
 });
+$('#reset').addEventListener('click',()=>{if(!confirm('Bu build\'deki tüm seçimler, configler, not ve görseller sıfırlanacak. Devam?'))return;S=blank();selectCat('Warframe');renderAll();msg('Build sıfırlandı. Kaydetmediysen kayıtlı hali değişmedi.')});
 $('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);renderAll();msg('')});
 $('#exp').addEventListener('click',()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(saved,null,2)],{type:'application/json'}));a.download='builds.json';a.click()
