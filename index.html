@@ -127,6 +127,12 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 .card{background:linear-gradient(180deg,#221846,#170f2d);border-radius:10px}
 .riv,.shards>div{border-radius:10px}
 .pb.fm{background:linear-gradient(180deg,#f5d98a,#c9962f);color:#1b1405}
+.abh{font:700 .8rem Rajdhani,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);text-align:center}
+.abrow{display:flex;align-items:center;gap:.3rem}.abn{font:700 .95rem Rajdhani,sans-serif;color:var(--gold);width:1.1rem;text-align:right}.abrow .ab{flex:1}
+#abil{width:116px}.ro #abil{align-self:center}
+#linkpop{position:absolute;bottom:calc(100% + 4px);left:0;right:0;z-index:20;display:flex;flex-direction:column;gap:.2rem;background:#120d20;border:1px solid var(--gold);border-radius:10px;padding:.3rem;box-shadow:0 8px 24px #000c;max-height:220px;overflow:auto}
+#linkpop[hidden]{display:none}#linkpop button{text-align:left;text-transform:none;letter-spacing:0;font-family:inherit}
+#prevb{margin-bottom:.6rem}
 </style>
 </head>
 <body>
@@ -135,6 +141,7 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 <div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
 <main>
   <section id="builder" class="panel">
+    <button id="prevb" data-prevb="1" hidden>← Önceki Build'e Dön</button>
     <button id="back" data-back="1">← Kayıtlı buildlere dön</button>
     <h2>Build</h2>
     <div class="row topbar"><button data-fwd="save" class="pri">Kaydet</button><button data-fwd="new">Yeni build</button><button data-fwd="reset">Tümünü sıfırla</button><button data-fwd="autof">Oto forma</button></div>
@@ -153,7 +160,7 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
     <div id="tgtrow"></div>
     <div id="shbox"><h2 style="margin-top:1rem">Archon Shards</h2><div class="shards" id="shards"></div></div>
     <div id="notebox"><h2 style="margin-top:1rem">Not</h2>
-      <textarea id="note" rows="4" placeholder="Build notu. Başka build'e köprü için [[Build adı]] yaz."></textarea><div id="notev" class="notev"></div>
+      <div id="notewrap" style="position:relative"><div id="linkpop" hidden></div><textarea id="note" rows="4" placeholder="Build notu. Başka build'e köprü için [[Build adı]] yaz."></textarea></div><div id="notev" class="notev"></div>
       <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı ekle</button><button id="addfile">Görsel yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
       <div class="gal" id="gal"></div></div>
     <div id="rivbox"><h2 style="margin-top:1rem">Riven önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven ekle</button></div>
@@ -214,6 +221,7 @@ const ADMIN=(()=>{try{const a=new URLSearchParams(location.search).get('admin');
 const RO=!ADMIN;document.body.classList.toggle('ro',RO);
 const openView=()=>{if(RO)document.body.classList.add('open')};
 let saved=[];if(ADMIN)try{saved=JSON.parse(localStorage.getItem('builds')||'[]')}catch(e){}
+const navStack=[];
 let CM=[];if(ADMIN)try{CM=JSON.parse(localStorage.getItem('cmods')||'[]')}catch(e){}
 const saveCM=()=>{if(RO)return;try{localStorage.setItem('cmods',JSON.stringify(CM))}catch(e){}};
 let CMD=[];if(ADMIN)try{CMD=JSON.parse(localStorage.getItem('cmodsdel')||'[]')}catch(e){}
@@ -286,7 +294,7 @@ function selectCat(c){
 
 function renderAll(){renderBuilder();renderList();renderSaved();renderCm()}
 function renderBuilder(){
-  $('#cats').innerHTML=CATS.map(c=>`<button data-cat="${c}" class="${c===S.cat?'on':''}">${c}</button>`).join('');
+  $('#prevb').hidden=!navStack.length;$('#cats').innerHTML=CATS.map(c=>`<button data-cat="${c}" class="${c===S.cat?'on':''}">${c}</button>`).join('');
   $('#item').innerHTML=(DATA.items[S.cat]||[]).map(i=>`<option value="${esc(i.uniqueName)}" ${i.uniqueName===S.item?'selected':''}>${esc(i.name)}</option>`).join('');
   $('#name').value=S.name;$('#reactor').checked=S.reactor;
   $('#elrow').hidden=!special();
@@ -336,8 +344,8 @@ function renderCfg(){
 function renderAbil(){
   const it=IT.get(S.item),box=$('#abil');
   if(S.cat!=='Warframe'||!it?.abilities){box.innerHTML='';return}
-  box.innerHTML=it.abilities.slice(0,4).map((a,i)=>{const h=AB.get(S.helm[i]),x=h||a;
-    return `<button class="ab ${h?'sw':''}" data-ab="${i}" title="${esc(x.description||'')}"><img src="${IMG+esc(x.imageName)}" alt="" draggable="false">${h?`<s>${esc(a.name)}</s><b>${esc(h.name)}</b>`:`<span>${esc(a.name)}</span>`}</button>`}).join('')
+  box.innerHTML='<div class="abh">Yetenekler</div>'+it.abilities.slice(0,4).map((a,i)=>{const h=AB.get(S.helm[i]),x=h||a;
+    return `<div class="abrow"><span class="abn">${i+1}.</span><button class="ab ${h?'sw':''}" data-ab="${i}" title="${esc(x.description||'')}"><img src="${IMG+esc(x.imageName)}" alt="" draggable="false">${h?`<s>${esc(a.name)}</s><b>${esc(h.name)}</b>`:`<span>${esc(a.name)}</span>`}</button></div>`}).join('')
    +(abPick!==null?`<select id="hsel"><option value="">Orijinal</option>${[...AB.values()].filter(x=>x.own!==it.name).sort((a,b)=>a.name.localeCompare(b.name)).map(x=>`<option value="${esc(x.uniqueName)}">${esc(x.name)} (${esc(x.own)})</option>`).join('')}</select>`:'');
 }
 function renderRiv(){
@@ -353,7 +361,7 @@ function openByName(n){
   const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());
   if(!b){msg('Build bulunamadı: '+n);return}
   if(ADMIN&&!confirm('Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
-  loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
+  if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
 }
 const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
 function guessCat(u){
@@ -453,6 +461,13 @@ function syncCM(){
 function renderCm(){
   const b=$('#cmlist');if(!b)return;
   b.innerHTML=CM.map(c=>`<div class="bl"><span><b>${esc(c.name)}</b> <small class="muted">${CK[c.ck]} · ${esc(c.polarity||'nötr')} · drain ${c.drain} · rank ${c.rank}${c.desc?' · '+esc(c.desc):''}</small></span><button data-cmdel="${c.id}">Sil</button></div>`).join('');
+}
+function linkSuggest(ta){
+  const pop=$('#linkpop'),m=ta.value.slice(0,ta.selectionStart).match(/\[\[([^\]\n]*)$/);
+  if(!m||RO){pop.hidden=true;return}
+  const q=m[1].toLowerCase(),names=[...new Set(saved.map(b=>b.name).filter(Boolean))].filter(n=>n.toLowerCase().includes(q)&&n!==S.name).slice(0,8);
+  if(!names.length){pop.hidden=true;return}
+  pop.innerHTML=names.map(n=>`<button type="button" data-lk="${esc(n)}">${esc(n)}</button>`).join('');pop.hidden=false;
 }
 const SH={
  Crimson:['+%15 Yetenek Gücü','+%15 Yetenek Süresi','+%37.5 Yakın Dövüş Kritik Hasarı','+%37.5 Birincil Durum Şansı','+%37.5 İkincil Kritik Şansı'],
@@ -591,7 +606,7 @@ document.addEventListener('click',e=>{
   const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();openByName(bl.dataset.bl);return}
   if(e.target.matches('#gal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&d.bc===undefined)return;
+  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined)return;
   if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build olarak başladı, önceki kayıt korundu.')}selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod);
@@ -601,9 +616,12 @@ document.addEventListener('click',e=>{
   else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);renderAll()}
   else if(d.cdel){S.cn=Math.max(1,(+S.cn||12)-1);cleanMods();renderAll()}
   else if(d.cmdel){CM=CM.filter(c=>c.id!==d.cmdel);if(!CMD.includes(d.cmdel))CMD.push(d.cmdel);saveCMD();saveCM();syncCM();renderAll();msg('Custom mod silindi.')}
+  else if(d.lk!==undefined){const ta=$('#note'),pos=ta.selectionStart??ta.value.length,pre=ta.value.slice(0,pos),m=pre.match(/\[\[([^\]\n]*)$/);
+    if(m){const ins='[['+d.lk+']]';S.note=pre.slice(0,m.index)+ins+ta.value.slice(pos);renderNote();const np=m.index+ins.length;ta.focus();ta.setSelectionRange(np,np)}$('#linkpop').hidden=true}
+  else if(d.prevb){const id=navStack.pop(),b=saved.find(x=>x.id===id);if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}else renderBuilder()}
   else if(d.fwd){$('#'+d.fwd).click()}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
-  else if(d.back){document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
+  else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
   else if(d.cfg!==undefined){if(S.tgt){tgtSave();tgtLoad(+d.cfg)}else loadCfg(+d.cfg);renderBuilder()}
   else if(d.cfgadd){if(S.tgt){tgtSave();const e=S.exs[S.tgt];e.cfgs.push({n:'Config '+(e.cfgs.length+1),d:JSON.parse(JSON.stringify(e.cfgs[e.ci].d))});tgtLoad(e.cfgs.length-1)}else{stash();const c=JSON.parse(JSON.stringify(S.cfgs[S.ci].d));S.cfgs.push({n:'Config '+(S.cfgs.length+1),d:c});loadCfg(S.cfgs.length-1)}renderBuilder()}
@@ -615,7 +633,7 @@ document.addEventListener('click',e=>{
   else if(d.rmst!==undefined){const [i,j]=d.rmst.split('.').map(Number);S.riv[i].st.splice(j,1);renderNote()}
   else if(d.rmimg!==undefined){S.imgs.splice(+d.rmimg,1);renderNote()}
   else if(d.rmarc!==undefined){S.arcs[+d.rmarc]=null;renderBuilder()}
-  else if(d.load){const b=saved.find(x=>x.id===d.load);if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}}
+  else if(d.load){const b=saved.find(x=>x.id===d.load);if(b){navStack.length=0;loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}}
   else if(d.del){saved=saved.filter(x=>x.id!==d.del);persist();renderSaved()}
   else if(d.share){const b=saved.find(x=>x.id===d.share);if(!b)return;const u=link(b);
     (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Bağlantı kopyalandı.')).catch(()=>prompt('Bağlantı:',u))}
@@ -666,7 +684,8 @@ $('#file').addEventListener('change',async e=>{
   e.target.value='';
 });
 function shrink(f){return new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.75))};im.onerror=bad;im.src=r.result};r.onerror=bad;r.readAsDataURL(f)})}
-$('#note').addEventListener('input',e=>{if(!RO)S.note=e.target.value});
+$('#note').addEventListener('input',e=>{if(!RO){S.note=e.target.value;linkSuggest(e.target)}});
+document.addEventListener('click',e=>{if(!e.target.closest('#linkpop,#note'))$('#linkpop').hidden=true});
 $('#addurl').addEventListener('click',()=>{const v=$('#imgurl').value.trim();if(!v)return;S.imgs.push(v);$('#imgurl').value='';renderNote()});
 $('#addfile').addEventListener('click',()=>$('#imgfile').click());
 $('#imgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{S.imgs.push(await shrink(f))}catch(err){msg('Görsel okunamadı: '+f.name)}}e.target.value='';renderNote()});
