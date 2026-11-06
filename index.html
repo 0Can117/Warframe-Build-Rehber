@@ -182,7 +182,13 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 </head>
 <body>
 <header><h1>Build Rehberi</h1></header>
-<div class="row" id="admtop" style="max-width:1300px;margin:auto;padding:.4rem 1rem"><button data-fwd="exp">builds.json İndir</button><button data-fwd="imp">JSON İçe Aktar</button><button data-fwd="adminoff">Yönetici Modundan Çık</button></div>
+<div class="row" id="admtop" style="max-width:1300px;margin:auto;padding:.4rem 1rem">
+  <button data-fwd="exp">builds.json İndir</button>
+  <button data-fwd="imp">JSON İçe Aktar</button>
+  <button data-ghsync="1" class="pri">GitHub'a Gönder</button>
+  <button data-ghset="1">GitHub Ayarları</button>
+  <button data-fwd="adminoff">Yönetici Modundan Çık</button>
+</div>
 <div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
 <main>
   <section id="builder" class="panel">
@@ -342,6 +348,23 @@ async function init(){
     const h=location.hash.match(/^#b=(.+)$/);
     if(h){try{loadBuild(JSON.parse(decodeURIComponent(escape(atob(h[1])))));openView()}catch(e){msg('Paylaşım bağlantısı okunamadı.')}}
     selectCat(S.cat);renderAll();
+    
+    // Canlı otomatik güncelleme (Sadece Ready-Only için)
+    if(RO){
+      setInterval(async()=>{
+        try{
+          const r=await fetch('builds.json?'+Date.now());
+          if(r.ok){
+            const pub=await r.json();
+            const pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]);
+            if(JSON.stringify(pb)!==JSON.stringify(saved)){
+              saved=pb; renderSaved();
+              if(S.id){ const updated=saved.find(x=>x.id===S.id); if(updated){ loadBuild(updated); renderAll(); } }
+            }
+          }
+        }catch(e){}
+      }, 30000); // 30 saniyede bir
+    }
   }catch(e){msg('Veri alınamadı: '+e.message+'. Sayfa GitHub Pages üzerinden ya da yerel dosya olarak açılmalı; Claude önizlemesi dış bağlantıları engelleyebilir.')}
 }
 function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.ceil(d*1.25)}return neg?-d:d}
@@ -993,6 +1016,16 @@ document.addEventListener('click',e=>{
     else{msg('Önceki build bulunamadı (paylaşım linkinden açılmış olabilir).');renderBuilder()}
   }
   else if(d.fwd){$('#'+d.fwd).click()}
+  else if(d.ghsync){syncToGitHub()}
+  else if(d.ghset){
+    const repo=prompt('GitHub Repo (örnek: kullanici/repo):',localStorage.getItem('gh_repo')||'');
+    if(repo!==null)localStorage.setItem('gh_repo',repo.trim());
+    const branch=prompt('Branch (varsayılan main):',localStorage.getItem('gh_branch')||'main');
+    if(branch!==null)localStorage.setItem('gh_branch',branch.trim()||'main');
+    const token=prompt('GitHub PAT (Personal Access Token):',localStorage.getItem('gh_token')||'');
+    if(token!==null)localStorage.setItem('gh_token',token.trim());
+    msg('GitHub ayarları kaydedildi.');
+  }
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
@@ -1106,7 +1139,52 @@ $('#cmsave').addEventListener('click',()=>{
   CM.unshift({id:'c'+Date.now().toString(36),name:n,ck:$('#cmkind').value,polarity:$('#cmpol').value,drain:Math.min(30,Math.abs(+$('#cmdrain').value||0)),rank:Math.max(0,Math.min(30,+$('#cmrank').value||0)),desc:$('#cmdesc').value.trim()});
   saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Custom mod kaydedildi, listenin başında.');
 });
+
+async function syncToGitHub(){
+  const token = localStorage.getItem('gh_token');
+  const repo = localStorage.getItem('gh_repo');
+  const branch = localStorage.getItem('gh_branch') || 'main';
+  if(!token || !repo){ msg('GitHub ayarları eksik. Lütfen sağ üstten ayarları yapın.'); return; }
+  
+  const content = JSON.stringify({builds: saved, cmods: CM}, null, 2);
+  const b64content = btoa(unescape(encodeURIComponent(content)));
+  const url = `https://api.github.com/repos/${repo}/contents/builds.json?ref=${branch}`;
+  
+  try{
+    msg('GitHub ile senkronize ediliyor...');
+    let sha = '';
+    const getRes = await fetch(url, {headers: {Authorization: `token ${token}`}});
+    if(getRes.ok){
+      const data = await getRes.json();
+      sha = data.sha;
+    }
+    
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'Builds auto-sync from admin panel',
+        content: b64content,
+        sha: sha || undefined,
+        branch: branch
+      })
+    });
+    
+    if(putRes.ok){
+      msg('Builds başarıyla GitHub\'a yüklendi ve yayına alındı.');
+    } else {
+      const err = await putRes.json();
+      msg('Hata: ' + (err.message || 'Bilinmeyen hata'));
+    }
+  }catch(e){
+    msg('Hata: ' + e.message);
+  }
+}
+
 init();
 </script>
 </body>
-</html>
+  </html>
