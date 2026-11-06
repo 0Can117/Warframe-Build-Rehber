@@ -135,9 +135,6 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 #prevb{margin-bottom:.6rem}
 .slot .x,.aslot .x{right:6px;top:6px;width:26px;height:26px;padding:0;border-radius:50%;background:#ff6b7a;color:#fff;font-size:1.15rem;line-height:1;border:0;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:2}
 .slot.f .pb{width:calc(100% - 34px)}.abh{padding-left:1.4rem}
-/* --- arcane yuvası ortalaması --- */
-.aslot:not(.f){display:flex;align-items:center;justify-content:center}
-.aslot:not(.f) .muted{text-align:center;width:100%}
 </style>
 </head>
 <body>
@@ -271,11 +268,6 @@ async function init(){
       if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
     [ZP.Strike,ZP.Grip,ZP.Link,KP.Chamber,KP.Grip.Primary,KP.Grip.Secondary,KP.Loader].forEach(a=>a.sort());
     DATA.items.Warframe.forEach(w=>(w.abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:w.name})));
-    // Sirius & Orion için özel kayıtlar
-    IT.set('sirius',{uniqueName:'sirius',name:'Sirius'});
-    IT.set('orion',{uniqueName:'orion',name:'Orion'});
-    DATA.items.Warframe.push({uniqueName:'sirius',name:'Sirius'},{uniqueName:'orion',name:'Orion'});
-    DATA.items.Warframe.sort((a,b)=>a.name.localeCompare(b.name));
     msg('');
     let pub=[];try{const r=await fetch('builds.json?'+Date.now());if(r.ok)pub=await r.json()}catch(e){}
     const pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]),pc=Array.isArray(pub?.cmods)?pub.cmods:[];
@@ -335,9 +327,7 @@ function renderBuilder(){
 const AUP={madurai:'Ash Atlas Banshee Chroma Cyte-09 Ember Garuda Koumei Mag Mesa Nidus Nokko Oberon Oraxia Rhino Titania Uriel Valkyr Volt Wukong Yareli',vazarin:'Frost Gara Khora Qorvex Saryn Trinity Voruna Zephyr Follie Jade',naramon:'Baruuk Caliban Citrine Equinox Gauss Grendel Gyre Harrow Hildryn Hydroid Inaros Ivara Kullervo Lavos Limbo Loki Mirage Nezha Nova Nyx Octavia Revenant Styanax Temple Vauban Wisp Xaku',omni:'Dante Protea'};
 function auraPol(n){
   if(/^Sevagoth (Prime )?Shadow/.test(n)||/^Excalibur (Prime|Umbra)/.test(n))return 'madurai';
-  if(/Sirius & Orion/i.test(n))return 'omni';
-  if(/^Dagath/i.test(n))return 'zenurik';
-  if(/^Narin/i.test(n))return 'naramon';
+  if(/Sirius|Orion/.test(n))return 'omni';
   const b=n.replace(/ (Prime|Umbra)$/,'');
   for(const k in AUP)if(AUP[k].split(' ').includes(b))return k;
   return '';
@@ -378,15 +368,13 @@ function openByName(n){
 }
 const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
 function guessCat(u){
-  if(u==='sirius'||u==='orion')return 'Warframe';
   if(u.startsWith('claw:'))return 'Companion Weapon';if(u==='sevashadowp')return 'Warframe';if(u==='venari')return 'Companion';if(u==='venariclaws')return 'Companion Weapon';if(u==='sevashadow')return 'Warframe';
   if(DATA.items.Archgun.some(i=>i.uniqueName===u))return 'Archgun';
   const n=IT.get(u)?.name||'';return /Bow|Balefire|Neutralizer|Noctua|Arquebex/.test(n)?'Primary':/Regulators|Pixia/.test(n)?'Secondary':'Melee';
 }
 const exList=()=>{
-  const pc=S.tgt?S.par.cat:S.cat, pi=S.tgt?S.par.item:S.item, it=IT.get(pi), nm=it?.name||'';
+  const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
   if(!['Warframe','Companion','Necramech'].includes(pc))return[];
-  if(pc==='Warframe' && /Sirius & Orion/i.test(nm)) return ['sirius','orion'];
   const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[];
   if(pc==='Warframe'&&/^Sevagoth/.test(nm))return[/Prime/.test(nm)?'sevashadowp':'sevashadow',...ex];
   if(pc==='Warframe'&&/^Khora/.test(nm))return[...ex,'venari','venariclaws'];
