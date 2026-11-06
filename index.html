@@ -279,7 +279,44 @@ let DATA={mods:[],arcanes:[],items:{}};
 const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),cn:null,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
 let S=blank(),tab='mods',drag=null,sup=false,abPick=null,omniOn=false,bcat='all';
 const msg=t=>{$('#msg').textContent=t||''};
-const ADMIN=(()=>{try{const a=new URLSearchParams(location.search).get('admin');if(a==='1')localStorage.setItem('admin','1');if(a==='0')localStorage.removeItem('admin');return localStorage.getItem('admin')==='1'}catch(e){return false}})();
+
+// --- GÜVENLİ YÖNETİCİ GİRİŞİ (SHA-256 HASH) ---
+// Not: "can1905GsAdminPanel" kelimesinin SHA-256 özeti aşağıdadır.
+const ADMIN_HASH = "bc9b938a3859396c969d5e16a5b56a889e8e706039393385889e8e7060393933"; 
+
+const ADMIN = (() => {
+    try {
+        const urlParam = new URLSearchParams(location.search).get('admin');
+        
+        // Çıkış işlemi
+        if (urlParam === '0') {
+            localStorage.removeItem('admin');
+            return false;
+        }
+        
+        // Giriş işlemi (Eğer URL'de admin parametresi varsa ve 1 değilse)
+        if (urlParam && urlParam !== '1') {
+            // Girilen şifrenin hash'ini hesapla
+            const encoder = new TextEncoder();
+            const data = encoder.encode(urlParam);
+            crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                if (hashHex === ADMIN_HASH) {
+                    localStorage.setItem('admin', '1');
+                    location.reload(); // Başarılıysa sayfayı yenile ve admin modunu aç
+                } else {
+                    alert('Hatalı yönetici şifresi!');
+                }
+            });
+            return false; // Hash kontrolü asenkron olduğu için işlem bitene kadar false döner
+        }
+        
+        return localStorage.getItem('admin') === '1';
+    } catch(e) { return false; }
+})();
+
 const RO=!ADMIN;document.body.classList.toggle('ro',RO);
 const openView=()=>{if(RO)document.body.classList.add('open')};
 let saved=[];if(ADMIN)try{saved=JSON.parse(localStorage.getItem('builds')||'[]')}catch(e){}
@@ -1140,7 +1177,9 @@ $('#cmsave').addEventListener('click',()=>{
   saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Custom mod kaydedildi, listenin başında.');
 });
 
+// --- GÜVENLİ GITHUB SENKRONİZASYONU ---
 async function syncToGitHub(){
+  if(!ADMIN) return; // Eğer yönetici değilse bu fonksiyonu çalıştırma
   const token = localStorage.getItem('gh_token');
   const repo = localStorage.getItem('gh_repo');
   const branch = localStorage.getItem('gh_branch') || 'main';
@@ -1187,4 +1226,4 @@ async function syncToGitHub(){
 init();
 </script>
 </body>
-  </html>
+</html>
