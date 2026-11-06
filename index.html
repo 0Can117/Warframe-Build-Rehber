@@ -45,8 +45,10 @@ button.on{border-color:var(--gold);color:var(--gold)}
 .card{text-align:left;border-radius:6px;padding:.45rem;font-size:.85rem;min-height:62px}
 .card small{display:block;color:var(--mu)}
 .arcs{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
-.aslot{min-height:64px;border:1px dashed var(--ln);border-radius:8px;padding:.4rem;font-size:.85rem;position:relative}
-.aslot.f{border:1px solid var(--gold)}.aslot img{width:34px;height:34px;float:left;margin-right:.4rem}
+.aslot{min-height:64px;border:1px dashed var(--ln);border-radius:8px;padding:.4rem;font-size:.85rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.2rem}
+.aslot.f{border:1px solid var(--gold)}
+.aslot img{width:34px;height:34px;float:none;margin:0}
+.aslot b,.aslot span{display:block;width:100%;text-align:center}
 .aslot .x{position:absolute;right:2px;top:2px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid #5a4690;border-radius:50%;background:#0b0813ee;color:#f2cf74;font:700 1.15rem/1 Rajdhani,sans-serif;cursor:pointer;z-index:2}
 .aslot .x:hover{border-color:var(--gold);color:#fff;background:#2d1b55}
 .slot.sp,.sp3 .slot{border-color:var(--gold)}.sp3{grid-template-columns:repeat(3,1fr);margin-bottom:0}
@@ -153,7 +155,7 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
     <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya silah"></select></div>
     <div class="row" id="cfgrow"></div>
     <div id="partbox"></div>
-    <div class="row" id="custrow" hidden><input type="text" id="cname" placeholder="Custom item adı"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button><label>Yuva sayısı <input type="number" id="cn" min="1" max="14" style="width:5rem"></label><label>Kapasite <input type="number" id="ccap" min="0" max="999" style="width:5rem"></label></div>
+    <div class="row" id="custrow" hidden><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button><label>Yuva sayısı <input type="number" id="cn" min="1" max="14" style="width:5rem"></label><label>Kapasite <input type="number" id="ccap" min="0" max="999" style="width:5rem"></label></div>
     <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
     <div class="row"><input type="text" id="name" placeholder="Build adı"><label><input type="checkbox" id="reactor" checked> Reaktör/katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
@@ -201,7 +203,7 @@ const IMG='https://cdn.warframestat.us/img/';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CATS=['Warframe','Primary','Secondary','Melee','Archgun','Archmelee','Zaw','Kitgun','Companion','Companion Weapon','Necramech','K-Drive','Railjack','Custom'];
-const XC={Companion:{n:8,re:/^Companion Mod/},'Companion Weapon':{n:8,re:/^(Primary|Secondary|Melee|Pistol|Rifle|Shotgun|Bow|Sniper|Companion|Posture) Mod/},Necramech:{n:12,re:/^Necramech Mod/},'K-Drive':{n:8,re:/^K-Drive Mod/},Railjack:{n:8,aura:true,re:/^(Plexus|Railjack) Mod/},Custom:{n:12,re:/./}};
+const XC={Companion:{n:10,re:/^Companion Mod/},'Companion Weapon':{n:8,re:/^(Primary|Secondary|Melee|Pistol|Rifle|Shotgun|Bow|Sniper|Companion|Posture) Mod/},Necramech:{n:12,re:/^Necramech Mod/},'K-Drive':{n:8,re:/^K-Drive Mod/},Railjack:{n:8,aura:true,re:/^(Plexus|Railjack) Mod/},Custom:{n:12,re:/./}};
 const MODRE={Warframe:/^Warframe Mod/,Primary:/^(Primary|Shotgun|Rifle|Bow|Sniper) Mod/,Secondary:/^(Secondary|Pistol) Mod/,Melee:/^(Melee|Stance) Mod/,Archgun:/^Arch-Gun Mod/,Archmelee:/^Arch-Melee Mod/,Zaw:/^Melee Mod/};
 const ARC={Warframe:/^Warframe Arcane/,Primary:/^(Primary|Shotgun|Bow) Arcane/,Secondary:/^Secondary Arcane/,Melee:/^Melee Arcane/,Zaw:/^Zaw Arcane/,Kitgun:/^Kitgun Arcane/};
 const SL={Warframe:['Warframe','Warframe'],Primary:['Primary'],Secondary:['Secondary'],Melee:['Melee'],Archgun:['Primary','Secondary'],Archmelee:['Melee','Melee'],Necramech:['Warframe','Warframe'],Zaw:['Melee','Zaw']};
@@ -261,9 +263,10 @@ async function init(){
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
     const wfList=wf.filter(i=>i.type==='Warframe').slice();
     if(!wfList.some(i=>i.uniqueName==='siriusorion'))wfList.unshift({uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe'});
+    const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,
       Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],
-      Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:wf.filter(i=>i.type==='Necramech'),'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
+      Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
@@ -331,9 +334,9 @@ function renderBuilder(){
   $('#sp').innerHTML=['aura','au2',...(S.cat==='Melee'?['st','ex']:['ex','st'])].filter(hasK).map(cell).join('');
   $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
   $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh"><span class="en">${n}</span> (kapasite kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
-  $('#custrow').hidden=S.cat!=='Custom';$('#cname').value=S.cname||'';$('#cn').value=S.cn;$('#ccap').value=S.ccap;
+  $('#custrow').hidden=S.cat!=='Custom';if(S.cat==='Custom'){$('#cn').value=S.cn;$('#ccap').value=S.ccap;}
   $('#arcs').innerHTML=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);
-    return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b lang="en">${esc(a.name)}</b><br><span class="muted">${t}</span></div>`
+    return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b lang="en">${esc(a.name)}</b><span class="muted">${t}</span></div>`
       :`<div class="aslot" data-ai="${i}"><span class="muted">${t} Arcane</span></div>`}).join('');
   if(RO)document.querySelectorAll('#builder input,#builder select').forEach(n=>n.disabled=true);
 }
@@ -650,7 +653,7 @@ document.addEventListener('click',e=>{
   else if(d.arc)addArc(d.arc);
   else if(d.pol!==undefined){const k=pk(d.pol);setP(k,omniOn?'omni':POLS[(POLS.indexOf(getP(k))+1)%POLS.length]);renderBuilder()}
   else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
-  else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);renderAll()}
+  else if(d.cadd){S.cn=Math.min(14,(+S.cn||12)+1);cleanMods();renderAll()}
   else if(d.cdel){S.cn=Math.max(1,(+S.cn||12)-1);cleanMods();renderAll()}
   else if(d.cmdel){CM=CM.filter(c=>c.id!==d.cmdel);if(!CMD.includes(d.cmdel))CMD.push(d.cmdel);saveCMD();saveCM();syncCM();renderAll();msg('Custom mod silindi.')}
   else if(d.lk!==undefined){const ta=$('#note'),pos=ta.selectionStart??ta.value.length,pre=ta.value.slice(0,pos),m=pre.match(/\[\[([^\]\n]*)$/);
@@ -679,7 +682,6 @@ document.addEventListener('change',e=>{
   const t=e.target;
   if(t.dataset.sh!==undefined){S.shards[+t.dataset.sh]=t.value||null;renderShards();return}
   if(t.dataset.pol!==undefined){setP(pk(t.dataset.pol),t.value);renderBuilder();return}
-  if(t.id==='cname'){S.cname=t.value.trim();renderAll();return}
   if(t.id==='cn'){S.cn=Math.max(1,Math.min(14,+t.value||12));cleanMods();renderAll();return}
   if(t.id==='ccap'){S.ccap=Math.max(0,+t.value||0);renderBuilder();return}
   if(t.id==='exn'){S.exn=t.value.trim();renderTgt();return}
