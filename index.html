@@ -213,6 +213,7 @@ const ELEMS=['Impact','Heat','Cold','Electricity','Toxin','Magnetic','Radiation'
 const M=new Map(),A=new Map(),IT=new Map(),AB=new Map();
 const PO=['pols','apol','a2pol','expol','stpol'];
 const CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts','cn'];
+const RIVCAT=['Primary','Secondary','Melee','Zaw','Kitgun','Archgun','Archmelee'];
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
  ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
  melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
@@ -238,11 +239,16 @@ const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]];
 const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
 const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
-const NG=()=>(+S.cn)||XC[S.cat]?.n||8;
-const hasK=k=>typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
+/* Necramech'in exalted silahı: 8 yuva, aura/arcane/exilus/stance yok */
+const isNecExalt=()=>!!S.tgt&&S.par?.cat==='Necramech';
+const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
+const hasK=k=>{
+  if(isNecExalt())return typeof k==='number'?k<8:false;
+  return typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
+};
 const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
 const KEYS=()=>ALLK.filter(hasK);
-const arcSlots=()=>{let a=S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];if(S.tgt&&S.par?.cat==='Necramech'&&a.length===1)a=[a[0],a[0]];return a};
+const arcSlots=()=>{if(isNecExalt())return[];let a=S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];if(S.tgt&&S.par?.cat==='Necramech'&&a.length===1)a=[a[0],a[0]];return a};
 const modRe=()=>S.cat==='Custom'?/./:(XC[S.cat]?XC[S.cat].re:S.cat==='Kitgun'?(S.item==='kg-s'?MODRE.Secondary:MODRE.Primary):MODRE[S.cat]);
 const special=()=>/\b(Kuva|Tenet|Coda)\b/.test(IT.get(S.item)?.name||'');
 const statsOf=m=>{const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):(m.description||'')};
@@ -269,15 +275,9 @@ async function init(){
     DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     IT.set('venari',{uniqueName:'venari',name:'Venari'});IT.set('venariclaws',{uniqueName:'venariclaws',name:'Venari Claws'});IT.set('sevashadow',{uniqueName:'sevashadow',name:'Sevagoth Shadow'});IT.set('sevashadowp',{uniqueName:'sevashadowp',name:'Sevagoth Prime Shadow'});
-    IT.set('siriusorion',{uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe',
-      polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],
-      auraPolarity:'naramon',exilusPolarity:'naramon'});
-    IT.set('sirius',{uniqueName:'sirius',name:'Sirius',type:'Warframe',
-      polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],
-      auraPolarity:'naramon',exilusPolarity:'naramon'});
-    IT.set('orion',{uniqueName:'orion',name:'Orion',type:'Warframe',
-      polarities:['madurai','madurai','naramon','naramon','','','','','','','','','',''],
-      auraPolarity:'madurai',exilusPolarity:'naramon'});
+    IT.set('siriusorion',{uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe',polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],auraPolarity:'naramon',exilusPolarity:'naramon'});
+    IT.set('sirius',{uniqueName:'sirius',name:'Sirius',type:'Warframe',polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],auraPolarity:'naramon',exilusPolarity:'naramon'});
+    IT.set('orion',{uniqueName:'orion',name:'Orion',type:'Warframe',polarities:['madurai','madurai','naramon','naramon','','','','','','','','','',''],auraPolarity:'madurai',exilusPolarity:'naramon'});
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
     misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;
@@ -301,7 +301,7 @@ function calc(){
   return{cap,used}
 }
 function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=S.cat==='Warframe'?auraPol(it?.name||''):'';S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||''}
-function fitArcs(){S.arcs=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null})}
+function fitArcs(){const sl=arcSlots();S.arcs=sl.length?sl.map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null}):[]}
 function cleanMods(){for(const k of ALLK){const s=getS(k),m=s&&M.get(s.u);if(m&&(!hasK(k)||(!m.custom&&!modRe().test(m.type))))setS(k,null)}}
 function selectCat(c){
   const changed=S.cat!==c;
@@ -334,6 +334,7 @@ function renderBuilder(){
   $('#sp').innerHTML=['aura','au2',...(S.cat==='Melee'?['st','ex']:['ex','st'])].filter(hasK).map(cell).join('');
   $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
   $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh"><span lang="en">${n}</span> (Kapasite Kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
+  $('#custrow').hidden=isNecExalt();
   $('#arcs').innerHTML=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);
     return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b lang="en">${esc(a.name)}</b><span class="muted">${t}</span></div>`
       :`<div class="aslot" data-ai="${i}"><span class="muted">${t} Arcane</span></div>`}).join('');
@@ -382,7 +383,8 @@ function renderRiv(){
 function openByName(n){
   const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());
   if(!b){msg('Build bulunamadı: '+n);return}
-  if(ADMIN&&!confirm('Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
+  const warn=S.tgt?'Exalted formundaki değişiklikler kaybolacak. ':'';
+  if(ADMIN&&!confirm(warn+'Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
   if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
 }
 const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor','cn'];
@@ -417,7 +419,6 @@ function tgtLoad(i){
   const keepShards=S.shards.slice();
   e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;
   S.aura=d.aura||null;S.au2=null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';
-  /* Exalted için yuva sayısını kategorisine göre sabitle */
   S.cn=d.cn||XC[S.cat]?.n||8;
   S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');
   S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');
@@ -512,7 +513,7 @@ const SH={
  Emerald:['Toxin durum etkileri +%45 daha fazla hasar','Toxin durum etkisiyle hasar alan düşmandan +3 Can','Corrosion durumlu düşmanlara +%15 Yetenek Hasarı','Corrosion en fazla +3 stack']};
 const SC={Crimson:'#c0443c',Amber:'#e0b04a',Azure:'#4c9bd6',Topaz:'#e08a3c',Violet:'#9b6fd1',Emerald:'#4cb07a'};
 function renderShards(){
-  const box=$('#shbox');box.hidden=S.cat!=='Warframe'||!!S.tgt||(RO&&!S.shards.some(Boolean));
+  const box=$('#shbox');box.hidden=S.cat!=='Warframe'||!!S.tgt||isNecExalt()||(RO&&!S.shards.some(Boolean));
   if(box.hidden)return;
   const optsFor=v=>Object.keys(SH).map(c=>`<optgroup label="Tauforged ${c}">${SH[c].map((d,i)=>{const val=`${c}|${i}`;return `<option value="${val}" ${val===v?'selected':''}>${c}: ${esc(d)}</option>`}).join('')}</optgroup>`).join('');
   $('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],c=v?v.split('|')[0]:'';
@@ -522,13 +523,13 @@ function renderNote(){
   $('#note').value=S.note||'';$('#note').readOnly=RO;
   $('#notebox').hidden=RO&&!S.note&&!S.imgs.length;
   $('#notev').innerHTML=esc(S.note).replace(/\n/g,'<br>').replace(/\[\[([^\]]+)\]\]/g,(m,n)=>`<a href="#" data-bl="${n}">${n}</a>`);
-  $('#rivbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.riv.length);renderRiv();
+  $('#rivbox').hidden=isNecExalt()||!RIVCAT.includes(S.cat)||(RO&&!S.riv.length);renderRiv();
   $('#gal').innerHTML=S.imgs.map((u,i)=>`<figure><img src="${esc(u)}" alt="Build görseli" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-rmimg="${i}" aria-label="Görseli Kaldır">×</button></figure>`).join('');
 }
 function renderList(){
   const q=$('#q').value.trim().toLowerCase();let rows;
   if(tab==='mods')rows=DATA.mods.filter(m=>(m.custom||modRe().test(m.type||''))&&(!q||m.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));
-  else{const sl=arcSlots();rows=DATA.arcanes.filter(a=>sl.some(t=>ARC[t].test(a.type||''))&&(!q||a.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name))}
+  else{const sl=arcSlots();rows=sl.length?DATA.arcanes.filter(a=>sl.some(t=>ARC[t].test(a.type||''))&&(!q||a.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name)):[]}
   const total=rows.length;rows=rows.slice(0,150);
   $('#list').innerHTML=rows.map(m=>`<button class="card" lang="en" data-${tab==='mods'?'mod':'arc'}="${esc(m.uniqueName)}" title="${esc(statsOf(m))}">
     ${m.imageName?`<img src="${IMG+esc(m.imageName)}" alt="" loading="lazy" draggable="false">`:''}<b>${esc(m.name)}</b>
@@ -572,8 +573,8 @@ function swap(a,b){
   if(mx&&canPlace(mx,b)&&(!my||canPlace(my,a))){setS(a,y);setS(b,x)}else msg('Bu mod bu yuvaya takılamaz.');
 }
 function placeArc(u,i){
-  const a=A.get(u),t=arcSlots()[i];
-  if(!a||!ARC[t].test(a.type||'')){msg('Bu arcane bu yuvaya takılamaz.');return false}
+  const a=A.get(u),sl=arcSlots(),t=sl[i];
+  if(!t||!a||!ARC[t].test(a.type||'')){msg('Bu arcane bu yuvaya takılamaz.');return false}
   if(S.arcs.some((x,j)=>x===u&&j!==i)){msg('Aynı arcane iki kez takılamaz.');return false}
   msg('');S.arcs[i]=u;return true;
 }
@@ -603,6 +604,7 @@ function loadBuild(b){
   if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}
   selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};
   if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(/^Jade/.test(n0)&&!S.a2pol)S.a2pol='omni'}
+  try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}
 }
 const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
 const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
@@ -649,7 +651,7 @@ document.addEventListener('click',e=>{
   if(e.target.matches('#gal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
   if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined)return;
-  if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build olarak başladı, önceki kayıt korundu.')}selectCat(d.cat);renderAll()}
+  if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build olarak başladı, önceki kayıt korundu.')}if(d.cat!==S.cat)navStack.length=0;selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod);
   else if(d.arc)addArc(d.arc);
@@ -660,7 +662,11 @@ document.addEventListener('click',e=>{
   else if(d.cmdel){CM=CM.filter(c=>c.id!==d.cmdel);if(!CMD.includes(d.cmdel))CMD.push(d.cmdel);saveCMD();saveCM();syncCM();renderAll();msg('Custom mod silindi.')}
   else if(d.lk!==undefined){const ta=$('#note'),pos=ta.selectionStart??ta.value.length,pre=ta.value.slice(0,pos),m=pre.match(/\[\[([^\]\n]*)$/);
     if(m){const ins='[['+d.lk+']]';S.note=pre.slice(0,m.index)+ins+ta.value.slice(pos);renderNote();const np=m.index+ins.length;ta.focus();ta.setSelectionRange(np,np)}$('#linkpop').hidden=true}
-  else if(d.prevb){const id=navStack.pop(),b=saved.find(x=>x.id===id);if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}else renderBuilder()}
+  else if(d.prevb){
+    const id=navStack.pop(),b=saved.find(x=>x.id===id);
+    if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}
+    else{msg('Önceki build bulunamadı (paylaşım linkinden açılmış olabilir).');renderBuilder()}
+  }
   else if(d.fwd){$('#'+d.fwd).click()}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
@@ -710,8 +716,8 @@ $('#save').addEventListener('click',()=>{
   const i=saved.findIndex(x=>x.id===b.id);i<0?saved.unshift(b):saved[i]=b;persist();renderAll();msg('Build kaydedildi.')
 });
 $('#autof').addEventListener('click',()=>{autoForma();renderBuilder()});
-$('#reset').addEventListener('click',()=>{if(!confirm('Bu build\'deki tüm seçimler, configler, not ve görseller sıfırlanacak. Devam?'))return;S=blank();selectCat('Warframe');renderAll();msg('Build sıfırlandı. Kaydetmediysen kayıtlı hali değişmedi.')});
-$('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);renderAll();msg('')});
+$('#reset').addEventListener('click',()=>{if(!confirm('Bu build\'deki tüm seçimler, configler, not ve görseller sıfırlanacak. Devam?'))return;S=blank();selectCat('Warframe');navStack.length=0;history.replaceState(null,'',location.pathname+location.search);renderAll();msg('Build sıfırlandı. Kaydetmediysen kayıtlı hali değişmedi.')});
+$('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);navStack.length=0;history.replaceState(null,'',location.pathname+location.search);renderAll();msg('')});
 $('#exp').addEventListener('click',()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({builds:saved,cmods:CM},null,2)],{type:'application/json'}));a.download='builds.json';a.click()
 });
@@ -739,4 +745,4 @@ $('#cmsave').addEventListener('click',()=>{
 init();
 </script>
 </body>
-</html>
+  </html>
