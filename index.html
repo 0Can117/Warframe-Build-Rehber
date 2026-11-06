@@ -375,7 +375,11 @@ function loadCfg(i,skip){
 }
 function renderCfg(){
   const e=S.tgt?S.exs[S.tgt]:null,L=e?e.cfgs:S.cfgs,ci=e?e.ci:S.ci;
-  $('#cfgrow').innerHTML=L.map((c,i)=>`<button data-cfg="${i}" class="${i===ci?'on':''}">${esc(c.n||('Config '+(i+1)))}</button>`).join('')
+  $('#cfgrow').innerHTML=L.map((c,i)=>{
+    const name=esc(c.n||('Config '+(i+1)));
+    if(RO||i===ci)return `<button data-cfg="${i}" class="${i===ci?'on':''}">${name}</button>`;
+    return `<span style="display:inline-flex;margin:0;gap:0"><button data-cfg="${i}" style="border-radius:6px 0 0 6px">${name}</button><button data-cfgcopy="${i}" title="Bu config'in içeriğini mevcut config'e kopyala" style="padding:0 .45rem;font-size:.9rem;border-left:0;border-radius:0 6px 6px 0">⧉</button></span>`;
+  }).join('')
    +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}" aria-label="Config Adı"><button data-cfgdel="1">Sil</button>`);
 }
 function renderAbil(){
@@ -708,6 +712,26 @@ document.addEventListener('click',e=>{
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
   else if(d.cfg!==undefined){if(S.tgt){tgtSave();tgtLoad(+d.cfg)}else loadCfg(+d.cfg);renderBuilder()}
+  else if(d.cfgcopy!==undefined){
+    const srcIdx=+d.cfgcopy;
+    const isTgt=!!S.tgt;
+    const L=isTgt?S.exs[S.tgt].cfgs:S.cfgs;
+    const srcD=L[srcIdx].d;
+    if(!srcD){msg('Kaynak config boş, kopyalanacak bir şey yok.');return}
+    if(!confirm(`"${L[srcIdx].n||('Config '+(srcIdx+1))}" içeriği mevcut config'e kopyalanacak. Mevcut içerik silinecek. Devam?`))return;
+    if(isTgt){
+      tgtSave();
+      const e=S.exs[S.tgt];
+      e.cfgs[e.ci].d=JSON.parse(JSON.stringify(srcD));
+      tgtLoad(e.ci);
+    }else{
+      stash();
+      S.cfgs[S.ci].d=JSON.parse(JSON.stringify(srcD));
+      loadCfg(S.ci,true);
+    }
+    renderBuilder();
+    msg('Config kopyalandı.');
+  }
   else if(d.cfgadd){if(S.tgt){tgtSave();const e=S.exs[S.tgt];e.cfgs.push({n:'Config '+(e.cfgs.length+1),d:JSON.parse(JSON.stringify(e.cfgs[e.ci].d))});tgtLoad(e.cfgs.length-1)}else{stash();const c=JSON.parse(JSON.stringify(S.cfgs[S.ci].d));S.cfgs.push({n:'Config '+(S.cfgs.length+1),d:c});loadCfg(S.cfgs.length-1)}renderBuilder()}
   else if(d.cfgdel){if(S.tgt){const e=S.exs[S.tgt];if(e.cfgs.length<2){msg('En az bir config kalmalı.');return}e.cfgs.splice(e.ci,1);tgtLoad(0)}else{if(S.cfgs.length<2){msg('En az bir config kalmalı.');return}S.cfgs.splice(S.ci,1);loadCfg(0,true)}renderBuilder()}
   else if(d.omni){omniOn=!omniOn;t.classList.toggle('on',omniOn);t.textContent='Omni Forma Modu: '+(omniOn?'Açık (Polarite Rozetine Dokun)':'Kapalı')}
