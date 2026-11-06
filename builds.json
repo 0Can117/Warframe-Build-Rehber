@@ -41,7 +41,7 @@
         "claw:/Lotus/Types/Friendly/Pets/CreaturePets/ArmoredInfestedCatbrowPetPowerSuit": {
           "cfgs": [
             {
-              "n": "Config 1",
+              "n": "Pençe",
               "d": {
                 "slots": [
                   {
@@ -340,8 +340,8 @@
               null
             ],
             "arcs": [
-              null,
-              null
+              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
             ],
             "elem": "",
             "bonus": 25,
