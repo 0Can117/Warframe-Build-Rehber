@@ -86,7 +86,7 @@ textarea{width:100%;font:inherit;color:var(--tx);background:#0b0813;border:1px s
 details summary{cursor:pointer;margin-top:1rem;font:700 1.25rem Rajdhani,sans-serif}
 .slots.sp3{display:flex;justify-content:center;flex-wrap:wrap}.sp3 .slot{width:150px}.xh{margin:.6rem 0 .2rem;text-align:center;font-size:1rem}
 .ro #elrow,.ro #reactor,.ro label:has(#reactor){display:none}
-#back{display:none}.ro.open #back{display:inline-block;margin-bottom:.6rem}.ro.open #saved{display:none}.intgt #custrow{display:none}
+#back{display:none}.ro.open #back{display:inline-block;margin-bottom:.6rem}.ro.open #saved{display:none}
 .shards{grid-template-columns:1fr!important}
 .shards>div{padding:.6rem .8rem!important;background:#241a3d;border-radius:8px;min-height:96px}
 .shd{font-size:1rem!important;line-height:1.5!important;margin-top:.4rem!important;color:var(--tx)!important}
@@ -212,7 +212,7 @@ const ZP={Strike:[],Grip:[],Link:[]},KP={Chamber:[],Grip:{Primary:[],Secondary:[
 const ELEMS=['Impact','Heat','Cold','Electricity','Toxin','Magnetic','Radiation'];
 const M=new Map(),A=new Map(),IT=new Map(),AB=new Map();
 const PO=['pols','apol','a2pol','expol','stpol'];
-const CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts'];
+const CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts','cn'];
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
  ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
  melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
@@ -353,7 +353,8 @@ function auraPol(n){
 const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?auraPol(n):'';if(k==='au2')return S.cat==='Warframe'&&/^Jade/.test(n)?'omni':'';return (typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
 const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
 function loadCfg(i,skip){
-  if(!skip)stash();const keep=[...PO,'shards','exs','cn'].map(k=>[k,S[k]]);S.ci=i;S.helm={};S.evo=['','','','',''];S.au2=null;if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));keep.forEach(([k,v])=>S[k]=v);
+  if(!skip)stash();const keep=[...PO,'shards','exs'].map(k=>[k,S[k]]);S.ci=i;S.helm={};S.evo=['','','','',''];S.au2=null;if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};Object.assign(S,JSON.parse(JSON.stringify(S.cfgs[i].d||{})));keep.forEach(([k,v])=>S[k]=v);
+  if(!S.cn)S.cn=XC[S.cat]?.n||8;
   S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.helm=S.helm||{};fitArcs();
 }
 function renderCfg(){
@@ -384,7 +385,7 @@ function openByName(n){
   if(ADMIN&&!confirm('Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
   if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
 }
-const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor'];
+const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor','cn'];
 function guessCat(u){
   if(u.startsWith('claw:'))return 'Companion Weapon';
   if(u==='sevashadowp'||u==='sevashadow'||u==='sirius'||u==='orion')return 'Warframe';
@@ -398,14 +399,13 @@ const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
   if(pi==='siriusorion')return['sirius','orion'];
   if(!['Warframe','Companion','Necramech'].includes(pc))return[];
-  /* Mausolon Exalted listesinden kesin olarak çıkarılır (o bir Arch-Gun, exalted silah değil) */
   const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)&&!/^Mausolon$/i.test(IT.get(u)?.name||'')):[];
   if(pc==='Warframe'&&/^Sevagoth/.test(nm))return[/Prime/.test(nm)?'sevashadowp':'sevashadow',...ex];
   if(pc==='Warframe'&&/^Khora/.test(nm))return[...ex,'venari','venariclaws'];
   if(pc==='Companion'&&IT.get('claw:'+pi))return['claw:'+pi];
   return ex;
 };
-const EF=['slots','reactor','aura','ex','st','arcs'];
+const EF=['slots','reactor','aura','ex','st','arcs','cn'];
 function tgtNorm(u){
   let e=(S.exs=S.exs||{})[u];
   if(!e)e={cfgs:[{n:'Config 1',d:null}],ci:0};
@@ -417,6 +417,8 @@ function tgtLoad(i){
   const keepShards=S.shards.slice();
   e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;
   S.aura=d.aura||null;S.au2=null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';
+  /* Exalted için yuva sayısını kategorisine göre sabitle */
+  S.cn=d.cn||XC[S.cat]?.n||8;
   S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');
   S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');
   S.shards=keepShards;
@@ -684,7 +686,7 @@ document.addEventListener('change',e=>{
   if(t.dataset.pol!==undefined){setP(pk(t.dataset.pol),t.value);renderBuilder();return}
   if(t.id==='exn'){S.exn=t.value.trim();renderTgt();return}
   if(t.dataset.part!==undefined){S.parts[t.dataset.part]=t.value;renderParts();return}
-  if(t.id==='excat'){S.cat=t.value;cleanMods();renderAll();return}
+  if(t.id==='excat'){S.cat=t.value;S.cn=XC[S.cat]?.n||8;cleanMods();renderAll();return}
   if(t.id==='hsel'){if(t.value)S.helm[abPick]=t.value;else delete S.helm[abPick];abPick=null;renderAbil();return}
   if(t.id==='cfgname'){const e=S.tgt?S.exs[S.tgt]:null;(e?e.cfgs[e.ci]:S.cfgs[S.ci]).n=t.value.trim()||'Config';renderCfg();return}
   if(t.dataset.rivn!==undefined){S.riv[+t.dataset.rivn].n=t.value;return}
