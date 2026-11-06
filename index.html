@@ -140,23 +140,46 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 #prevb{margin-bottom:.6rem}
 
 /* CONFIG BUTONLARI İÇİN GÜNCELLENMİŞ CSS */
-#cfgrow{justify-content:center!important;gap:1rem!important;margin-bottom:1.5rem!important}
-#cfgrow button{font-size:1.1rem!important;padding:0.6rem 1.2rem!important;text-align:center!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:130px}
-#cfgrow button.on{border:2px solid var(--gold)!important;box-shadow:0 0 12px rgba(224,176,74,0.4)!important;font-size:1.15rem!important}
-#cfgrow #cfgname{flex:0 0 auto;width:140px;min-width:auto;font-size:0.95rem!important}
-#itembtn{text-align:left;flex:1;min-width:140px}
-#buildlistro{margin-bottom:.7rem;padding:.5rem;background:#150f24;border:1px solid var(--ln);border-radius:8px;max-height:400px;overflow:auto}
-#buildlistro h2{font-size:1.1rem;margin-bottom:.5rem}
-#buildlistro button{display:block;width:100%;text-align:left;margin-bottom:.3rem;padding:.5rem .7rem}
-#stats-panel{margin:.6rem 0;padding:.6rem .8rem;background:linear-gradient(180deg,#1d1538,#150f24);border:1px solid var(--ln);border-radius:8px;display:none;text-align:center}
-#stats-panel.on{display:block}
-#stats-panel .stats-title{font:700 1.05rem Rajdhani,system-ui,sans-serif;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid var(--ln)}
-.stat-row{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:1rem;padding:.2rem 0;justify-content:center}
-.stat-lbl{color:var(--mu);font-weight:700;margin-right:.2rem}
-.el-chip{padding:.25rem .7rem;border-radius:5px;font-weight:700;font-size:.95rem;color:#0b0813;text-shadow:none;box-shadow:inset 0 -1px 0 rgba(0,0,0,.2)}
-.wf-stat{color:var(--mu);font-size:.95rem}
-.wf-stat b{color:var(--gold);font-weight:700;margin-left:.25rem}
-.wf-stat.capped{color:var(--cy)}
+#cfgrow { 
+  justify-content: center !important; 
+  gap: 0.75rem !important; 
+  margin-bottom: 1rem !important; 
+  margin-top: 0.5rem !important;
+  width: 100%;
+}
+#cfgrow button { 
+  font-size: 1.05rem !important; 
+  padding: 0.5rem 1rem !important; 
+  text-align: center !important; 
+  display: flex !important; 
+  align-items: center !important; 
+  justify-content: center !important; 
+  min-width: 110px; 
+}
+#cfgrow button.on { 
+  border: 2px solid var(--gold) !important; 
+  box-shadow: 0 0 12px rgba(224,176,74,0.4) !important; 
+  font-size: 1.1rem !important;
+}
+#cfgrow #cfgname { 
+  flex: 0 0 auto; 
+  width: 130px; 
+  min-width: auto; 
+  font-size: 0.95rem !important; 
+}
+#itembtn { text-align: left; flex: 1; min-width: 140px; }
+#buildlistro { margin-bottom: .7rem; padding: .5rem; background: #150f24; border: 1px solid var(--ln); border-radius: 8px; max-height: 400px; overflow: auto; }
+#buildlistro h2 { font-size: 1.1rem; margin-bottom: .5rem; }
+#buildlistro button { display: block; width: 100%; text-align: left; margin-bottom: .3rem; padding: .5rem .7rem; }
+#stats-panel { margin: .6rem 0; padding: .6rem .8rem; background: linear-gradient(180deg, #1d1538, #150f24); border: 1px solid var(--ln); border-radius: 8px; display: none; text-align: center; }
+#stats-panel.on { display: block; }
+#stats-panel .stats-title { font: 700 1.05rem Rajdhani, system-ui, sans-serif; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; padding-bottom: .3rem; border-bottom: 1px solid var(--ln); }
+.stat-row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; font-size: 1rem; padding: .2rem 0; justify-content: center; }
+.stat-lbl { color: var(--mu); font-weight: 700; margin-right: .2rem; }
+.el-chip { padding: .25rem .7rem; border-radius: 5px; font-weight: 700; font-size: .95rem; color: #0b0813; text-shadow: none; box-shadow: inset 0 -1px 0 rgba(0,0,0,.2); }
+.wf-stat { color: var(--mu); font-size: .95rem; }
+.wf-stat b { color: var(--gold); font-weight: 700; margin-left: .25rem; }
+.wf-stat.capped { color: var(--cy); }
 </style>
 </head>
 <body>
@@ -172,15 +195,22 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
     <div class="row" id="cats"></div>
     <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya Silah"></select><button id="itembtn" hidden></button></div>
     <div id="buildlistro" hidden></div>
-    <div class="row" id="cfgrow"></div>
     <div id="partbox"></div>
     <div class="row" id="custrow"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button></div>
     <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus Element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
     <div class="row"><label><input type="checkbox" id="reactor" checked> Reaktör/Katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
     <div class="bar" id="bar"><i></i></div>
-    <div class="bwrap"><div><div class="slots sp3" id="sp"></div>
-    <div class="slots" id="slots"></div><div id="stats-panel"></div><div class="arcs" id="arcs"></div></div><div id="abil"></div></div>
+    
+    <!-- bwrap içine cfgrow eklendi -->
+    <div class="bwrap"><div>
+      <div class="row" id="cfgrow"></div>
+      <div class="slots sp3" id="sp"></div>
+      <div class="slots" id="slots"></div>
+      <div id="stats-panel"></div>
+      <div class="arcs" id="arcs"></div>
+    </div><div id="abil"></div></div>
+    
     <div id="xs"></div>
     <div id="tgtrow"></div>
     <div id="shbox"><h2 style="margin-top:1rem">Archon Shards</h2><div class="shards" id="shards"></div></div>
