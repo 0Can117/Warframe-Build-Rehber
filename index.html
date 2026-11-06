@@ -138,9 +138,12 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 #linkpop{position:absolute;bottom:calc(100% + 4px);left:0;right:0;z-index:20;display:flex;flex-direction:column;gap:.2rem;background:#120d20;border:1px solid var(--gold);border-radius:10px;padding:.3rem;box-shadow:0 8px 24px #000c;max-height:220px;overflow:auto}
 #linkpop[hidden]{display:none}#linkpop button{text-align:left;letter-spacing:0;font-family:inherit}
 #prevb{margin-bottom:.6rem}
-#cfgrow{justify-content:center!important}
-#cfgrow button{font-weight:700}
-#cfgrow #cfgname{flex:0 0 auto;width:140px;min-width:auto}
+
+/* CONFIG BUTONLARI İÇİN GÜNCELLENMİŞ CSS */
+#cfgrow{justify-content:center!important;gap:1rem!important;margin-bottom:1.5rem!important}
+#cfgrow button{font-size:1.1rem!important;padding:0.6rem 1.2rem!important;text-align:center!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:130px}
+#cfgrow button.on{border:2px solid var(--gold)!important;box-shadow:0 0 12px rgba(224,176,74,0.4)!important;font-size:1.15rem!important}
+#cfgrow #cfgname{flex:0 0 auto;width:140px;min-width:auto;font-size:0.95rem!important}
 #itembtn{text-align:left;flex:1;min-width:140px}
 #buildlistro{margin-bottom:.7rem;padding:.5rem;background:#150f24;border:1px solid var(--ln);border-radius:8px;max-height:400px;overflow:auto}
 #buildlistro h2{font-size:1.1rem;margin-bottom:.5rem}
@@ -546,9 +549,9 @@ function renderCfg(){
   $('#cfgrow').innerHTML=L.map((c,i)=>{
     const name=esc(c.n||('Config '+(i+1)));
     if(RO||i===ci)return `<button data-cfg="${i}" class="${i===ci?'on':''}">${name}</button>`;
-    return `<span style="display:inline-flex;margin:0;gap:0"><button data-cfg="${i}" style="border-radius:6px 0 0 6px">${name}</button><button data-cfgcopy="${i}" title="Bu config'in içeriğini mevcut config'e kopyala" style="padding:0 .45rem;font-size:.9rem;border-left:0;border-radius:0 6px 6px 0">⧉</button></span>`;
+    return `<span style="display:inline-flex;margin:0;gap:0;"><button data-cfg="${i}" style="border-radius:6px 0 0 6px;">${name}</button><button data-cfgcopy="${i}" title="Bu config'in içeriğini mevcut config'e kopyala" style="padding:0 .45rem;font-size:.9rem;border-left:0;border-radius:0 6px 6px 0;">⧉</button></span>`;
   }).join('')
-   +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}" aria-label="Config Adı"><button data-cfgdel="1">Sil</button>`);
+   +(RO?'':`<button data-cfgadd="1" title="Config ekle" style="min-width:auto; padding:0.6rem 1rem;">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}" aria-label="Config Adı"><button data-cfgdel="1" style="min-width:auto; padding:0.6rem 1rem;">Sil</button>`);
 }
 function renderAbil(){
   const it=IT.get(S.item),box=$('#abil');
