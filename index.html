@@ -375,6 +375,17 @@ function getModElements(m){
   let match;while((match=re.exec(stats)))els.push(match[1]);
   return els;
 }
+function getModPrimaryEls(m){return getModElements(m).filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e))}
+function getModSecondaryEls(m){return getModElements(m).filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e))}
+function getInnateEls(){
+  const it=IT.get(S.item);if(!it)return[];
+  const dmg=it.damage||{};
+  const els=[];
+  ['heat','cold','electricity','toxin','blast','radiation','magnetic','viral','corrosive','gas'].forEach(k=>{
+    if(dmg[k]&&dmg[k]>0)els.push(k.charAt(0).toUpperCase()+k.slice(1));
+  });
+  return els;
+}
 function getModAbilityBonus(m){
   const stats=getModLastStats(m);
   const result={str:0,dur:0,range:0,eff:0};
@@ -411,23 +422,36 @@ function renderStats(){
   if(convEl){
     combined=[{name:convEl}];
   }else{
-    const baseEls=[];
+    const primaryModEls=[];
+    const secondaryModEls=[];
     for(const k of [0,1,2,3,4,5,6,7]){
       const s=getS(k),m=s&&M.get(s.u);
       if(!m)continue;
-      getModElements(m).forEach(e=>{if(['Heat','Cold','Electricity','Toxin'].includes(e))baseEls.push(e)});
+      getModPrimaryEls(m).forEach(e=>primaryModEls.push(e));
+      getModSecondaryEls(m).forEach(e=>secondaryModEls.push(e));
     }
-    const used=new Set();
-    for(let i=0;i<baseEls.length;i++){
-      if(used.has(i))continue;
+    const innateEls=getInnateEls();
+    const innateSecondary=innateEls.filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e));
+    const innatePrimary=innateEls.filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e));
+    const valEl=(special()&&S.elem)?[S.elem]:[];
+    const allPrimary=[...primaryModEls,...innatePrimary,...valEl];
+    const usedPrimary=new Set();
+    const comboPairs=[];
+    for(let i=0;i<allPrimary.length;i++){
+      if(usedPrimary.has(i))continue;
       let didCombo=false;
-      for(let j=i+1;j<baseEls.length;j++){
-        if(used.has(j))continue;
-        const key=baseEls[i]+'|'+baseEls[j];
-        if(combo[key]){combined.push({name:combo[key]});used.add(i);used.add(j);didCombo=true;break}
+      for(let j=i+1;j<allPrimary.length;j++){
+        if(usedPrimary.has(j))continue;
+        const key=allPrimary[i]+'|'+allPrimary[j];
+        if(combo[key]){comboPairs.push(combo[key]);usedPrimary.add(i);usedPrimary.add(j);didCombo=true;break}
       }
-      if(!didCombo&&!used.has(i))combined.push({name:baseEls[i]});
+      if(!didCombo&&!usedPrimary.has(i))comboPairs.push(allPrimary[i]);
     }
+    const seen=new Set();
+    [...innateSecondary,...secondaryModEls,...comboPairs].forEach(e=>{
+      if(!seen.has(e)){seen.add(e);combined.push({name:e})}
+    });
+    if(!combined.length&&allPrimary.length)combined=allPrimary.map(e=>({name:e}));
   }
   const wf={str:100,dur:100,range:100,eff:100};
   for(const k of [0,1,2,3,4,5,6,7]){
@@ -990,8 +1014,8 @@ document.addEventListener('change',e=>{
   if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
 });
 $('#item').addEventListener('change',e=>{const nv=e.target.value;if(S.id){const c=S.cat;S=blank();S.cat=c;msg('Yeni build olarak başladı, önceki kayıt korundu.')}S.item=nv;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
-$('#elem').addEventListener('change',e=>{S.elem=e.target.value});
-$('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus});
+$('#elem').addEventListener('change',e=>{S.elem=e.target.value;renderStats()});
+$('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus;renderStats()});
 $('#reactor').addEventListener('change',e=>{S.reactor=e.target.checked;renderBuilder()});
 $('#q').addEventListener('input',renderList);
 $('#save').addEventListener('click',()=>{
