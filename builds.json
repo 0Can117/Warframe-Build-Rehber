@@ -1001,7 +1001,7 @@
         "",
         ""
       ],
-      "apol": "vazarin",
+      "apol": "omni",
       "a2pol": "",
       "expol": "zenurik",
       "stpol": "",
@@ -1448,6 +1448,80 @@
             "reactor": true,
             "helm": {
               "2": "/Lotus/Powersuits/Runner/Abilities/RunnerTransferAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Shield Gate",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/FixedShieldAndShieldGatingDuration",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedDurationRangeWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/BrokenFrame/Abilities/BrokenRotAbility"
             },
             "evo": [
               "",
