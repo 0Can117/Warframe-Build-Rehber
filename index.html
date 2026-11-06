@@ -686,7 +686,7 @@ function guessCat(u){
   if(u==='venariclaws')return 'Companion Weapon';
   if(DATA.items.Archgun.some(i=>i.uniqueName===u))return 'Archgun';
   const n=IT.get(u)?.name||'';
-  return /Bow|Balefire|Neutralizer|Noctua|Arquebex/.test(n)?'Primary':/Regulators|Pixia/.test(n)?'Secondary':'Melee';
+  return /Bow|Balefire|Neutralizer|Noctua|Arquebex/.test(n)?'Primary':/Regulators|Pixia|Glory/.test(n)?'Secondary':'Melee';
 }
 const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
