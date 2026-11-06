@@ -1,6 +1,1322 @@
 {
   "builds": [
     {
+      "id": "bmw59w60l",
+      "name": "Citrine Prime",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Geode/CitrinePrime",
+      "note": "-1 düşmanları işaretler ve bu düşmanalr enerji-sağlık küresi düşürür 3ü çalıştırır\n-2 hasar azaltma ve can yenileme sağlar\n-3 prisma ile düşmanlara statü uygular, alanda iken size statü şansı ve süresi buffı verir, Prismatic Companion ile bu küreyi petiniz taşır\n-4 düşmanları kristal ile sabitler kristale vurduğunuzda o düşmanda kritik şansınız artar ve augment sayesinde yayılır\n-Molt Efficiency yerine Arcane Concentration kullanabilirsiniz hangisi rahatsa sizin için onu kullanın\n\nHuras Kubrow ile oynamanızı tavsiye ederim(görünmezlik ve dps sağlar): ⁠Huras Kubrow alternatif olarak panzerde olabilir. Buildler: [[Panzer Vulpaphyla]] --- [[Huras Kubrow]]\n__\n1. Build genel kullanıma uygunudr silah bazlı oynarsınız tank olursunuz, huras kubrow görünmez yapar silah kullanmadan da 1 3 4 ile sürekli görünmez de oynayabilirsiniz\n\n2. buildde 4te nokko takılı, 4 atıp 3 ve 2 ile buff verebilirsiniz sabit farm oyunlarında iyidir cyte ile vs. nokko skillini atıp ağır silah Arbucep ile bu mantarlara sıkarsanız mantar buffları artar\n\n3.buildde 2de Sirius(Jade Star) yeteneği takılı, 1. build ile aynı oynanışa sahiptir, Arcane Concentration yerine yine Molt Efficiency  kullanabilirsiniz (1 çok kullanıyoruz o yüzden Arcane Concentration takılı), görünmez olarak rahat oynanır\n\nArcane Concentration çalıştırmak için 3sn içinde kullandığınız ikinci skill %60 süre verir buna dikkat edin, yani %60 süre buffı almak için 3sn içinde diğer skilli atmak gerekiyor",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "vazarin",
+        "madurai",
+        "naramon",
+        "naramon",
+        "madurai",
+        "vazarin",
+        "omni",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "naramon",
+      "a2pol": "",
+      "expol": "vazarin",
+      "stpol": "",
+      "shards": [
+        "Crimson|1|t",
+        "Crimson|1|t",
+        "Amber|3|t",
+        "Amber|0|t",
+        "Violet|3|t"
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityRangeMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarPowerMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Geode/GeodeGrowthsAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Powersuits/Geode/GeodeCrystalAugmentCard",
+                "r": 3
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityStatusProcsGiveAbilityStrengthAndEfficiency",
+              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Buffer",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedDurationRangeWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityRangeMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarPowerMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurReachMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityFourStrengthMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurSecretsMod",
+                "r": 5
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Genel+Jadestar",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityRangeMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarPowerMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Geode/GeodeGrowthsAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Powersuits/Geode/GeodeCrystalAugmentCard",
+                "r": 3
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityStatusProcsGiveAbilityStrengthAndEfficiency",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw59k1bi",
+      "name": "Ash",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Ninja/Ninja",
+      "note": "",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "madurai",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": null,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Config 1",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              null,
+              null
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw58cz64",
+      "name": "Huras Kubrow",
+      "cname": "",
+      "cat": "Companion",
+      "item": "/Lotus/Types/Game/KubrowPet/FurtiveKubrowPetPowerSuit",
+      "note": "",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "penjaga",
+        "madurai",
+        "madurai",
+        "naramon",
+        "vazarin",
+        "",
+        "",
+        "",
+        "madurai",
+        "naramon",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": 10,
+      "exs": {
+        "claw:/Lotus/Types/Game/KubrowPet/FurtiveKubrowPetPowerSuit": {
+          "cfgs": [
+            {
+              "n": "Config 1",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowCritMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sets/Mecha/KubrowMechaOverdriveMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/KubrowHeatConversionMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastWeakenedImmunityMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowMeleeDamageMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/DualStat/KubrowMagneticEventMeleeMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastPrecisionConditioningMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastCullTheWeakMod",
+                    "r": 5
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": null,
+                "st": {
+                  "u": "/Lotus/Types/Friendly/Pets/BeastWeapons/Stances/BeastVIPStance",
+                  "r": 3
+                },
+                "arcs": [],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Companion Weapon",
+          "po": {
+            "pols": [
+              "madurai",
+              "",
+              "madurai",
+              "",
+              "madurai",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "",
+            "stpol": "penjaga"
+          }
+        }
+      },
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Types/Friendly/Pets/KubrowPetPrecepts/KubrowCloakPrecept",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/Proliferation",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/VoidClone",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelLootRadarEnemyRadarExpertMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelShieldMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastUniversalVacuum",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/TenaciousPartner",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastResourceDoublingMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/EximusHunter",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/AlacrityField",
+                "r": 5
+              },
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw587tmk",
+      "name": "Banshee Prime",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Banshee/BansheePrime",
+      "note": "1. Build:\nshiled gate mantığı ile çalışır\n-4 te mirage yeteneği takılı, mirage yeteneğini ayarlarda ters çevirin ecplise tek basmada silah hasar artışı basılı tutunca hasar azaltma kazandırır,\n-2 zayıf noktalar ile yüksek hasar çıkartır, 1 zırh siler, 3 silence sağlar\n\n4 Nuke Build Oynanış:\n-3. yetenekte nokko yeteneği takılı yetenek gücü ve enerji sağlar, ağır silaha Arbucep takıp bu mantarlara sıkarsanız güçleri artar (şart değil oynanışı yavaşlatır), ayrıca bu yetenek Arcane Sculptor yeteneğinizide tetikler\n-Nuke yeteneği 4tür, 4 te durursanız veya 4ü bırakırsanız yetenek devam eder, 2 ile komboloyalarak kullanın (aşağıdaki maddede detaylar var)\n-Arcaneleri çalıştırmak için 3 veya 2 basıp, 3sn içinde 4 atın böylece 2 arcanenide aynı anda tetikleyip kullanmış olursunuz, 2 ile kombo yapmanızı tavsiye ederim\n-Oynanış olarak 4te sürekli kalmanız gerekmez, 4 ü birkaç saniye atıp bıraktığınızda yetenek devam ettiği için bu şekilde kullanabilirsiniz veya 4te sabit bırakıp enerji tüketimi arttığında bırakırsınız. ",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "zenurik",
+        "naramon",
+        "madurai",
+        "madurai",
+        "vazarin",
+        "",
+        "umbra",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "zenurik",
+      "a2pol": "",
+      "expol": "vazarin",
+      "stpol": "",
+      "shards": [
+        "Crimson|1|t",
+        "Crimson|1|t",
+        "Azure|2|t",
+        "Azure|2|t",
+        "Amber|3|t"
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Ölümsüz/Silah Hasar",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Banshee/SonarAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarShieldRechargeRateMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarShieldMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarInvulnOnRollMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Vigilante/WarframeVigilanteVigorMod",
+                "r": 5
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Defensive/GolemArcaneShieldRegenOnDamage",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/GolemArcaneRadialEnergyOnEnergyPickup"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "3": "/Lotus/Powersuits/Harlequin/Abilities/LightAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "4 ile Nuke/Temizleme",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Banshee/EarthQuakeAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurReachMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityEfficiencyOnAbilityObjectCreation",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/Nokko/Abilities/NokkoPowerShroomAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw57vxfx",
+      "name": "Furax Wraith",
+      "cname": "",
+      "cat": "Melee",
+      "item": "/Lotus/Weapons/Tenno/Melee/Fist/FuraxWraith",
+      "note": "-Bu silahta yalnızca Amalagam Furax Body Count modu gereklidir, takılı olduğunda tüm ikincil silahların atış hızını artırır",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "",
+        "",
+        "madurai",
+        "",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "vazarin",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "%45 Atış Hızı Buffı",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": {
+              "u": "/Lotus/Weapons/Tenno/Melee/MeleeTrees/FistCmbTwoMeleeTree",
+              "r": 3
+            },
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/DualSource/Melee/FuraxLauncherMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/WeaponCritDamageMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponFireRateModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponCritChanceSPMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponMeleeDamageModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Gladiator/MeleeGladiatorMightMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/DualStat/PoisonEventMeleeMod",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/DualStat/ElectEventMeleeMod",
+                "r": 3
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/FreezeEnemiesOnRoll"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw53mmj2",
+      "name": "Titania Prime",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Fairy/TitaniaPrime",
+      "note": "-- Titania yeteneğini ayarlardan ters çevrilmiş şekilde kullanın\n--Genel olarak Xata+Blast buildini öneririm\n--Helminth yetenekleri 3. yeteneğe aktarılmıştır\n--Meleede Furax ve Furax Amalgam modu takılı olsun\n--Reinforced Mod çalıştıran bir pet ile kullanın Örn: Huras, Panzer vs.\nMelee Silahınız: [[Furax Wraith]]\nÖrnek Pet: [[Panzer Vulpaphyla]]\n\n-Gausslu build oynanış: Gauss yeteneği ayarlardan ters çevrilmiş olmalıdır(bir kere bastığınızda alandaki düşmanlara ateş uygular düşman gördükçe basın ve uçun), kelebek formunda iken gauss yeteneği kullanarak hızlı-yok etme görevlerinde vs. haritayı hızlıca temizlemenizi sağlar \n",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "vazarin",
+        "naramon",
+        "naramon",
+        "madurai",
+        "",
+        "vazarin",
+        "madurai",
+        "umbra",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "vazarin",
+      "a2pol": "",
+      "expol": "zenurik",
+      "stpol": "",
+      "shards": [
+        "Crimson|0",
+        "Crimson|0",
+        "Crimson|0",
+        "Crimson|0",
+        "Crimson|0"
+      ],
+      "cn": 8,
+      "exs": {
+        "/Lotus/Powersuits/Fairy/PrimeFlightPistols": {
+          "cfgs": [
+            {
+              "n": "Patlama(Xatas Whisper)",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/IceEventPistolMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponFireIterationsSPMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Expert/PrimedWeaponCritDamageMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Expert/WeaponFireDamageModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/PistolStatusDamageDuoMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponStatusChanceSPMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/CriticalDamagePunchThroughMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/PoisonEventPistolMod",
+                    "r": 3
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": {
+                  "u": "/Lotus/Upgrades/Mods/Pistol/Event/AccuracyWhileAimingPistolMod",
+                  "r": 5
+                },
+                "st": null,
+                "arcs": [
+                  "/Lotus/Upgrades/CosmeticEnhancers/Offensive/SecondaryCritOnHit"
+                ],
+                "cn": 8
+              }
+            },
+            {
+              "n": "Paslanma/Ateş",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/PoisonEventPistolMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponFireIterationsSPMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Expert/PrimedWeaponCritDamageMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/CriticalDamagePunchThroughMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponStatusChanceSPMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/ElectEventPistolMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Expert/WeaponFireDamageModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/GrinderMod",
+                    "r": 5
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": {
+                  "u": "/Lotus/Upgrades/Mods/Pistol/Event/AccuracyWhileAimingPistolMod",
+                  "r": 5
+                },
+                "st": null,
+                "arcs": [
+                  "/Lotus/Upgrades/CosmeticEnhancers/Offensive/SecondaryCritOnHit"
+                ],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Secondary",
+          "po": {
+            "pols": [
+              "madurai",
+              "madurai",
+              "madurai",
+              "naramon",
+              "vazarin",
+              "vazarin",
+              "naramon",
+              "madurai",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "madurai",
+            "stpol": ""
+          }
+        },
+        "/Lotus/Powersuits/Fairy/PrimeFlightSword": {
+          "cfgs": [
+            {
+              "n": "Config 1",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponMeleeDamageModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponFireRateModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponToxinDamageModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sets/Sacrifice/MeleeSacrificeModB",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/Beginner/WeaponElectricityDamageModBeginner",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sets/Gladiator/MeleeGladiatorMightMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/WeaponCritDamageMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Melee/WeaponFreezeDamageMod",
+                    "r": 5
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": null,
+                "st": {
+                  "u": "custom:cmw57nogj",
+                  "r": 0
+                },
+                "arcs": [
+                  "/Lotus/Upgrades/CosmeticEnhancers/Offensive/CorrosiveMeleePerAbilityCast"
+                ],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Melee",
+          "po": {
+            "pols": [
+              "madurai",
+              "madurai",
+              "naramon",
+              "",
+              "",
+              "madurai",
+              "madurai",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "",
+            "stpol": "zenurik"
+          }
+        }
+      },
+      "cfgs": [
+        {
+          "n": "Xatas Whisper",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityEfficiencyMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedDurationRangeWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/BrokenFrame/Abilities/BrokenRotAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Ecplise",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Beginner/AvatarAbilityEfficiencyModBeginner",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedDurationRangeWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/Harlequin/Abilities/LightAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Gauss/Relik",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedEfficiencyDurationWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityEfficiencyMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/PowerStrengthOnKill",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/GolemArcaneRadialEnergyOnEnergyPickup"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/Runner/Abilities/RunnerTransferAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw4zuykm",
       "name": "Panzer Vulpaphyla",
       "cname": "",
@@ -363,5 +1679,15 @@
       ]
     }
   ],
-  "cmods": []
+  "cmods": [
+    {
+      "id": "cmw57nogj",
+      "name": "Razorwing",
+      "ck": "stance",
+      "polarity": "zenurik",
+      "drain": 5,
+      "rank": 0,
+      "desc": ""
+    }
+  ]
 }
