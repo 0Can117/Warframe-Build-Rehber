@@ -449,7 +449,7 @@ function renderStats(){
     html+=`<span class="wf-stat">Güç<b>${Math.round(wf.str*10)/10}%</b></span>`;
     html+=`<span class="wf-stat">Süre<b>${Math.round(wf.dur*10)/10}%</b></span>`;
     html+=`<span class="wf-stat">Menzil<b>${Math.round(wf.range*10)/10}%</b></span>`;
-    html+=`<span class="wf-stat${effCapped?' capped':''}" title="${effCapped?'Maksimum: 175%':''}">Verim<b>${Math.round(wf.eff*10)/10}%</b>${effCapped?' ✦':''}</span>`;
+    html+=`<span class="wf-stat${effCapped?' capped':''}" title="${effCapped?'Maksimum: 175%':''}">Verimlilik<b>${Math.round(wf.eff*10)/10}%</b>${effCapped?' ✦':''}</span>`;
     html+='</div>';
   }
   box.innerHTML=html;
