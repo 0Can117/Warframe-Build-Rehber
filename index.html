@@ -280,8 +280,7 @@ const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',
 let S=blank(),tab='mods',drag=null,sup=false,abPick=null,omniOn=false,bcat='all';
 const msg=t=>{$('#msg').textContent=t||''};
 
-// --- GÜVENLİ YÖNETİCİ GİRİŞİ (SHA-256 HASH) ---
-// Not: "can1905GsAdminPanel" kelimesinin SHA-256 özeti aşağıdadır.
+// --- GÜVENLİ YÖNETİCİ GİRİŞİ (SHA-256) ---
 const ADMIN_HASH = "6b215dadc6a4e29028391bc75263c3444715e2530b185ef46c35db90ed5706ff"; 
 
 const ADMIN = (() => {
@@ -291,26 +290,37 @@ const ADMIN = (() => {
         // Çıkış işlemi
         if (urlParam === '0') {
             localStorage.removeItem('admin');
+            history.replaceState(null, '', location.pathname); // URL'yi temizle
             return false;
         }
         
-        // Giriş işlemi (Eğer URL'de admin parametresi varsa ve 1 değilse)
+        // Giriş işlemi
         if (urlParam && urlParam !== '1') {
-            // Girilen şifrenin hash'ini hesapla
-            const encoder = new TextEncoder();
-            const data = encoder.encode(urlParam);
-            crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                if (hashHex === ADMIN_HASH) {
-                    localStorage.setItem('admin', '1');
-                    location.reload(); // Başarılıysa sayfayı yenile ve admin modunu aç
-                } else {
-                    alert('Hatalı yönetici şifresi!');
-                }
-            });
-            return false; // Hash kontrolü asenkron olduğu için işlem bitene kadar false döner
+            if (window.crypto && window.crypto.subtle) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(urlParam);
+                crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    
+                    if (hashHex === ADMIN_HASH) {
+                        localStorage.setItem('admin', '1');
+                        history.replaceState(null, '', location.pathname); // DÖNGÜYÜ KIRAN KOD
+                        location.reload(); 
+                    } else {
+                        alert('Hatalı yönetici şifresi!');
+                        history.replaceState(null, '', location.pathname);
+                    }
+                }).catch(err => {
+                    console.error("Hash hatası:", err);
+                    alert("Güvenli bağlantı hatası! Dosyayı yerel (file://) açıyorsanız şifreleme çalışmaz. Lütfen GitHub Pages (https) üzerinden girin.");
+                    history.replaceState(null, '', location.pathname);
+                });
+            } else {
+                alert("Tarayıcınız şifreleme desteklemiyor veya güvenli bağlantı (HTTPS) kullanmıyorsunuz.");
+                history.replaceState(null, '', location.pathname);
+            }
+            return false; 
         }
         
         return localStorage.getItem('admin') === '1';
@@ -469,7 +479,6 @@ function getModElements(m){
 function getModPrimaryEls(m){return getModElements(m).filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e))}
 function getModSecondaryEls(m){return getModElements(m).filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e))}
 function getInnateEls(){
-  // Yoldaş silahlarında doğuştan gelen element (örneğin Panzer'in Viral'i) stat panelinde gösterilmesin
   if(S.cat==='Companion'||S.cat==='Companion Weapon')return[];
   const it=IT.get(S.item);if(!it)return[];
   const dmg=it.damage||{};
@@ -907,7 +916,7 @@ function renderSaved(){
   const bcatsList=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']];
   $('#bcats').innerHTML=bcatsList.map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
   const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q)));
-  rows.sort((a,b)=>(a.name||'').localeCompare(b.name||'')); // Kayıtlı buildleri isme göre alfabetik sırala
+  rows.sort((a,b)=>(a.name||'').localeCompare(b.name||'')); 
   $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
     <button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
 }
