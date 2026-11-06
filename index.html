@@ -108,6 +108,7 @@ button,select,input,textarea{font-size:1rem;font-weight:600}
 .shards>div{min-height:0!important;padding:.4rem .7rem!important}.shd{font-size:1.08rem!important;font-weight:600!important;line-height:1.4!important}
 .bl{font-size:1.05rem}.bl b{font-weight:700;font-size:1.15rem}.ab{font-size:.85rem;font-weight:600}.rs{font-size:1rem;font-weight:600}.dis{font-size:.9rem}
 .ro #admtop{display:none}
+.ro [data-curreset],.ro [data-polreset]{display:none}
 #cmbox{margin-bottom:.8rem}.ro #cmbox{display:none}
 *{scrollbar-color:#5a4690 #0b0813}
 body{background:radial-gradient(1100px 560px at 15% -8%,#2d1b55 0%,transparent 62%),radial-gradient(900px 480px at 100% 0,#3b2a0e 0%,transparent 55%),#0b0813;background-attachment:fixed}
@@ -231,6 +232,7 @@ const M=new Map(),A=new Map(),IT=new Map(),AB=new Map();
 const PO=['pols','apol','a2pol','expol','stpol'];
 const CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts','cn'];
 const RIVCAT=['Primary','Secondary','Melee','Zaw','Kitgun','Archgun','Archmelee'];
+const CONV_MODS={'Burning Claws':'Heat','Chilling Claws':'Cold','Shocking Claws':'Electricity','Sepsis Claws':'Toxin'};
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
  ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
  melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
@@ -257,6 +259,7 @@ const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
 const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
 const isNecExalt=()=>!!S.tgt&&S.par?.cat==='Necramech';
+const isClaws=()=>!!S.tgt&&/^claw:/.test(S.tgt);
 const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
 const hasK=k=>{
   if(isNecExalt())return typeof k==='number'?k<8:false;
@@ -397,22 +400,34 @@ function renderStats(){
   if(!box)return;
   const ELC={Heat:'#ff6b3d',Cold:'#6bc9ff',Electricity:'#c06bff',Toxin:'#6bff7a',Blast:'#ff9e3d',Radiation:'#ffea6b',Magnetic:'#8a8aff',Viral:'#6bffc9',Corrosive:'#b8ff6b',Gas:'#a8ff6b'};
   const combo={'Heat|Cold':'Blast','Cold|Heat':'Blast','Heat|Electricity':'Radiation','Electricity|Heat':'Radiation','Heat|Toxin':'Gas','Toxin|Heat':'Gas','Cold|Electricity':'Magnetic','Electricity|Cold':'Magnetic','Cold|Toxin':'Viral','Toxin|Cold':'Viral','Electricity|Toxin':'Corrosive','Toxin|Electricity':'Corrosive'};
-  const baseEls=[];
-  for(const k of [0,1,2,3,4,5,6,7]){
-    const s=getS(k),m=s&&M.get(s.u);
-    if(!m)continue;
-    getModElements(m).forEach(e=>{if(['Heat','Cold','Electricity','Toxin'].includes(e))baseEls.push(e)});
-  }
-  const combined=[],used=new Set();
-  for(let i=0;i<baseEls.length;i++){
-    if(used.has(i))continue;
-    let didCombo=false;
-    for(let j=i+1;j<baseEls.length;j++){
-      if(used.has(j))continue;
-      const key=baseEls[i]+'|'+baseEls[j];
-      if(combo[key]){combined.push({name:combo[key]});used.add(i);used.add(j);didCombo=true;break}
+  let combined=[];
+  let convEl=null;
+  if(isClaws()){
+    for(const k of [0,1,2,3,4,5,6,7]){
+      const s=getS(k),m=s&&M.get(s.u);
+      if(m&&CONV_MODS[m.name]){convEl=CONV_MODS[m.name];break}
     }
-    if(!didCombo&&!used.has(i))combined.push({name:baseEls[i]});
+  }
+  if(convEl){
+    combined=[{name:convEl}];
+  }else{
+    const baseEls=[];
+    for(const k of [0,1,2,3,4,5,6,7]){
+      const s=getS(k),m=s&&M.get(s.u);
+      if(!m)continue;
+      getModElements(m).forEach(e=>{if(['Heat','Cold','Electricity','Toxin'].includes(e))baseEls.push(e)});
+    }
+    const used=new Set();
+    for(let i=0;i<baseEls.length;i++){
+      if(used.has(i))continue;
+      let didCombo=false;
+      for(let j=i+1;j<baseEls.length;j++){
+        if(used.has(j))continue;
+        const key=baseEls[i]+'|'+baseEls[j];
+        if(combo[key]){combined.push({name:combo[key]});used.add(i);used.add(j);didCombo=true;break}
+      }
+      if(!didCombo&&!used.has(i))combined.push({name:baseEls[i]});
+    }
   }
   const wf={str:100,dur:100,range:100,eff:100};
   for(const k of [0,1,2,3,4,5,6,7]){
@@ -434,7 +449,7 @@ function renderStats(){
   const isWf=S.cat==='Warframe'||S.cat==='Necramech';
   if(!combined.length&&!isWf){box.classList.remove('on');box.innerHTML='';return}
   let html='<div class="stats-title">Stats</div>';
-  if(combined.length){
+  if(combined.length&&!isWf){
     html+='<div class="stat-row"><span class="stat-lbl">Element:</span>';
     combined.forEach((c,i)=>{
       if(i>0)html+='<span class="muted">+</span>';
@@ -765,6 +780,17 @@ function place(u,k){
   const m=M.get(u);if(!m)return false;
   if(!hasK(k)||!canPlace(m,k)){msg('Bu mod bu yuvaya takılamaz.');return false}
   if(KEYS().some(x=>x!==k&&getS(x)&&M.get(getS(x).u)?.name===m.name)){msg('Aynı mod bir build içinde iki kez kullanılamaz.');return false}
+  if(CONV_MODS[m.name]&&isClaws()){
+    const conflict=KEYS().find(x=>{
+      const s=getS(x),mm=s&&M.get(s.u);
+      return mm&&mm.name!==m.name&&CONV_MODS[mm.name];
+    });
+    if(conflict!==undefined){
+      const cm=M.get(getS(conflict).u);
+      msg('Sadece bir dönüşüm modu takılabilir: '+cm.name+' zaten takılı.');
+      return false;
+    }
+  }
   msg('');setS(k,{u,r:maxRank(m)});return true;
 }
 function autoKey(m){
