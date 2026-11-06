@@ -111,11 +111,11 @@ button,select,input,textarea{font-size:1rem;font-weight:600}
 #cmbox{margin-bottom:.8rem}.ro #cmbox{display:none}
 *{scrollbar-color:#5a4690 #0b0813}
 body{background:radial-gradient(1100px 560px at 15% -8%,#2d1b55 0%,transparent 62%),radial-gradient(900px 480px at 100% 0,#3b2a0e 0%,transparent 55%),#0b0813;background-attachment:fixed}
-h1{background:linear-gradient(90deg,#f2cf74,#e0b04a 45%,#b99cff);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.08em}
-h1,h2,summary,.capt,.xh{text-transform:uppercase;letter-spacing:.07em}
+h1{background:linear-gradient(90deg,#f2cf74,#e0b04a 45%,#b99cff);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.02em}
+h1,h2,summary,.capt,.xh{letter-spacing:.02em}
 h2{color:#f2cf74}
 .panel{background:linear-gradient(180deg,#1a1230,#120d20);border:1px solid #3a2b5c;box-shadow:0 10px 28px #000a}
-button{font-family:Rajdhani,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.07em;font-weight:700;background:linear-gradient(180deg,#2b2050,#1a1230);border:1px solid #5a4690;border-radius:8px;color:#efe9fb;padding:.5rem .95rem;transition:all .15s}
+button{font-family:Rajdhani,system-ui,sans-serif;letter-spacing:.02em;font-weight:700;background:linear-gradient(180deg,#2b2050,#1a1230);border:1px solid #5a4690;border-radius:8px;color:#efe9fb;padding:.5rem .95rem;transition:all .15s}
 button:hover{border-color:#e0b04a;box-shadow:0 0 14px #e0b04a55;transform:translateY(-1px)}
 button:active{transform:translateY(0)}
 button.pri{background:linear-gradient(180deg,#f5d98a,#c9962f);color:#1b1405;border-color:#f2cf74;box-shadow:0 2px 12px #e0b04a44}
@@ -131,54 +131,52 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 .card{background:linear-gradient(180deg,#221846,#170f2d);border-radius:10px}
 .riv,.shards>div{border-radius:10px}
 .pb.fm{background:linear-gradient(180deg,#f5d98a,#c9962f);color:#1b1405}
-.abh{font:700 .8rem Rajdhani,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);text-align:center;padding-left:1.4rem}
+.abh{font:700 .8rem Rajdhani,sans-serif;letter-spacing:.05em;color:var(--mu);text-align:center;padding-left:1.4rem}
 .abrow{display:flex;align-items:center;gap:.3rem}.abn{font:700 .95rem Rajdhani,sans-serif;color:var(--gold);width:1.1rem;text-align:right}.abrow .ab{flex:1}
 #abil{width:116px}.ro #abil{align-self:center}
 #linkpop{position:absolute;bottom:calc(100% + 4px);left:0;right:0;z-index:20;display:flex;flex-direction:column;gap:.2rem;background:#120d20;border:1px solid var(--gold);border-radius:10px;padding:.3rem;box-shadow:0 8px 24px #000c;max-height:220px;overflow:auto}
-#linkpop[hidden]{display:none}#linkpop button{text-align:left;text-transform:none;letter-spacing:0;font-family:inherit}
+#linkpop[hidden]{display:none}#linkpop button{text-align:left;letter-spacing:0;font-family:inherit}
 #prevb{margin-bottom:.6rem}
-.en{text-transform:none!important;letter-spacing:normal!important}
-.card,.card *,.ab,.ab *{text-transform:none;letter-spacing:normal}
 </style>
 </head>
 <body>
-<header><h1><span class="en">Build</span> Rehberi</h1></header>
-<div class="row" id="admtop" style="max-width:1300px;margin:auto;padding:.4rem 1rem"><button data-fwd="exp"><span class="en">builds.json</span> indir</button><button data-fwd="imp">JSON içe aktar</button><button data-fwd="adminoff">Yönetici modundan çık</button></div>
+<header><h1>Build Rehberi</h1></header>
+<div class="row" id="admtop" style="max-width:1300px;margin:auto;padding:.4rem 1rem"><button data-fwd="exp">builds.json İndir</button><button data-fwd="imp">JSON İçe Aktar</button><button data-fwd="adminoff">Yönetici Modundan Çık</button></div>
 <div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
 <main>
   <section id="builder" class="panel">
-    <button id="prevb" data-prevb="1" hidden>← Önceki <span class="en">Build</span>'e Dön</button>
-    <button id="back" data-back="1">← Kayıtlı <span class="en">buildlere</span> dön</button>
-    <h2><span class="en">Build</span></h2>
-    <div class="row topbar"><button data-fwd="save" class="pri">Kaydet</button><button data-fwd="new">Yeni <span class="en">build</span></button><button data-fwd="reset">Tümünü sıfırla</button><button data-fwd="autof">Oto forma</button></div>
+    <button id="prevb" data-prevb="1" hidden>← Önceki Build'e Dön</button>
+    <button id="back" data-back="1">← Kayıtlı Buildlere Dön</button>
+    <h2>Build</h2>
+    <div class="row topbar"><button data-fwd="save" class="pri">Kaydet</button><button data-fwd="new">Yeni Build</button><button data-fwd="reset">Tümünü Sıfırla</button><button data-fwd="autof">Oto Forma</button></div>
     <div class="row" id="cats"></div>
-    <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya silah"></select></div>
+    <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya Silah"></select></div>
     <div class="row" id="cfgrow"></div>
     <div id="partbox"></div>
     <div class="row" id="custrow"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button></div>
-    <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
-    <div class="row"><input type="text" id="name" placeholder="Build adı"><label><input type="checkbox" id="reactor" checked> Reaktör/katalizör (60)</label></div>
+    <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus Element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
+    <div class="row"><input type="text" id="name" placeholder="Build Adı"><label><input type="checkbox" id="reactor" checked> Reaktör/Katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
     <div class="bar" id="bar"><i></i></div>
     <div class="bwrap"><div><div class="slots sp3" id="sp"></div>
     <div class="slots" id="slots"></div><div class="arcs" id="arcs"></div></div><div id="abil"></div></div>
     <div id="xs"></div>
     <div id="tgtrow"></div>
-    <div id="shbox"><h2 style="margin-top:1rem"><span class="en">Archon Shards</span></h2><div class="shards" id="shards"></div></div>
+    <div id="shbox"><h2 style="margin-top:1rem">Archon Shards</h2><div class="shards" id="shards"></div></div>
     <div id="notebox"><h2 style="margin-top:1rem">Not</h2>
       <div id="notewrap" style="position:relative"><div id="linkpop" hidden></div><textarea id="note" rows="4" placeholder="Build notu. Başka build'e köprü için [[Build adı]] yaz."></textarea></div><div id="notev" class="notev"></div>
-      <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı ekle</button><button id="addfile">Görsel yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
+      <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı Ekle</button><button id="addfile">Görsel Yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
       <div class="gal" id="gal"></div></div>
-    <div id="rivbox"><h2 style="margin-top:1rem"><span class="en">Riven</span> önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ <span class="en">Riven</span> ekle</button></div>
-    <details id="evbox" open><summary><span class="en">Incarnon</span> Evrimleri</summary><div id="evs"></div></details>
-    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni <span class="en">build</span></button><button id="reset">Tümünü sıfırla</button><button id="autof">Oto forma</button></div>
+    <div id="rivbox"><h2 style="margin-top:1rem">Riven Önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven Ekle</button></div>
+    <details id="evbox" open><summary>Incarnon Evrimleri</summary><div id="evs"></div></details>
+    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni Build</button><button id="reset">Tümünü Sıfırla</button><button id="autof">Oto Forma</button></div>
   </section>
 
   <section id="browser" class="panel">
-    <div class="row"><button data-tab="mods" class="on">Modlar</button><button data-tab="arcanes"><span class="en">Arcane</span>'ler</button></div>
+    <div class="row"><button data-tab="mods" class="on">Modlar</button><button data-tab="arcanes">Arcane'ler</button></div>
     <p class="muted" style="margin:0 0 .6rem">Modu veya arcane'i yuvaya sürükle (dokunmatikte basılı tut) ya da dokun. Yuvadan listeye sürüklersen kaldırılır.</p>
-    <details id="cmbox"><summary style="font-size:1.05rem;margin-top:0">+ <span class="en">Custom</span> mod oluştur</summary>
-      <div class="row"><input type="text" id="cmname" placeholder="Mod adı"><select id="cmkind"><option value="normal">Normal yuva</option><option value="aura">Aura</option><option value="stance">Stance</option><option value="exilus">Exilus</option></select></div>
+    <details id="cmbox"><summary style="font-size:1.05rem;margin-top:0">+ Custom Mod Oluştur</summary>
+      <div class="row"><input type="text" id="cmname" placeholder="Mod Adı"><select id="cmkind"><option value="normal">Normal Yuva</option><option value="aura">Aura</option><option value="stance">Stance</option><option value="exilus">Exilus</option></select></div>
       <div class="row"><select id="cmpol"><option value="">Nötr</option><option>madurai</option><option>vazarin</option><option>naramon</option><option>zenurik</option><option>unairu</option><option>penjaga</option><option>umbra</option></select>
         <label>Drain <input type="number" id="cmdrain" min="0" max="30" value="4" style="width:4.5rem"></label><label>Maks Rank <input type="number" id="cmrank" min="0" max="30" value="10" style="width:4.5rem"></label></div>
       <div class="row"><input type="text" id="cmdesc" placeholder="Açıklama (isteğe bağlı)"><button class="pri" id="cmsave">Kaydet</button></div>
@@ -188,10 +186,10 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
   </section>
 
   <section id="saved" class="panel">
-    <h2>Kayıtlı <span class="en">buildler</span></h2>
+    <h2>Kayıtlı Buildler</h2>
     <div class="row" id="bcats"></div>
-    <div class="row"><input type="search" id="bq" placeholder="Build ara" aria-label="Build ara"><button id="bgo">Ara</button></div>
-    <div class="row" id="admrow"><button id="exp"><span class="en">builds.json</span> indir (yayınlamak için)</button><button id="imp">JSON içe aktar</button><button id="adminoff">Yönetici modundan çık</button><input type="file" id="file" accept=".json" hidden></div>
+    <div class="row"><input type="search" id="bq" placeholder="Build Ara" aria-label="Build Ara"><button id="bgo">Ara</button></div>
+    <div class="row" id="admrow"><button id="exp">builds.json İndir (Yayınlamak İçin)</button><button id="imp">JSON İçe Aktar</button><button id="adminoff">Yönetici Modundan Çık</button><input type="file" id="file" accept=".json" hidden></div>
     <div id="bl"></div>
   </section>
 </main>
@@ -218,7 +216,7 @@ const CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm',
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],
  ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],
  melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],
- spl:['Status Damage','Gas Damage','Corrosive Damage','Viral Damage','Radiation Damage','Blast Damage','Magnetic Damage','Damage vs Orokin','Damage vs Techrot','Damage vs Scaldra'],
+ spl:['Status Damage','Gas Damage','Corrosive Damage','Viral Damage','Radiation Damage','Blast Damage','Magnetic Damage','Damage vs Orokin','Damage vs Techrot','Damage vs Scalda'],
  splr:['Weak Point Damage','Weak Point Critical Chance','Ammo Efficiency','Magazine Reload While Holstered'],splm:['Heavy Attack Damage']};
 let DATA={mods:[],arcanes:[],items:{}};
 const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),cn:null,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
@@ -263,8 +261,7 @@ async function init(){
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
     const wfList=wf.filter(i=>i.type==='Warframe').slice();
     if(!wfList.some(i=>i.uniqueName==='siriusorion'))wfList.unshift({uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe'});
-    const ARCHGUN_RE=/Mausolon|Morgha|Cortege|Larkspur|Imperator|Corvas|Velocitus|Fluctus|Grattler|Ayanga|Decurion|Prisma|Kaszas|Knux|Onorix|Agkuza|Centaur|Veritux|Rathbone|Krohkur|Dual/i;
-    const necList=wf.filter(i=>i.type==='Necramech'&&!ARCHGUN_RE.test(i.name));
+    const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,
       Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],
       Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
@@ -336,7 +333,7 @@ function renderBuilder(){
   renderNote();
   $('#sp').innerHTML=['aura','au2',...(S.cat==='Melee'?['st','ex']:['ex','st'])].filter(hasK).map(cell).join('');
   $('#slots').innerHTML=Array.from({length:NG()},(_,i)=>i).map(cell).join('');
-  $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh"><span class="en">${n}</span> (kapasite kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
+  $('#xs').innerHTML=S.cat==='Railjack'?[['Battle',8],['Tactical',11]].map(([n,a])=>`<h3 class="xh"><span lang="en">${n}</span> (Kapasite Kullanmaz)</h3><div class="slots sp3">${[a,a+1,a+2].map(cell).join('')}</div>`).join(''):'';
   $('#arcs').innerHTML=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);
     return a?`<div class="aslot f" data-ai="${i}" title="${esc(statsOf(a))}"><button class="x" data-rmarc="${i}" aria-label="Kaldır">×</button><img src="${IMG+esc(a.imageName)}" alt="" draggable="false"><b lang="en">${esc(a.name)}</b><span class="muted">${t}</span></div>`
       :`<div class="aslot" data-ai="${i}"><span class="muted">${t} Arcane</span></div>`}).join('');
@@ -363,7 +360,7 @@ function renderCfg(){
   const e=S.tgt?S.exs[S.tgt]:null,L=e?e.cfgs:S.cfgs,ci=e?e.ci:S.ci;
   if(RO&&L.length<2){$('#cfgrow').innerHTML='';return}
   $('#cfgrow').innerHTML=L.map((c,i)=>`<button data-cfg="${i}" class="${i===ci?'on':''}">${esc(c.n)}</button>`).join('')
-   +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}" aria-label="Config adı"><button data-cfgdel="1">Sil</button>`);
+   +(RO?'':`<button data-cfgadd="1" title="Config ekle">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}" aria-label="Config Adı"><button data-cfgdel="1">Sil</button>`);
 }
 function renderAbil(){
   const it=IT.get(S.item),box=$('#abil');
@@ -375,8 +372,8 @@ function renderAbil(){
 function renderRiv(){
   const mel=/Melee|Zaw/.test(S.cat),B=RS.common.concat(mel?RS.melee:RS.ranged),P=RS.spl.concat(mel?RS.splm:RS.splr);
   const o=(p,l)=>l.map(x=>`<option value="${p}|${esc(x)}">${esc(x)}</option>`).join('');
-  const opts=`<option value="">+ Stat ekle</option><optgroup label="Pozitif">${o('p',B)}</optgroup><optgroup label="Spliced (pozitif)">${o('s',P)}</optgroup><optgroup label="Negatif">${o('n',B)}</optgroup>`;
-  $('#rivs').innerHTML=S.riv.map((r,i)=>`<div class="riv"><div class="row" style="margin:0"><input type="text" data-rivn="${i}" value="${esc(r.n)}" placeholder="Riven adı"><button class="x2" data-rmriv="${i}" aria-label="Rivenı sil">×</button></div>
+  const opts=`<option value="">+ Stat Ekle</option><optgroup label="Pozitif">${o('p',B)}</optgroup><optgroup label="Spliced (Pozitif)">${o('s',P)}</optgroup><optgroup label="Negatif">${o('n',B)}</optgroup>`;
+  $('#rivs').innerHTML=S.riv.map((r,i)=>`<div class="riv"><div class="row" style="margin:0"><input type="text" data-rivn="${i}" value="${esc(r.n)}" placeholder="Riven Adı"><button class="x2" data-rmriv="${i}" aria-label="Rivenı Sil">×</button></div>
     <span class="dis">Disposition ×1.20 · S-tier (maks. roll)</span>
     ${r.st.map((t,j)=>`<div class="rs ${t.s<0?'neg':''} ${t.sp?'sp':''}"><span>${t.s<0?'−':'+'} ${esc(t.k)}${t.sp?' (spliced)':''}</span><button data-rmst="${i}.${j}" aria-label="Kaldır">×</button></div>`).join('')}
     <select data-rivadd="${i}">${opts}</select></div>`).join('');
@@ -401,7 +398,8 @@ const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
   if(pi==='siriusorion')return['sirius','orion'];
   if(!['Warframe','Companion','Necramech'].includes(pc))return[];
-  const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[];
+  /* Mausolon Exalted listesinden kesin olarak çıkarılır (o bir Arch-Gun, exalted silah değil) */
+  const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)&&!/^Mausolon$/i.test(IT.get(u)?.name||'')):[];
   if(pc==='Warframe'&&/^Sevagoth/.test(nm))return[/Prime/.test(nm)?'sevashadowp':'sevashadow',...ex];
   if(pc==='Warframe'&&/^Khora/.test(nm))return[...ex,'venari','venariclaws'];
   if(pc==='Companion'&&IT.get('claw:'+pi))return['claw:'+pi];
@@ -444,10 +442,10 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  box.innerHTML='<h2 style="margin-top:.8rem"><span class="en">Exalted</span></h2><div class="row">'
+  box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}" lang="en">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'')}</button>`
    +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}" lang="en">${esc(IT.get(u).name)}</button>`).join('')
-   +(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod Türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>';
 }
 function renderEvo(){
@@ -523,7 +521,7 @@ function renderNote(){
   $('#notebox').hidden=RO&&!S.note&&!S.imgs.length;
   $('#notev').innerHTML=esc(S.note).replace(/\n/g,'<br>').replace(/\[\[([^\]]+)\]\]/g,(m,n)=>`<a href="#" data-bl="${n}">${n}</a>`);
   $('#rivbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.riv.length);renderRiv();
-  $('#gal').innerHTML=S.imgs.map((u,i)=>`<figure><img src="${esc(u)}" alt="Build görseli" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-rmimg="${i}" aria-label="Görseli kaldır">×</button></figure>`).join('');
+  $('#gal').innerHTML=S.imgs.map((u,i)=>`<figure><img src="${esc(u)}" alt="Build görseli" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-rmimg="${i}" aria-label="Görseli Kaldır">×</button></figure>`).join('');
 }
 function renderList(){
   const q=$('#q').value.trim().toLowerCase();let rows;
@@ -541,7 +539,7 @@ function renderSaved(){
   $('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
   const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q)));
   $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
-    <button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
+    <button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
 }
 function place(u,k){
   const m=M.get(u);if(!m)return false;
@@ -668,7 +666,7 @@ document.addEventListener('click',e=>{
   else if(d.cfg!==undefined){if(S.tgt){tgtSave();tgtLoad(+d.cfg)}else loadCfg(+d.cfg);renderBuilder()}
   else if(d.cfgadd){if(S.tgt){tgtSave();const e=S.exs[S.tgt];e.cfgs.push({n:'Config '+(e.cfgs.length+1),d:JSON.parse(JSON.stringify(e.cfgs[e.ci].d))});tgtLoad(e.cfgs.length-1)}else{stash();const c=JSON.parse(JSON.stringify(S.cfgs[S.ci].d));S.cfgs.push({n:'Config '+(S.cfgs.length+1),d:c});loadCfg(S.cfgs.length-1)}renderBuilder()}
   else if(d.cfgdel){if(S.tgt){const e=S.exs[S.tgt];if(e.cfgs.length<2){msg('En az bir config kalmalı.');return}e.cfgs.splice(e.ci,1);tgtLoad(0)}else{if(S.cfgs.length<2){msg('En az bir config kalmalı.');return}S.cfgs.splice(S.ci,1);loadCfg(0,true)}renderBuilder()}
-  else if(d.omni){omniOn=!omniOn;t.classList.toggle('on',omniOn);t.innerHTML='<span class="en">Omni</span> forma modu: '+(omniOn?'açık (polarite rozetine dokun)':'kapalı')}
+  else if(d.omni){omniOn=!omniOn;t.classList.toggle('on',omniOn);t.textContent='Omni Forma Modu: '+(omniOn?'Açık (Polarite Rozetine Dokun)':'Kapalı')}
   else if(d.ab!==undefined){abPick=+d.ab;renderAbil()}
   else if(d.addriv){S.riv.push({n:'',st:[]});renderNote()}
   else if(d.rmriv!==undefined){S.riv.splice(+d.rmriv,1);renderNote()}
