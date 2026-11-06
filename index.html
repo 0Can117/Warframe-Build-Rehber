@@ -420,7 +420,20 @@ function renderStats(){
     }
   }
   if(convEl){
-    combined=[{name:convEl}];
+    const secondaryModEls=[];
+    for(const k of [0,1,2,3,4,5,6,7]){
+      const s=getS(k),m=s&&M.get(s.u);
+      if(!m)continue;
+      getModSecondaryEls(m).forEach(e=>secondaryModEls.push(e));
+    }
+    const innateEls=getInnateEls();
+    const innateSecondary=innateEls.filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e));
+    const seen=new Set();
+    combined.push({name:convEl});
+    seen.add(convEl);
+    [...innateSecondary,...secondaryModEls].forEach(e=>{
+      if(!seen.has(e)){seen.add(e);combined.push({name:e})}
+    });
   }else{
     const primaryModEls=[];
     const secondaryModEls=[];
