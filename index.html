@@ -429,7 +429,6 @@ function renderStats(){
     if(/Yetenek Gücü/i.test(stat))wf.str+=num;
     else if(/Yetenek Süresi/i.test(stat))wf.dur+=num;
   });
-  /* Wiki cap: Ability Efficiency maks %175 */
   const effCapped=wf.eff>175;
   if(effCapped)wf.eff=175;
   const isWf=S.cat==='Warframe'||S.cat==='Necramech';
@@ -649,26 +648,34 @@ function resetPolarities(){
   msg('Polariteler sıfırlandı.');
 }
 function resetCurrentBuild(){
-  if(!confirm('Mevcut config\'deki tüm modlar, arcaneler ve polariteler sıfırlanacak. Diğer config\'lerin mod yuvaları korunur (polariteler ortak olduğu için onlar da orijinaline döner). Devam?'))return;
-  const it=IT.get(S.item);
-  S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
-  S.apol=S.cat==='Warframe'?auraPol(it?.name||''):'';
-  S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';
-  S.expol=it?.exilusPolarity||'';
-  S.stpol=it?.stancePolarity||'';
+  if(!confirm('Mevcut config\'deki tüm modlar ve arcaneler sıfırlanacak. Polariteler, reaktör, yuva sayısı ve diğer ayarlar korunur. Devam?'))return;
   const isTgt=!!S.tgt;
   if(isTgt){
     tgtSave();
     const e=S.exs[S.tgt];
-    e.cfgs[e.ci].d=null;
+    const cur=e.cfgs[e.ci].d||{};
+    e.cfgs[e.ci].d={
+      ...cur,
+      slots:Array(14).fill(null),
+      arcs:[],
+      aura:null,au2:null,ex:null,st:null,
+      helm:{}
+    };
     tgtLoad(e.ci);
   }else{
     stash();
-    S.cfgs[S.ci].d=null;
+    const cur=S.cfgs[S.ci].d||{};
+    S.cfgs[S.ci].d={
+      ...cur,
+      slots:Array(14).fill(null),
+      arcs:[],
+      aura:null,au2:null,ex:null,st:null,
+      helm:{}
+    };
     loadCfg(S.ci,true);
   }
   renderBuilder();
-  msg('Mevcut config sıfırlandı.');
+  msg('Mevcut config sıfırlandı (modlar ve arcaneler).');
 }
 const CK={normal:'Normal',aura:'Aura',stance:'Stance',exilus:'Exilus'};
 function syncCM(){
@@ -1001,4 +1008,4 @@ $('#cmsave').addEventListener('click',()=>{
 init();
 </script>
 </body>
-  </html>
+</html>
