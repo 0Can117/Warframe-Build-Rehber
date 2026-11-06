@@ -259,20 +259,24 @@ async function init(){
     const [mods,arc,wf,pri,sec,mel,ag,misc,pets,sen,sw,am]=await Promise.all(['Mods','Arcanes','Warframes','Primary','Secondary','Melee','Arch-Gun','Misc','Pets','Sentinels','SentinelWeapons','Arch-Melee'].map(get));
     DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
-    DATA.items={Warframe:wf.filter(i=>i.type==='Warframe'),Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,
+    const wfList=wf.filter(i=>i.type==='Warframe').slice();
+    if(!wfList.some(i=>i.uniqueName==='siriusorion'))wfList.unshift({uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe'});
+    DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,
       Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],
       Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:wf.filter(i=>i.type==='Necramech'),'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m));DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     IT.set('venari',{uniqueName:'venari',name:'Venari'});IT.set('venariclaws',{uniqueName:'venariclaws',name:'Venari Claws'});IT.set('sevashadow',{uniqueName:'sevashadow',name:'Sevagoth Shadow'});IT.set('sevashadowp',{uniqueName:'sevashadowp',name:'Sevagoth Prime Shadow'});
-    /* Sirius & Orion — çift Warframe (wiki polariteleri) */
-    IT.set('sirius',{uniqueName:'sirius',name:'Sirius',type:'Warframe',category:'Warframe',
+    IT.set('siriusorion',{uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe',
       polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],
-      auraPolarity:'naramon',exilusPolarity:'naramon',imageName:'Sirius.png'});
-    IT.set('orion',{uniqueName:'orion',name:'Orion',type:'Warframe',category:'Warframe',
+      auraPolarity:'naramon',exilusPolarity:'naramon'});
+    IT.set('sirius',{uniqueName:'sirius',name:'Sirius',type:'Warframe',
+      polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],
+      auraPolarity:'naramon',exilusPolarity:'naramon'});
+    IT.set('orion',{uniqueName:'orion',name:'Orion',type:'Warframe',
       polarities:['madurai','madurai','naramon','naramon','','','','','','','','','',''],
-      auraPolarity:'madurai',exilusPolarity:'naramon',imageName:'Orion.png'});
+      auraPolarity:'madurai',exilusPolarity:'naramon'});
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
     misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;
@@ -333,10 +337,13 @@ function renderBuilder(){
       :`<div class="aslot" data-ai="${i}"><span class="muted">${t} Arcane</span></div>`}).join('');
   if(RO)document.querySelectorAll('#builder input,#builder select').forEach(n=>n.disabled=true);
 }
-const AUP={madurai:'Ash Atlas Banshee Chroma Cyte-09 Ember Garuda Koumei Mag Mesa Nidus Nokko Oberon Oraxia Rhino Titania Uriel Valkyr Volt Wukong Yareli',vazarin:'Frost Gara Khora Qorvex Saryn Trinity Voruna Zephyr Follie Jade',naramon:'Baruuk Caliban Citrine Equinox Gauss Grendel Gyre Harrow Hildryn Hydroid Inaros Ivara Kullervo Lavos Limbo Loki Mirage Nezha Nova Nyx Octavia Revenant Styanax Temple Vauban Wisp Xaku',omni:'Dante Protea'};
+const AUP={
+  madurai:'Ash Atlas Banshee Chroma Cyte-09 Ember Garuda Koumei Mag Mesa Nidus Nokko Oberon Oraxia Orion Rhino Titania Uriel Valkyr Volt Wukong Yareli',
+  vazarin:'Frost Gara Khora Qorvex Saryn Trinity Voruna Zephyr Follie Jade',
+  naramon:'Baruuk Caliban Citrine Equinox Gauss Grendel Gyre Harrow Hildryn Hydroid Inaros Ivara Kullervo Lavos Limbo Loki Mirage Nezha Nova Nyx Octavia Revenant Sirius Styanax Temple Vauban Wisp Xaku',
+  omni:'Dante Protea'};
 function auraPol(n){
   if(/^Sevagoth (Prime )?Shadow/.test(n)||/^Excalibur (Prime|Umbra)/.test(n))return 'madurai';
-  if(/Sirius|Orion/.test(n))return 'omni';
   const b=n.replace(/ (Prime|Umbra)$/,'');
   for(const k in AUP)if(AUP[k].split(' ').includes(b))return k;
   return '';
@@ -387,7 +394,7 @@ function guessCat(u){
 }
 const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
-  if(pc==='Warframe'&&/Sirius|Orion/.test(nm))return['sirius','orion'];
+  if(pi==='siriusorion')return['sirius','orion'];
   if(!['Warframe','Companion','Necramech'].includes(pc))return[];
   const ex=Array.isArray(it?.exalted)?it.exalted.filter(u=>IT.get(u)):[];
   if(pc==='Warframe'&&/^Sevagoth/.test(nm))return[/Prime/.test(nm)?'sevashadowp':'sevashadow',...ex];
@@ -404,10 +411,12 @@ function tgtNorm(u){
 }
 function tgtLoad(i){
   const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};
+  const keepShards=S.shards.slice();
   e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;
   S.aura=d.aura||null;S.au2=null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';
   S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');
   S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');
+  S.shards=keepShards;
   fitArcs();
 }
 function tgtSave(){
@@ -430,11 +439,10 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  const isSO=/Sirius|Orion/.test(IT.get(S.tgt?S.par.item:S.item)?.name||'');
-  box.innerHTML=`<h2 style="margin-top:.8rem">${isSO?'<span class="en">Sirius &amp; Orion</span> Formları':'<span class="en">Exalted</span>'}</h2><div class="row">`
+  box.innerHTML='<h2 style="margin-top:.8rem"><span class="en">Exalted</span></h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}" lang="en">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'')}</button>`
    +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}" lang="en">${esc(IT.get(u).name)}</button>`).join('')
-   +(S.tgt&&!RO&&!isSO&&!/^(venari|sevashadow|claw:)/.test(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>';
 }
 function renderEvo(){
