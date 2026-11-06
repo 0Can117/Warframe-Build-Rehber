@@ -474,7 +474,7 @@ function getModLastStats(m){const l=m.levelStats;return l&&l.length?(l[l.length-
 function getModElements(m){
   const stats=getModLastStats(m);
   const els=[];
-  const re=/\b(Heat|Cold|Electricity|Toxin|Blast|Radiation|Magnetic|Viral|Corrosive|Gas)\b/gi;
+  const re=/\b(Heat|Cold|Electricity|Toxin|Blast(?! Range| Radius)|Radiation|Magnetic|Viral|Corrosive|Gas)\b/gi;
   const parts = stats.split('|');
   for (let part of parts) {
     if (/Radius/i.test(part)) continue;
