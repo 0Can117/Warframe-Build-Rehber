@@ -627,7 +627,7 @@ function loadCfg(i,skip){
   S.ci=i;
   const d=S.cfgs[i].d||{};
   S.aura=d.aura!==undefined?d.aura:null;
-  S.au2=null;
+  S.au2=d.au2!==undefined?d.au2:null;
   S.ex=d.ex!==undefined?d.ex:null;
   S.st=d.st!==undefined?d.st:null;
   S.arcs=d.arcs?JSON.parse(JSON.stringify(d.arcs)):[];
@@ -709,7 +709,7 @@ function tgtLoad(i){
   const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};
   const keepShards=S.shards.slice();
   e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;
-  S.aura=d.aura||null;S.au2=null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';
+  S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';
   S.cn=d.cn||XC[S.cat]?.n||8;
   S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');
   S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');
