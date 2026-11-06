@@ -430,10 +430,13 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
-   +`<button lang="en" data-tgt="" class="${S.tgt?'':'on'}">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'Warframe')}</button>`
+  const parentItem=IT.get(S.tgt&&S.par?S.par.item:S.item)||{};
+  const parentName=parentItem.name||'Warframe';
+  const isSO=S.tgt==='sirius'||S.tgt==='orion'||(/Sirius/i.test(parentName)&&/Orion/i.test(parentName));
+  box.innerHTML=`<h2 style="margin-top:.8rem">${isSO?esc(parentName):'Exalted'}</h2><div class="row">`
+   +(isSO?'':`<button lang="en" data-tgt="" class="${S.tgt?'':'on'}">${esc(parentName)}</button>`)
    +l.map(u=>`<button lang="en" data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}">${esc(IT.get(u).name.replace(/^Shadow Claws/,'Sevagoth Shadow Claws'))}</button>`).join('')
-   +(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
+   +(S.tgt&&!RO&&!isSO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
    +'</div>';
 }
 function renderEvo(){
