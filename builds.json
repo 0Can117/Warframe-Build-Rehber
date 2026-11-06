@@ -1,6 +1,283 @@
 {
   "builds": [
     {
+      "id": "bmw5jqpiq",
+      "name": "Jade",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Choir/Choir",
+      "note": "",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "naramon",
+        "",
+        "naramon",
+        "",
+        "umbra",
+        "madurai",
+        "",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "vazarin",
+      "a2pol": "naramon",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        "Crimson|1|t",
+        "Crimson|1|t",
+        "Amber|4|t",
+        "Amber|4|t",
+        "Amber|0|t"
+      ],
+      "cn": 8,
+      "exs": {
+        "/Lotus/Powersuits/Choir/ChoirEruptWeapon": {
+          "cfgs": [
+            {
+              "n": "Viral/Heat",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponFireIterationsSPMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/WeaponDamageAmountMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Expert/PrimedWeaponCritDamageMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/GrinderMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/Event/AmbulasEvent/Expert/SecondaryExplosionRadiusModExpert",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/MagneticCritDamagePistolMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/PoisonEventPistolMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Pistol/DualStat/IceEventPistolMod",
+                    "r": 3
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": {
+                  "u": "/Lotus/Upgrades/Mods/Pistol/WeaponProjectileSpeedMod",
+                  "r": 3
+                },
+                "st": null,
+                "arcs": [
+                  "/Lotus/Upgrades/CosmeticEnhancers/Offensive/SecondaryCritOnHit"
+                ],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Secondary",
+          "po": {
+            "pols": [
+              "madurai",
+              "madurai",
+              "madurai",
+              "madurai",
+              "madurai",
+              "madurai",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "",
+            "stpol": ""
+          }
+        }
+      },
+      "cfgs": [
+        {
+          "n": "Genel/Verimlilik",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
+              "r": 5
+            },
+            "au2": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurReachMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolSpeedOnCrit",
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/PowerStrengthOnKill"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        },
+        {
+          "n": "Full Güç/Railjack Pilot",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
+              "r": 5
+            },
+            "au2": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurMessageMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolSpeedOnCrit",
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/PowerStrengthOnKill"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "0": "/Lotus/Powersuits/Nokko/Abilities/NokkoPowerShroomAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw5aiy3v",
       "name": "Narin",
       "cname": "",
