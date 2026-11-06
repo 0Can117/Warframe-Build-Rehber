@@ -1,6 +1,231 @@
 {
   "builds": [
     {
+      "id": "bmw5aiy3v",
+      "name": "Narin",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Duelist/Duelist",
+      "note": "-1 ve 2 yi kullanarak hızlıca 4ü doldurabilirsiniz\n-2 overguard kazandırır\n-3 alan açar ve alandaki düşmanlar daha fazla hasar alır, 4 açıkken yine 3ü kullanabilirsiniz\n-Narin 4 üzerine oynanır, exalted silah gibi çalışır, savunmaları siler ve güzel hasar çıkartır\n-4 te iken shift basıp hızlıca gidebilirsiniz, parkour velocity, dodge speed hareketinizi artırır, bu yüzden Praedos ve ikincil silahınızda Amalgam Barrel Diffusion kullanabilirsiniz\nPraedos Build: [[Praedos]]",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "vazarin",
+        "naramon",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "naramon",
+      "a2pol": "",
+      "expol": "zenurik",
+      "stpol": "",
+      "shards": [
+        "Amber|2|t",
+        "Amber|2|t",
+        "Crimson|0|t",
+        "Crimson|0|t",
+        "Crimson|0|t"
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarPowerMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurSecretsMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityFourStrengthMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarCastingSpeedMod",
+                "r": 3
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AbilityPowerOnFreeze",
+              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw5adwyj",
+      "name": "Praedos",
+      "cname": "",
+      "cat": "Melee",
+      "item": "/Lotus/Weapons/Tenno/Zariman/Melee/Tonfas/ZarimanTonfaWeapon",
+      "note": "Parkur hızı sağlar ve sağlam hasarı vardır istediğiniz yerde kullanabilirsiniz",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "vazarin",
+        "madurai",
+        "madurai",
+        "umbra",
+        "",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "naramon",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/EmpoweredHeavyMelee/CursedSyndicateEmpoweredHeavyMeleeMod",
+              "r": 3
+            },
+            "st": {
+              "u": "/Lotus/Weapons/Tenno/Melee/MeleeTrees/TonfaCmbTwoMeleeTree",
+              "r": 3
+            },
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Gladiator/MeleeGladiatorMightMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponMeleeStatusChanceSPMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Expert/WeaponMeleeDamageModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/DualSource/Melee/CritDamageChargeSpeedMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Sacrifice/MeleeSacrificeModB",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/WeaponElectricityDamageMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Event/ComboCritChanceMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Melee/Event/ComboStatusChanceMod",
+                "r": 5
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/MeleeProcsSpread"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "Varsayılan",
+              "2",
+              "3",
+              "2",
+              "2"
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw59w60l",
       "name": "Citrine Prime",
       "cname": "",
@@ -171,7 +396,9 @@
             "elem": "",
             "bonus": 25,
             "reactor": true,
-            "helm": {},
+            "helm": {
+              "3": "/Lotus/Powersuits/Nokko/Abilities/NokkoPowerShroomAbility"
+            },
             "evo": [
               "",
               "",
@@ -243,7 +470,9 @@
             "elem": "",
             "bonus": 25,
             "reactor": true,
-            "helm": {},
+            "helm": {
+              "1": "/Lotus/Powersuits/SiriusOrion/Abilities/SiriusBuffAbility"
+            },
             "evo": [
               "",
               "",
