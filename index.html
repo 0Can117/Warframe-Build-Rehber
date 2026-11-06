@@ -239,7 +239,6 @@ const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]];
 const setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]];
 const setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
-/* Necramech'in exalted silahı: 8 yuva, aura/arcane/exilus/stance yok */
 const isNecExalt=()=>!!S.tgt&&S.par?.cat==='Necramech';
 const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
 const hasK=k=>{
@@ -383,7 +382,7 @@ function renderRiv(){
 function openByName(n){
   const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());
   if(!b){msg('Build bulunamadı: '+n);return}
-  const warn=S.tgt?'Exalted formundaki değişiklikler kaybolacak. ':'';
+  const warn=S.tgt?'Alt formdaki değişiklikler kaybolacak. ':'';
   if(ADMIN&&!confirm(warn+'Kaydedilmeyen değişiklikler kaybolabilir. Devam?'))return;
   if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'});
 }
@@ -445,7 +444,7 @@ function renderTgt(){
   const l=exList(),box=$('#tgtrow');
   $('#builder').classList.toggle('intgt',!!S.tgt);
   if(!l.length){box.innerHTML='';return}
-  box.innerHTML='<h2 style="margin-top:.8rem">Exalted</h2><div class="row">'
+  box.innerHTML='<h2 style="margin-top:.8rem">Diğer</h2><div class="row">'
    +`<button data-tgt="" class="${S.tgt?'':'on'}" lang="en">${esc(IT.get(S.tgt?S.par.item:S.item)?.name||'')}</button>`
    +l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}" lang="en">${esc(IT.get(u).name)}</button>`).join('')
    +(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat" aria-label="Mod Türü">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')
@@ -467,8 +466,16 @@ function calcWith(d,P){
   Object.assign(S,d,P);const r=calc();Object.assign(S,keep);return r;
 }
 function autoForma(){
-  stash();
-  const ds=S.cfgs.map(c=>c.d).filter(Boolean),pn={aura:'apol',au2:'a2pol',ex:'expol',st:'stpol'};
+  const isTgt=!!S.tgt;
+  if(isTgt){
+    tgtSave();
+  }else{
+    const d=Object.fromEntries(CF.map(k=>[k,S[k]]));
+    if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}
+    S.cfgs[S.ci].d=d;
+  }
+  const cfgs=isTgt?S.exs[S.tgt].cfgs:S.cfgs;
+  const ds=cfgs.map(c=>c.d).filter(Boolean),pn={aura:'apol',au2:'a2pol',ex:'expol',st:'stpol'};
   const P={pols:S.pols.slice(),apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol};
   const gp=k=>typeof k==='number'?P.pols[k]:P[pn[k]],sp=(k,v)=>{typeof k==='number'?P.pols[k]=v:P[pn[k]]=v};
   const modsAt=k=>ds.map(d=>typeof k==='number'?d.slots?.[k]:d[k]).filter(Boolean).map(x=>M.get(x.u)).filter(m=>m&&m.polarity);
@@ -484,8 +491,15 @@ function autoForma(){
     if(!best)break;sp(best.k,best.pol);
   }
   S.pols=P.pols;S.apol=P.apol;S.a2pol=P.a2pol;S.expol=P.expol;S.stpol=P.stpol;
+  if(isTgt){
+    const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));
+    e.po={pols:S.pols,apol:S.apol,expol:S.expol,stpol:S.stpol};
+  }else{
+    const d=Object.fromEntries(CF.map(k=>[k,S[k]]));
+    S.cfgs[S.ci].d=d;
+  }
   const fm=KEYS().filter(k=>gp(k)!==baseP(k)).length,o=tot()[0];
-  msg(fm+' forma kullanıldı (tüm configler için ortak).'+(o>0?' Kapasite yine de aşılıyor, bazı modları değiştirmen gerekebilir.':''));
+  msg(fm+' forma kullanıldı'+(o>0?' (kapasite yine de aşılıyor, bazı modları değiştirmen gerekebilir).':''));
 }
 const CK={normal:'Normal',aura:'Aura',stance:'Stance',exilus:'Exilus'};
 function syncCM(){
@@ -745,4 +759,4 @@ $('#cmsave').addEventListener('click',()=>{
 init();
 </script>
 </body>
-  </html>
+</html>
