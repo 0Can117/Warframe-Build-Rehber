@@ -139,7 +139,7 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 #linkpop[hidden]{display:none}#linkpop button{text-align:left;letter-spacing:0;font-family:inherit}
 #prevb{margin-bottom:.6rem}
 
-/* CONFIG BUTONLARI - ADMIN: VARSAYILAN BOYUT, RO: SOLA YASLI */
+/* CONFIG BUTONLARI - ADMIN: VARSAYILAN, RO: SOLA YASLI VE BÜYÜK */
 #cfgrow { 
   display: flex !important;
   flex-wrap: wrap !important;
@@ -155,9 +155,14 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
   min-width: auto; 
 }
 
-/* Ready Only'de sola yasla */
+/* Ready Only'de sola yasla ve biraz büyüt */
 .ro #cfgrow {
   justify-content: flex-start !important;
+}
+.ro #cfgrow button {
+  font-size: 1.15rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 700 !important;
 }
 
 #itembtn { text-align: left; flex: 1; min-width: 140px; }
@@ -404,6 +409,8 @@ function getModElements(m){
 function getModPrimaryEls(m){return getModElements(m).filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e))}
 function getModSecondaryEls(m){return getModElements(m).filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e))}
 function getInnateEls(){
+  // Yoldaş silahlarında doğuştan gelen element (örneğin Panzer'in Viral'i) stat panelinde gösterilmesin
+  if(S.cat==='Companion'||S.cat==='Companion Weapon')return[];
   const it=IT.get(S.item);if(!it)return[];
   const dmg=it.damage||{};
   const els=[];
@@ -837,8 +844,11 @@ function renderList(){
 function renderSaved(){
   const q=($('#bq')?.value||'').trim().toLowerCase();
   const bc=b=>b.cat==='Warframe'?'wf':/^(Primary|Secondary|Melee)$/.test(b.cat)?'wp':/^Companion/.test(b.cat)?'pet':'oth';
-  $('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
+  const bcatsList=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']];
+  bcatsList.sort((a,b)=>a[1].localeCompare(b[1])); // Kategori filtrelerini alfabetik sırala
+  $('#bcats').innerHTML=bcatsList.map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
   const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q)));
+  rows.sort((a,b)=>(a.name||'').localeCompare(b.name||'')); // Kayıtlı buildleri isme göre alfabetik sırala
   $('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span>
     <button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
 }
