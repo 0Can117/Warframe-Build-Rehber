@@ -1293,7 +1293,7 @@
             ],
             "arcs": [
               "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
-              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
+              "/Lotus/Upgrades/CosmeticEnhancers/Defensive/GolemArcaneShieldRegenOnDamage"
             ],
             "elem": "",
             "bonus": 25,
