@@ -347,6 +347,7 @@ const isClaws=()=>!!S.tgt&&/^claw:/.test(S.tgt);
 const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
 const hasK=k=>{
   if(isNecExalt())return typeof k==='number'?k<8:false;
+  if(S.tgt && (k==='aura' || k==='au2')) return false;
   return typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
 };
 const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13];
