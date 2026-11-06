@@ -1,6 +1,89 @@
 {
   "builds": [
     {
+      "id": "bmw5h093w",
+      "name": "Ash",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Ninja/Ninja",
+      "note": "",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "madurai",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": null,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Config 1",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              null,
+              null
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": null
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw5aiy3v",
       "name": "Narin",
       "cname": "",
