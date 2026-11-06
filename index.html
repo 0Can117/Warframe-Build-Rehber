@@ -473,8 +473,16 @@ function renderBuilder(){
 function getModLastStats(m){const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):''}
 function getModElements(m){
   const stats=getModLastStats(m);
-  const els=[];const re=/\b(Heat|Cold|Electricity|Toxin|Blast|Radiation|Magnetic|Viral|Corrosive|Gas)\b/gi;
-  let match;while((match=re.exec(stats)))els.push(match[1]);
+  const els=[];
+  const re=/\b(Heat|Cold|Electricity|Toxin|Blast|Radiation|Magnetic|Viral|Corrosive|Gas)\b/gi;
+  const parts = stats.split('|');
+  for (let part of parts) {
+    if (/Radius/i.test(part)) continue;
+    let match;
+    while((match=re.exec(part))){
+      els.push(match[1]);
+    }
+  }
   return els;
 }
 function getModPrimaryEls(m){return getModElements(m).filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e))}
