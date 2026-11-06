@@ -845,7 +845,6 @@ function renderSaved(){
   const q=($('#bq')?.value||'').trim().toLowerCase();
   const bc=b=>b.cat==='Warframe'?'wf':/^(Primary|Secondary|Melee)$/.test(b.cat)?'wp':/^Companion/.test(b.cat)?'pet':'oth';
   const bcatsList=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']];
-  bcatsList.sort((a,b)=>a[1].localeCompare(b[1])); // Kategori filtrelerini alfabetik sırala
   $('#bcats').innerHTML=bcatsList.map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
   const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q)));
   rows.sort((a,b)=>(a.name||'').localeCompare(b.name||'')); // Kayıtlı buildleri isme göre alfabetik sırala
