@@ -1,6 +1,6 @@
 const CDN='https://cdn.jsdelivr.net/gh/WFCD/warframe-items@master/data/json/', SRC=[f=>'https://raw.githubusercontent.com/WFCD/warframe-items/master/data/json/'+f+'.json', f=>CDN+f+'.json'], IMG='https://cdn.warframestat.us/img/';
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const CATS=['Warframe','Primary','Secondary','Melee','Archgun','Archmelee','Zaw','Kitgun','Companion','Companion Weapon','Necramech','K-Drive','Railjack','Custom'];
+const CATS=['Warframe','Primary','Secondary','Melee','Archgun','Archmelee','Zaw','Kitgun','Companion','Companion Weapon','Necramech','K-Drive','Railjack'];
 const XC={Companion:{n:10,re:/^Companion Mod/},'Companion Weapon':{n:8,re:/^(Primary|Secondary|Melee|Pistol|Rifle|Shotgun|Bow|Sniper|Companion|Posture) Mod/},Necramech:{n:12,re:/^Necramech Mod/},'K-Drive':{n:8,re:/^K-Drive Mod/},Railjack:{n:8,aura:true,re:/^(Plexus|Railjack) Mod/},Custom:{n:12,re:/./}};
 const MODRE={Warframe:/^Warframe Mod/,Primary:/^(Primary|Shotgun|Rifle|Bow|Sniper) Mod/,Secondary:/^(Secondary|Pistol) Mod/,Melee:/^(Melee|Stance) Mod/,Archgun:/^Arch-Gun Mod/,Archmelee:/^Arch-Melee Mod/,Zaw:/^Melee Mod/};
 const ARC={Warframe:/^Warframe Arcane/,Primary:/^(Primary|Shotgun|Bow) Arcane/,Secondary:/^Secondary Arcane/,Melee:/^Melee Arcane/,Zaw:/^Zaw Arcane/,Kitgun:/^Kitgun Arcane/};
@@ -16,7 +16,7 @@ const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',
 let S=blank(), tab='mods', drag=null, sup=false, abPick=null, omniOn=false, bcat='all';
 const msg=t=>$('#msg').textContent=t||'';
 
-const ADMIN_HASH = "6b215dadc6a4e29028391bc75263c3444715e2530b185ef46c35db90ed5706ff"; 
+const ADMIN_HASH = "6b215dadc6a4e29028391bc75263c3444715e2530b185ef46c35db90ed5706ff";
 const ADMIN = (() => {
     try {
         const urlParam = new URLSearchParams(location.search).get('admin');
@@ -38,6 +38,9 @@ const ADMIN = (() => {
 const RO=!ADMIN; document.body.classList.toggle('ro',RO);
 const openView=()=>{if(RO)document.body.classList.add('open')};
 let saved=[]; if(ADMIN)try{saved=JSON.parse(localStorage.getItem('builds')||'[]')}catch(e){}
+let guides=[]; if(ADMIN)try{guides=JSON.parse(localStorage.getItem('guides')||'[]')}catch(e){}
+const persistGuides=()=>{if(!RO)try{localStorage.setItem('guides',JSON.stringify(guides))}catch(e){msg('Rehber kaydı yazılamadı.')}};
+let curGuide=null, guideImgs=[];
 const navStack=[];
 let CM=[]; if(ADMIN)try{CM=JSON.parse(localStorage.getItem('cmods')||'[]')}catch(e){}
 const saveCM=()=>{if(!RO)try{localStorage.setItem('cmods',JSON.stringify(CM))}catch(e){}};
@@ -69,25 +72,21 @@ async function init(){
     const [mods,arc,wf,pri,sec,mel,ag,misc,pets,sen,sw,am]=await Promise.all(['Mods','Arcanes','Warframes','Primary','Secondary','Melee','Arch-Gun','Misc','Pets','Sentinels','SentinelWeapons','Arch-Melee'].map(get));
     DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
-    
     const isSO = i => /^\/Lotus\/Powersuits\/SiriusOrion\//.test(i.uniqueName||'');
     const soSirius = wf.find(i => i.type==='Warframe' && isSO(i) && /Sirius/.test(i.uniqueName) && /SiriusSuit$/.test(i.uniqueName));
     const soOrion  = wf.find(i => i.type==='Warframe' && isSO(i) && /OrionSuit$/.test(i.uniqueName));
     const soFix = (i,ap) => ({...(i||{}), polarities:((i||{}).polarities||[]).filter(p=>p!=='aura').concat('omni'), auraPolarity:ap});
     let wfList = wf.filter(i => i.type === 'Warframe' && !isSO(i));
     wfList.push({...soFix(soSirius,'vazarin'), uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe', abilities:[]});
-    
     const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m)); DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     ['venari','venariclaws','sevashadow','sevashadowp'].forEach(u=>IT.set(u,{uniqueName:u,name:u.charAt(0).toUpperCase()+u.slice(1).replace('p',' Prime')}));
-    
     IT.set('sirius', {...soFix(soSirius,'vazarin'), uniqueName:'sirius', name:'Sirius', type:'Warframe'});
     IT.set('orion', {...soFix(soOrion,'naramon'), uniqueName:'orion', name:'Orion', type:'Warframe'});
     ['sirius','orion'].forEach(u=>(IT.get(u).abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:IT.get(u).name})));
-    
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
     misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
@@ -95,8 +94,8 @@ async function init(){
     DATA.items.Warframe.forEach(w=>(w.abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:w.name})));
     msg('');
     let pub=[];try{const r=await fetch('builds.json?'+Date.now());if(r.ok)pub=await r.json()}catch(e){}
-    const pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]),pc=Array.isArray(pub?.cmods)?pub.cmods:[];
-    if(RO){saved=pb;CM=pc}else{if(!saved.length&&pb.length){saved=pb;persist()}pc.forEach(c=>{if(!CM.some(x=>x.id===c.id)&&!CMD.includes(c.id))CM.push(c)});saveCM()}
+    const pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]),pc=Array.isArray(pub?.cmods)?pub.cmods:[],pg=Array.isArray(pub?.guides)?pub.guides:[];
+    if(RO){saved=pb;CM=pc;guides=pg}else{if(!saved.length&&pb.length){saved=pb;persist()}if(!guides.length&&pg.length){guides=pg;persistGuides()}pc.forEach(c=>{if(!CM.some(x=>x.id===c.id)&&!CMD.includes(c.id))CM.push(c)});saveCM()}
     syncCM();
     const h=location.hash.match(/^#b=(.+)$/);
     if(h){try{loadBuild(JSON.parse(decodeURIComponent(escape(atob(h[1])))));openView()}catch(e){msg('Paylaşım bağlantısı okunamadı.')}}
@@ -106,11 +105,12 @@ async function init(){
         try{
           const r=await fetch('builds.json?'+Date.now());
           if(r.ok){
-            const pub=await r.json(), pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]);
+            const pub=await r.json(), pb=Array.isArray(pub)?pub:(Array.isArray(pub?.builds)?pub.builds:[]),pg=Array.isArray(pub?.guides)?pub.guides:[];
             if(JSON.stringify(pb)!==JSON.stringify(saved)){
               saved=pb; renderSaved();
               if(S.id){ const updated=saved.find(x=>x.id===S.id); if(updated){ loadBuild(updated); renderAll(); } }
             }
+            if(JSON.stringify(pg)!==JSON.stringify(guides)){guides=pg;renderSaved()}
           }
         }catch(e){}
       }, 30000);
@@ -162,8 +162,6 @@ function renderBuilder(){
 
 function getModLastStats(m){const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):''}
 function getModElements(m){
-  // Yalnızca "+%X Element" biçimindeki hasar bonusu satırları sayılır (örn. "+90% Heat", "+150% Viral and Magnetic Damage").
-  // "Melee kills Blast and stagger...", "Heat Status", "radial blast of Cold" gibi açıklama cümleleri element eklemez.
   const stats=getModLastStats(m), EL='Heat|Cold|Electricity|Toxin|Blast(?!\\s*(?:Range|Radius))|Radiation|Magnetic|Viral|Corrosive|Gas', T='(?:<[^>]*>\\s*)?';
   const seg=new RegExp('[+\\-]\\s*\\d+(?:\\.\\d+)?%\\s*('+T+'(?:'+EL+')\\b(?:\\s+and\\s+'+T+'(?:'+EL+')\\b)*)(?!\\s*(?:Status|Proc|Resist))','gi');
   const one=new RegExp('\\b('+EL+')\\b','gi'), els=[];let a;
@@ -192,7 +190,6 @@ function renderStats(){
     finalEls=[...innateSecondary,...secondaryModEls,...comboPairs]; if(!finalEls.length&&allPrimary.length)finalEls=allPrimary;
   }
   const combined=[...new Set(finalEls)].map(name=>({name}));
-  
   const wf={str:100,dur:100,range:100,eff:100};
   for(const k of [0,1,2,3,4,5,6,7]){const s=getS(k),m=s&&M.get(s.u);if(!m)continue;const b=getModAbilityBonus(m);wf.str+=b.str;wf.dur+=b.dur;wf.range+=b.range;wf.eff+=b.eff}
   (S.shards||[]).forEach(sh=>{const p=shardParse(sh);if(!p)return;const statArr=SH[p.color]?(SH[p.color][p.tau?'t':'n']||[]):[];const stat=statArr[p.idx]||'';const num=parseFloat((stat.match(/(\d+(?:\.\d+)?)/)||[])[1]||'0');if(/Yetenek Gücü/i.test(stat))wf.str+=num;else if(/Yetenek Süresi/i.test(stat))wf.dur+=num});
@@ -274,7 +271,51 @@ const SC={Crimson:'#c0443c',Amber:'#e0b04a',Azure:'#4c9bd6',Topaz:'#e08a3c',Viol
 function renderShards(){const box=$('#shbox');box.hidden=S.cat!=='Warframe'||!!S.tgt||isNecExalt()||(RO&&!S.shards.some(Boolean));if(box.hidden)return;const optsFor=v=>{const p=shardParse(v);return Object.keys(SH).map(c=>`<optgroup label="${c}">${SH[c].t.map((d,i)=>`<option value="${c}|${i}|t" ${p&&p.color===c&&p.idx===i&&p.tau?'selected':''}>${c} (Tau): ${esc(d)}</option>`).join('')}${SH[c].n.map((d,i)=>`<option value="${c}|${i}|n" ${p&&p.color===c&&p.idx===i&&!p.tau?'selected':''}>${c} (Normal): ${esc(d)}</option>`).join('')}</optgroup>`).join('')};$('#shards').innerHTML=Array.from({length:5},(_,i)=>{const v=S.shards[i],p=shardParse(v),c=p?p.color:'';return `<div class="${v?'sf':''}" style="border-left-color:${SC[c]||'var(--ln)'}"><select data-sh="${i}"><option value="">Shard ${i+1}: Boş</option>${optsFor(v)}</select>${p?`<div class="shd"><b style="color:${SC[c]}">${c}${p.tau?' (Tau)':''}</b> · ${esc((SH[c][p.tau?'t':'n']||[])[p.idx]||'')}</div>`:''}</div>`}).join('')}
 function renderNote(){$('#note').value=S.note||'';$('#note').readOnly=RO;$('#notebox').hidden=RO&&!S.note&&!S.imgs.length;$('#notev').innerHTML=esc(S.note).replace(/\n/g,'<br>').replace(/\[\[([^\]]+)\]\]/g,(m,n)=>`<a href="#" data-bl="${n}">${n}</a>`);$('#rivbox').hidden=isNecExalt()||!RIVCAT.includes(S.cat)||(RO&&!S.riv.length);renderRiv();$('#gal').innerHTML=S.imgs.map((u,i)=>`<figure><img src="${esc(u)}" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-rmimg="${i}">×</button></figure>`).join('')}
 function renderList(){const q=$('#q').value.trim().toLowerCase();let rows;if(tab==='mods')rows=DATA.mods.filter(m=>(m.custom||modRe().test(m.type||''))&&(!q||m.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));else{const sl=arcSlots();rows=sl.length?DATA.arcanes.filter(a=>sl.some(t=>ARC[t].test(a.type||''))&&(!q||a.name.toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name)):[]}const total=rows.length;rows=rows.slice(0,150);$('#list').innerHTML=rows.map(m=>`<button class="card" lang="en" data-${tab==='mods'?'mod':'arc'}="${esc(m.uniqueName)}" title="${esc(statsOf(m))}">${m.imageName?`<img src="${IMG+esc(m.imageName)}" loading="lazy" draggable="false">`:''}<b>${esc(m.name)}</b><small>${tab==='mods'?`${esc(polLabel(m.polarity)||'-')} · Drain ${Math.abs(m.baseDrain||0)} · Rank ${maxRank(m)}`:esc(m.type||'Arcane')}</small></button>`).join('')+(total>150?`<p class="muted">${total} sonuçtan ilk 150 gösteriliyor.</p>`:'')||'<p class="muted">Sonuç yok.</p>'}
-function renderSaved(){const q=($('#bq')?.value||'').trim().toLowerCase(),bc=b=>b.cat==='Warframe'?'wf':/^(Primary|Secondary|Melee)$/.test(b.cat)?'wp':/^Companion/.test(b.cat)?'pet':'oth';$('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q))).sort((a,b)=>(a.name||'').localeCompare(b.name||''));$('#bl').innerHTML=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`}
+function renderSaved(){
+  const q=($('#bq')?.value||'').trim().toLowerCase(),bc=b=>b.cat==='Warframe'?'wf':/^(Primary|Secondary|Melee)$/.test(b.cat)?'wp':/^Companion/.test(b.cat)?'pet':'oth';
+  $('#bcats').innerHTML=[['all','Tümü'],['wf','Warframeler'],['wp','Silahlar'],['pet','Yoldaşlar'],['oth','Diğer Buildler'],['guide','Rehberler']].map(([k,l])=>`<button data-bc="${k}" class="${k===bcat?'on':''}">${l}</button>`).join('');
+  let html='';
+  if(bcat==='guide'||bcat==='all'){
+    const gr=guides.filter(g=>!q||[g.name,g.note].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    if(gr.length)html+=gr.map(g=>`<div class="bl"><span><b>${esc(g.name||'Adsız Rehber')}</b> <small class="muted">Rehber</small></span><button data-guide-open="${g.id}">${ADMIN?'Düzenle':'Aç'}</button>${ADMIN?`<button data-gdel="${g.id}">Sil</button>`:''}</div>`).join('');
+    else if(bcat==='guide')html+=`<p class="muted">${guides.length?'Aramaya uyan rehber yok.':'Henüz rehber yok.'}</p>`;
+  }
+  if(bcat!=='guide'){
+    const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q))).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    html+=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
+  }
+  $('#bl').innerHTML=html;
+}
+
+function guideNoteHTML(note){
+  return esc(note).replace(/\n/g,'<br>').replace(/\[\[([^\]]+)\]\]/g,(m,n)=>`<a href="#" data-bl="${esc(n)}">${esc(n)}</a>`);
+}
+function renderGuideGal(){
+  $('#ggal').innerHTML=guideImgs.map((u,i)=>`<figure><img src="${esc(u)}" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-grmimg="${i}">×</button></figure>`).join('');
+}
+function openGuide(g){
+  curGuide=g||{id:'g'+Date.now().toString(36),name:'',note:'',imgs:[]};
+  guideImgs=[...(curGuide.imgs||[])];
+  $('#gname').value=curGuide.name||'';
+  $('#gnote').value=curGuide.note||'';
+  renderGuideGal();
+  $('#gdelete').hidden=!g||RO;
+  if(RO){
+    $('#gname').readOnly=true; $('#gnote').readOnly=true;
+    $('#gview').innerHTML=`<h2>${esc(curGuide.name||'')}</h2><div class="notev">${guideNoteHTML(curGuide.note||'')}</div>`;
+    $('#gview').hidden=false;
+    $('#gsave').hidden=true; $('#gdelete').hidden=true; $('#gimgrow').hidden=true;
+    $('#gnote').style.display='none';
+    $('#gcancel').textContent='Kapat';
+  }else{
+    $('#gname').readOnly=false; $('#gnote').readOnly=false;
+    $('#gview').hidden=true;
+    $('#gsave').hidden=false; $('#gimgrow').hidden=false;
+    $('#gnote').style.display='';
+    $('#gcancel').textContent='İptal';
+  }
+  $('#guidemodal').hidden=false;
+}
 
 function place(u,k){const m=M.get(u);if(!m)return false;if(!hasK(k)||!canPlace(m,k)){msg('Bu mod bu yuvaya takılamaz.');return false}if(KEYS().some(x=>x!==k&&getS(x)&&M.get(getS(x).u)?.name===m.name)){msg('Aynı mod iki kez kullanılamaz.');return false}if(CONV_MODS[m.name]&&isClaws()){const conflict=KEYS().find(x=>{const s=getS(x),mm=s&&M.get(s.u);return mm&&mm.name!==m.name&&CONV_MODS[mm.name]});if(conflict!==undefined){msg('Sadece 1 dönüşüm modu takılabilir: '+M.get(getS(conflict).u).name);return false}}msg('');setS(k,{u,r:maxRank(m)});return true}
 function autoKey(m){if(m.custom){if(isAura(m)){if(hasK('aura')&&!getS('aura'))return'aura';if(hasK('au2')&&!getS('au2'))return'au2'}if(isSt(m)&&hasK('st')&&!getS('st'))return'st';if(m.isUtility&&hasK('ex')&&!getS('ex'))return'ex';for(let i=0;i<NG();i++)if(!S.slots[i])return i;if(hasK('ex')&&!getS('ex'))return'ex';if(hasK('aura')&&!getS('aura'))return'aura';if(hasK('au2')&&!getS('au2'))return'au2';if(hasK('st')&&!getS('st'))return'st';return null}if(isAura(m))return!S.aura||!hasK('au2')?'aura':!S.au2?'au2':'aura';if(isSt(m))return'st';if(m.isUtility&&hasK('ex')&&!getS('ex'))return'ex';for(let i=0;i<NG();i++)if(!S.slots[i])return i;return null}
@@ -301,10 +342,10 @@ $('#itembtn').addEventListener('click',()=>{const box=$('#buildlistro');if(!box.
 
 document.addEventListener('click',e=>{
   if(sup)return;
-  const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();openByName(bl.dataset.bl);return}
-  if(e.target.matches('#gal img')){e.target.classList.toggle('big');return}
+  const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();$('#guidemodal').hidden=true;openByName(bl.dataset.bl);return}
+  if(e.target.matches('#gal img, #ggal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined)return;
+  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined&&d.guideOpen===undefined)return;
   if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build başladı.')}if(d.cat!==S.cat)navStack.length=0;selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod); else if(d.arc)addArc(d.arc);
@@ -318,6 +359,10 @@ document.addEventListener('click',e=>{
   else if(d.fwd){$('#'+d.fwd).click()}
   else if(d.ghsync){syncToGitHub()}
   else if(d.ghset){const repo=prompt('Repo:',localStorage.getItem('gh_repo')||'');if(repo!==null)localStorage.setItem('gh_repo',repo.trim());const branch=prompt('Branch:',localStorage.getItem('gh_branch')||'main');if(branch!==null)localStorage.setItem('gh_branch',branch.trim()||'main');const token=prompt('PAT:',localStorage.getItem('gh_token')||'');if(token!==null)localStorage.setItem('gh_token',token.trim());msg('Ayarlar kaydedildi.')}
+  else if(d.guide){openGuide(null)}
+  else if(d.guideOpen!==undefined){const g=guides.find(x=>x.id===d.guideOpen);if(g)openGuide(g)}
+  else if(d.gdel){if(confirm('Rehber silinsin mi?')){guides=guides.filter(x=>x.id!==d.gdel);persistGuides();renderSaved()}}
+  else if(d.grmimg!==undefined){guideImgs.splice(+d.grmimg,1);renderGuideGal()}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
@@ -362,9 +407,9 @@ $('#autof').addEventListener('click',()=>{autoForma();renderBuilder()});
 $('#reset').addEventListener('click',()=>{if(!confirm('Sıfırlanacak. Devam?'))return;S=blank();selectCat('Warframe');navStack.length=0;history.replaceState(null,'',location.pathname+location.search);renderAll();msg('Sıfırlandı.')});
 $('#new').addEventListener('click',()=>{const c=S.cat;S=blank();selectCat(c);navStack.length=0;history.replaceState(null,'',location.pathname+location.search);renderAll();msg('')});
 
-$('#exp').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({builds:saved,cmods:CM},null,2)],{type:'application/json'}));a.download='builds.json';a.click()});
+$('#exp').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({builds:saved,cmods:CM,guides},null,2)],{type:'application/json'}));a.download='builds.json';a.click()});
 $('#imp').addEventListener('click',()=>$('#file').click());
-$('#file').addEventListener('change',async e=>{try{const j=JSON.parse(await e.target.files[0].text()),arr=Array.isArray(j)?j:j.builds;if(!Array.isArray(arr))throw 0;if(Array.isArray(j.cmods)){j.cmods.forEach(c=>{if(!CM.some(x=>x.id===c.id))CM.push(c);CMD=CMD.filter(x=>x!==c.id)});saveCMD();saveCM();syncCM();renderCm()}arr.forEach(b=>{if(b&&b.id){const i=saved.findIndex(x=>x.id===b.id);i<0?saved.push(b):saved[i]=b}});persist();renderSaved();msg('İçe aktarıldı.')}catch(err){msg('Geçersiz dosya.')}e.target.value=''});
+$('#file').addEventListener('change',async e=>{try{const j=JSON.parse(await e.target.files[0].text()),arr=Array.isArray(j)?j:j.builds;if(!Array.isArray(arr))throw 0;if(Array.isArray(j.cmods)){j.cmods.forEach(c=>{if(!CM.some(x=>x.id===c.id))CM.push(c);CMD=CMD.filter(x=>x!==c.id)});saveCMD();saveCM();syncCM();renderCm()}if(Array.isArray(j.guides)){j.guides.forEach(g=>{if(g&&g.id){const i=guides.findIndex(x=>x.id===g.id);i<0?guides.push(g):guides[i]=g}});persistGuides()}arr.forEach(b=>{if(b&&b.id){const i=saved.findIndex(x=>x.id===b.id);i<0?saved.push(b):saved[i]=b}});persist();renderSaved();msg('İçe aktarıldı.')}catch(err){msg('Geçersiz dosya.')}e.target.value=''});
 
 function shrink(f){return new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.75))};im.onerror=bad;im.src=r.result};r.onerror=bad;r.readAsDataURL(f)})}
 $('#note').addEventListener('input',e=>{if(!RO){S.note=e.target.value;linkSuggest(e.target)}});
@@ -377,11 +422,28 @@ $('#adminoff').addEventListener('click',()=>{try{localStorage.removeItem('admin'
 document.addEventListener('input',e=>{const d=e.target.dataset;if(d.evo!==undefined&&!RO)S.evo[+d.evo]=e.target.value});
 $('#cmsave').addEventListener('click',()=>{const n=$('#cmname').value.trim();if(!n){msg('Mod adı gerekli.');return}CM.unshift({id:'c'+Date.now().toString(36),name:n,ck:$('#cmkind').value,polarity:$('#cmpol').value,drain:Math.min(30,Math.abs(+$('#cmdrain').value||0)),rank:Math.max(0,Math.min(30,+$('#cmrank').value||0)),desc:$('#cmdesc').value.trim()});saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Kaydedildi.')});
 
+$('#gcancel').addEventListener('click',()=>{$('#guidemodal').hidden=true;curGuide=null});
+$('#gsave').addEventListener('click',()=>{
+  const name=$('#gname').value.trim();
+  if(!name){msg('Rehber adı gerekli.');return}
+  const g={id:curGuide.id,name,note:$('#gnote').value,imgs:guideImgs.slice()};
+  const i=guides.findIndex(x=>x.id===g.id);
+  i<0?guides.unshift(g):guides[i]=g;
+  persistGuides();renderSaved();$('#guidemodal').hidden=true;curGuide=null;msg('Rehber kaydedildi.');
+});
+$('#gdelete').addEventListener('click',()=>{
+  if(!curGuide||!confirm('Rehber silinsin mi?'))return;
+  guides=guides.filter(g=>g.id!==curGuide.id);persistGuides();renderSaved();$('#guidemodal').hidden=true;curGuide=null;
+});
+$('#gaddurl').addEventListener('click',()=>{const v=$('#gimgurl').value.trim();if(!v)return;guideImgs.push(v);$('#gimgurl').value='';renderGuideGal()});
+$('#gaddfile').addEventListener('click',()=>$('#gimgfile').click());
+$('#gimgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{guideImgs.push(await shrink(f))}catch(err){msg('Hata: '+f.name)}}e.target.value='';renderGuideGal()});
+
 async function syncToGitHub(){
-  if(!ADMIN) return; 
+  if(!ADMIN) return;
   const token = localStorage.getItem('gh_token'), repo = localStorage.getItem('gh_repo'), branch = localStorage.getItem('gh_branch') || 'main';
   if(!token || !repo){ msg('GitHub ayarları eksik.'); return; }
-  const b64content = btoa(unescape(encodeURIComponent(JSON.stringify({builds: saved, cmods: CM}, null, 2))));
+  const b64content = btoa(unescape(encodeURIComponent(JSON.stringify({builds: saved, cmods: CM, guides}, null, 2))));
   const url = `https://api.github.com/repos/${repo}/contents/builds.json?ref=${branch}`;
   try{
     msg('Senkronize ediliyor...');
