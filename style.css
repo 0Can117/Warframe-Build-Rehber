@@ -133,7 +133,6 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 #cfgrow { display: flex !important; flex-wrap: wrap !important; gap: 0.5rem !important; justify-content: center !important; margin-bottom: 1rem !important; margin-top: 0.5rem !important; width: 100%; }
 #cfgrow #cfgname { flex: 0 0 auto; width: 140px; min-width: auto; }
 .ro #cfgrow { justify-content: flex-start !important; }
-.ro #cfgrow button { font-size: 1.15rem !important; padding: 0.5rem 1rem !important; font-weight: 700 !important; }
 #itembtn { text-align: left; flex: 1; min-width: 140px; }
 #buildlistro { margin-bottom: .7rem; padding: .5rem; background: #150f24; border: 1px solid var(--ln); border-radius: 8px; max-height: 400px; overflow: auto; }
 #buildlistro h2 { font-size: 1.1rem; margin-bottom: .5rem; }
@@ -167,4 +166,26 @@ body.guiding #guideview{display:block!important}
 #ggal figure{width:100%;margin:0;position:relative}
 #ggal img{width:100%;height:auto;max-height:none;max-width:100%;border-radius:10px;cursor:zoom-in;border:1px solid var(--ln)}
 #ggal img.big{cursor:zoom-out}
-.bl button{min-width:130px;text-align:center;padding:.4rem .8rem;font-size:1rem}
+
+/* BUTON EŞİTLEME (Kocaman olmayı engeller, hepsini aynı boyuta getirir) */
+#cfgrow button, .bl button, .bl button[data-gshare], .bl button[data-guide-open] {
+  font-size: 1rem !important;
+  padding: .4rem .8rem !important;
+  height: 38px !important;
+  min-width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#cfgrow button[data-cfgcopy] {
+  padding: 0 .5rem !important;
+  min-width: 36px !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+#cfgrow span button:first-child {
+  border-radius: 6px 0 0 6px !important;
+  max-width: 140px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  }
