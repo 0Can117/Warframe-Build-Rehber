@@ -285,7 +285,7 @@ function renderSaved(){
   }
   if(bcat!=='guide'){
     const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q))).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-    html+=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantıyı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
+    html+=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
   }
   $('#bl').innerHTML=html;
 }
@@ -459,7 +459,6 @@ $('#adminoff').addEventListener('click',()=>{try{localStorage.removeItem('admin'
 document.addEventListener('input',e=>{const d=e.target.dataset;if(d.evo!==undefined&&!RO)S.evo[+d.evo]=e.target.value});
 $('#cmsave').addEventListener('click',()=>{const n=$('#cmname').value.trim();if(!n){msg('Mod adı gerekli.');return}CM.unshift({id:'c'+Date.now().toString(36),name:n,ck:$('#cmkind').value,polarity:$('#cmpol').value,drain:Math.min(30,Math.abs(+$('#cmdrain').value||0)),rank:Math.max(0,Math.min(30,+$('#cmrank').value||0)),desc:$('#cmdesc').value.trim()});saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Kaydedildi.')});
 
-$('#gcancel').addEventListener('click',()=>{closeGuide()});
 $('#gback').addEventListener('click',()=>{closeGuide();document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})});
 $('#gsave').addEventListener('click',()=>{
   const name=$('#gname').value.trim();
