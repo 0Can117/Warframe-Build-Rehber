@@ -100,6 +100,8 @@ async function init(){
     syncCM();
     const h=location.hash.match(/^#b=(.+)$/);
     if(h){try{loadBuild(JSON.parse(decodeURIComponent(escape(atob(h[1])))));openView()}catch(e){msg('Paylaşım bağlantısı okunamadı.')}}
+    const gh=location.hash.match(/^#g=(.+)$/);
+    if(gh){const g=guides.find(x=>x.id===decodeURIComponent(gh[1]));if(g){openGuide(g)}else msg('Rehber bulunamadı.')}
     selectCat(S.cat); renderAll();
     if(RO){
       setInterval(async()=>{
@@ -294,7 +296,9 @@ function guideNoteHTML(note){
 function renderGuideGal(){
   $('#ggal').innerHTML=guideImgs.map((u,i)=>`<figure><img src="${esc(u)}" referrerpolicy="no-referrer" loading="lazy"><button class="x" data-grmimg="${i}">×</button></figure>`).join('');
 }
+const linkGuide = g => location.origin+location.pathname+'#g='+encodeURIComponent(g.id);
 function openGuide(g){
+  openView();
   curGuide=g||{id:'g'+Date.now().toString(36),name:'',note:'',imgs:[]};
   guideImgs=[...(curGuide.imgs||[])];
   $('#gname').value=curGuide.name||'';
@@ -309,6 +313,7 @@ function openGuide(g){
     $('#gsave').hidden=true;
     $('#gdelete').hidden=true;
     $('#gimgrow').hidden=true;
+    $('#gshare').hidden=false;
     $('#gcancel').textContent='Kapat';
     $('#gtitle').textContent=curGuide.name||'Rehber';
   }else{
@@ -319,9 +324,11 @@ function openGuide(g){
     $('#gsave').hidden=false;
     $('#gdelete').hidden=!g;
     $('#gimgrow').hidden=false;
+    $('#gshare').hidden=!g;
     $('#gcancel').textContent='İptal';
     $('#gtitle').textContent=g?'Rehberi Düzenle':'Rehber Hazırla';
   }
+  try{ if(g) history.replaceState(null,'',location.pathname+location.search+'#g='+encodeURIComponent(g.id)) }catch(e){}
   $('#guideview').hidden=false;
   document.body.classList.add('guiding');
   scrollTo({top:0,behavior:'smooth'});
@@ -331,6 +338,7 @@ function closeGuide(){
   document.body.classList.remove('guiding');
   curGuide=null;
   guideImgs=[];
+  try{ if(/^#g=/.test(location.hash)) history.replaceState(null,'',location.pathname+location.search) }catch(e){}
 }
 
 function place(u,k){const m=M.get(u);if(!m)return false;if(!hasK(k)||!canPlace(m,k)){msg('Bu mod bu yuvaya takılamaz.');return false}if(KEYS().some(x=>x!==k&&getS(x)&&M.get(getS(x).u)?.name===m.name)){msg('Aynı mod iki kez kullanılamaz.');return false}if(CONV_MODS[m.name]&&isClaws()){const conflict=KEYS().find(x=>{const s=getS(x),mm=s&&M.get(s.u);return mm&&mm.name!==m.name&&CONV_MODS[mm.name]});if(conflict!==undefined){msg('Sadece 1 dönüşüm modu takılabilir: '+M.get(getS(conflict).u).name);return false}}msg('');setS(k,{u,r:maxRank(m)});return true}
@@ -361,7 +369,7 @@ document.addEventListener('click',e=>{
   const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();closeGuide();openByName(bl.dataset.bl);return}
   if(e.target.matches('#gal img, #ggal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined&&d.guideOpen===undefined)return;
+  if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined&&d.guideOpen===undefined&&d.gshare===undefined)return;
   if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build başladı.')}if(d.cat!==S.cat)navStack.length=0;selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod); else if(d.arc)addArc(d.arc);
@@ -395,6 +403,7 @@ document.addEventListener('click',e=>{
   else if(d.guideOpen!==undefined){const g=guides.find(x=>x.id===d.guideOpen);if(g)openGuide(g)}
   else if(d.gdel){if(confirm('Rehber silinsin mi?')){guides=guides.filter(x=>x.id!==d.gdel);persistGuides();renderSaved()}}
   else if(d.grmimg!==undefined){guideImgs.splice(+d.grmimg,1);renderGuideGal()}
+  else if(d.gshare!==undefined){if(curGuide){const u=linkGuide(curGuide);(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Rehber bağlantısı kopyalandı.')).catch(()=>prompt('Bağlantı:',u))}}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
@@ -471,6 +480,11 @@ $('#gdelete').addEventListener('click',()=>{
 $('#gaddurl').addEventListener('click',()=>{const v=$('#gimgurl').value.trim();if(!v)return;guideImgs.push(v);$('#gimgurl').value='';renderGuideGal()});
 $('#gaddfile').addEventListener('click',()=>$('#gimgfile').click());
 $('#gimgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{guideImgs.push(await shrink(f))}catch(err){msg('Hata: '+f.name)}}e.target.value='';renderGuideGal()});
+$('#gshare').addEventListener('click',()=>{
+  if(!curGuide)return;
+  const u=linkGuide(curGuide);
+  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Rehber bağlantısı kopyalandı.')).catch(()=>prompt('Bağlantı:',u));
+});
 
 async function syncToGitHub(){
   if(!ADMIN) return;
