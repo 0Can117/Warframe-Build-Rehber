@@ -146,13 +146,14 @@ select:hover,input:hover,textarea:hover{border-color:#5a4690}
 .wf-stat { color: var(--mu); font-size: .95rem; }
 .wf-stat b { color: var(--gold); font-weight: 700; margin-left: .25rem; }
 .wf-stat.capped { color: var(--cy); }
-#guidemodal{position:fixed;inset:0;background:#000a;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;overflow:auto}
-#guidemodal[hidden]{display:none}
-.gm-box{background:linear-gradient(180deg,#1a1230,#120d20);border:1px solid var(--gold);border-radius:12px;padding:1.2rem;max-width:720px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 60px #000}
-.gm-box h2{color:var(--gold);margin-bottom:.6rem}
-.gm-box textarea{margin-top:.4rem}
-#gview{margin-top:.6rem}
-#gview h2{font-size:1.4rem;color:var(--gold)}
-#gview .notev a{color:var(--gold)}
-.ro #ggal .x{display:none}
-.ro #gimgrow,.ro #gsave,.ro #gdelete{display:none!important}
+body.guiding #builder > *:not(#guideview){display:none!important}
+body.guiding #browser{display:none}
+body.guiding #guideview{display:block!important}
+body.guiding #saved{display:none}
+#guideview h2{color:var(--gold);margin-bottom:.6rem}
+#guideview textarea{width:100%}
+#guideview .gal img{max-width:200px;max-height:160px}
+#gview-ro{margin-top:.6rem}
+#gview-ro .notev{line-height:1.6;font-size:1.08rem}
+#gview-ro .notev a{color:var(--gold)}
+#gback{margin-bottom:.6rem}
