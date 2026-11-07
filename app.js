@@ -280,7 +280,7 @@ function renderSaved(){
   let html='';
   if(bcat==='guide'||bcat==='all'){
     const gr=guides.filter(g=>!q||[g.name,g.note].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-    if(gr.length)html+=gr.map(g=>`<div class="bl"><span><b>${esc(g.name||'Adsız Rehber')}</b> <small class="muted">Rehber</small></span><button data-guide-open="${g.id}">${ADMIN?'Düzenle':'Aç'}</button>${ADMIN?`<button data-gdel="${g.id}">Sil</button>`:''}</div>`).join('');
+    if(gr.length)html+=gr.map(g=>`<div class="bl"><span><b>${esc(g.name||'Adsız Rehber')}</b> <small class="muted">Rehber</small></span><button data-guide-open="${g.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-gshare="${g.id}">Bağlantıyı Kopyala</button>${ADMIN?`<button data-gdel="${g.id}">Sil</button>`:''}</div>`).join('');
     else if(bcat==='guide')html+=`<p class="muted">${guides.length?'Aramaya uyan rehber yok.':'Henüz rehber yok.'}</p>`;
   }
   if(bcat!=='guide'){
@@ -308,12 +308,16 @@ function openGuide(g){
   if(RO){
     $('#gname').readOnly=true;
     $('#gnote').readOnly=true;
-    $('#gnote-row').hidden=true;
-    $('#gview-ro').hidden=false;
+    if(!curGuide.note){
+      $('#gnote-row').hidden=true;
+      $('#gview-ro').hidden=true;
+    }else{
+      $('#gnote-row').hidden=true;
+      $('#gview-ro').hidden=false;
+    }
     $('#gsave').hidden=true;
     $('#gdelete').hidden=true;
     $('#gimgrow').hidden=true;
-    $('#gshare').hidden=false;
     $('#gcancel').textContent='Kapat';
     $('#gtitle').textContent=curGuide.name||'Rehber';
   }else{
@@ -324,7 +328,6 @@ function openGuide(g){
     $('#gsave').hidden=false;
     $('#gdelete').hidden=!g;
     $('#gimgrow').hidden=false;
-    $('#gshare').hidden=!g;
     $('#gcancel').textContent='İptal';
     $('#gtitle').textContent=g?'Rehberi Düzenle':'Rehber Hazırla';
   }
@@ -403,7 +406,7 @@ document.addEventListener('click',e=>{
   else if(d.guideOpen!==undefined){const g=guides.find(x=>x.id===d.guideOpen);if(g)openGuide(g)}
   else if(d.gdel){if(confirm('Rehber silinsin mi?')){guides=guides.filter(x=>x.id!==d.gdel);persistGuides();renderSaved()}}
   else if(d.grmimg!==undefined){guideImgs.splice(+d.grmimg,1);renderGuideGal()}
-  else if(d.gshare!==undefined){if(curGuide){const u=linkGuide(curGuide);(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Rehber bağlantısı kopyalandı.')).catch(()=>prompt('Bağlantı:',u))}}
+  else if(d.gshare!==undefined){const g=guides.find(x=>x.id===d.gshare);if(!g)return;const u=linkGuide(g);(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Rehber bağlantısı kopyalandı.')).catch(()=>prompt('Bağlantı:',u))}
   else if(d.bc!==undefined){bcat=d.bc;renderSaved()}
   else if(d.back){navStack.length=0;document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})}
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
@@ -480,11 +483,6 @@ $('#gdelete').addEventListener('click',()=>{
 $('#gaddurl').addEventListener('click',()=>{const v=$('#gimgurl').value.trim();if(!v)return;guideImgs.push(v);$('#gimgurl').value='';renderGuideGal()});
 $('#gaddfile').addEventListener('click',()=>$('#gimgfile').click());
 $('#gimgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{guideImgs.push(await shrink(f))}catch(err){msg('Hata: '+f.name)}}e.target.value='';renderGuideGal()});
-$('#gshare').addEventListener('click',()=>{
-  if(!curGuide)return;
-  const u=linkGuide(curGuide);
-  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>msg('Rehber bağlantısı kopyalandı.')).catch(()=>prompt('Bağlantı:',u));
-});
 
 async function syncToGitHub(){
   if(!ADMIN) return;
