@@ -21,6 +21,25 @@
 <div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
 <main>
   <section id="builder" class="panel">
+    <div id="guideview" hidden>
+      <button id="gback">← Rehberlerden Dön</button>
+      <h2 id="gtitle" style="margin-top:.6rem">Rehber</h2>
+      <div class="row"><input type="text" id="gname" placeholder="Rehber adı" style="flex:1"></div>
+      <div id="gview-ro" hidden></div>
+      <div class="row" id="gnote-row"><textarea id="gnote" rows="8" placeholder="Not... [[Build adı]] ile bağlantı kurabilirsin."></textarea></div>
+      <div class="row" id="gimgrow">
+        <input type="text" id="gimgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)">
+        <button id="gaddurl">Bağlantıyı Ekle</button>
+        <button id="gaddfile">Görsel Yükle</button>
+        <input type="file" id="gimgfile" accept="image/*" multiple hidden>
+      </div>
+      <div class="gal" id="ggal"></div>
+      <div class="row" id="gactions" style="margin-top:.8rem">
+        <button class="pri" id="gsave">Kaydet</button>
+        <button id="gcancel">İptal</button>
+        <button id="gdelete" hidden>Sil</button>
+      </div>
+    </div>
     <button id="prevb" data-prevb="1" hidden>← Önceki Build'e Dön</button>
     <button id="back" data-back="1">← Kayıtlı Buildlere Dön</button>
     <h2>Build</h2>
@@ -29,7 +48,18 @@
     <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya Silah"></select><button id="itembtn" hidden></button></div>
     <div id="buildlistro" hidden></div>
     <div id="partbox"></div>
-    <div class="row" id="custrow"><button data-cdel="1">− Yuva</button><button data-cadd="1">+ Yuva</button></div>
+    <div class="row" id="custrow">
+      <label style="display:flex;align-items:center;gap:.3rem">Yuva Tipi
+        <select id="addslottype">
+          <option value="normal">Normal</option>
+          <option value="aura">Aura</option>
+          <option value="ex">Exilus</option>
+          <option value="st">Stance</option>
+        </select>
+      </label>
+      <button data-cadd="1">+ Yuva Ekle</button>
+      <button data-cdel="1">− Yuva Çıkar</button>
+    </div>
     <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus Element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
     <div class="row"><label><input type="checkbox" id="reactor" checked> Reaktör/Katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
@@ -72,26 +102,6 @@
     <div id="bl"></div>
   </section>
 </main>
-<div id="guidemodal" hidden>
-  <div class="gm-box">
-    <h2>Rehber</h2>
-    <div class="row"><input type="text" id="gname" placeholder="Rehber adı"></div>
-    <textarea id="gnote" rows="6" placeholder="Not... [[Build adı]] ile başka build'e köprü kurabilirsin."></textarea>
-    <div id="gview" hidden></div>
-    <div class="row" id="gimgrow" style="margin-top:.5rem">
-      <input type="text" id="gimgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)">
-      <button id="gaddurl">Bağlantıyı Ekle</button>
-      <button id="gaddfile">Görsel Yükle</button>
-      <input type="file" id="gimgfile" accept="image/*" multiple hidden>
-    </div>
-    <div class="gal" id="ggal"></div>
-    <div class="row" style="margin-top:.8rem">
-      <button class="pri" id="gsave">Kaydet</button>
-      <button id="gcancel">İptal</button>
-      <button id="gdelete" hidden>Sil</button>
-    </div>
-  </div>
-</div>
 <script src="app.js"></script>
 </body>
 </html>
