@@ -1,368 +1,6 @@
 {
   "builds": [
     {
-      "id": "bmw4zuykm",
-      "name": "Panzer Vulpaphyla",
-      "cname": "",
-      "cat": "Companion",
-      "item": "/Lotus/Types/Friendly/Pets/CreaturePets/ArmoredInfestedCatbrowPetPowerSuit",
-      "note": "-Düşamana viral atar ve ölümsüzdür",
-      "imgs": [],
-      "riv": [],
-      "pols": [
-        "penjaga",
-        "",
-        "",
-        "madurai",
-        "naramon",
-        "",
-        "vazarin",
-        "",
-        "naramon",
-        "",
-        "",
-        "",
-        "",
-        ""
-      ],
-      "apol": "",
-      "a2pol": "",
-      "expol": "",
-      "stpol": "",
-      "shards": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ],
-      "cn": 10,
-      "exs": {
-        "claw:/Lotus/Types/Friendly/Pets/CreaturePets/ArmoredInfestedCatbrowPetPowerSuit": {
-          "cfgs": [
-            {
-              "n": "Pençe",
-              "d": {
-                "slots": [
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowCritMod",
-                    "r": 10
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/KubrowHeatConversionMod",
-                    "r": 10
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastPrecisionConditioningMod",
-                    "r": 10
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastCullTheWeakMod",
-                    "r": 5
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowMeleeDamageMod",
-                    "r": 10
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastWeakenedImmunityMod",
-                    "r": 3
-                  },
-                  {
-                    "u": "/Lotus/Upgrades/Mods/Sets/Hunter/CompanionHunterSynergyMod",
-                    "r": 5
-                  },
-                  {
-                    "u": "/Lotus/Types/Friendly/Pets/CatbrowPetPrecepts/CatbrowSwipePrecept",
-                    "r": 3
-                  },
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null
-                ],
-                "reactor": true,
-                "aura": null,
-                "ex": null,
-                "st": {
-                  "u": "/Lotus/Types/Friendly/Pets/BeastWeapons/Stances/BeastSpreadAttacksStance",
-                  "r": 3
-                },
-                "arcs": [],
-                "cn": 8
-              }
-            }
-          ],
-          "ci": 0,
-          "cat": "Companion Weapon",
-          "po": {
-            "pols": [
-              "madurai",
-              "madurai",
-              "madurai",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""
-            ],
-            "apol": "",
-            "expol": "",
-            "stpol": "penjaga"
-          }
-        }
-      },
-      "cfgs": [
-        {
-          "n": "Genel",
-          "d": {
-            "aura": null,
-            "au2": null,
-            "ex": null,
-            "st": null,
-            "slots": [
-              {
-                "u": "/Lotus/Types/Friendly/Pets/CreaturePets/CreaturePrecepts/ArmoredInfestedCatbrowRespawn",
-                "r": 3
-              },
-              {
-                "u": "/Lotus/Types/Friendly/Pets/CreaturePets/CreaturePrecepts/InfestedKavatViralQuillsPrecept",
-                "r": 3
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastResourceDoublingMod",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/BoneSplitter",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/AlacrityField",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/TenaciousPartner",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelShieldMaxMod",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/VoidClone",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelLootRadarEnemyRadarExpertMod",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastUniversalVacuum",
-                "r": 5
-              },
-              null,
-              null,
-              null,
-              null
-            ],
-            "arcs": [],
-            "elem": "",
-            "bonus": 25,
-            "reactor": true,
-            "helm": {},
-            "evo": [
-              "",
-              "",
-              "",
-              "",
-              ""
-            ],
-            "parts": {},
-            "cn": 10
-          }
-        }
-      ]
-    },
-    {
-      "id": "bmw4zlrv1",
-      "name": "Uriel",
-      "cname": "",
-      "cat": "Warframe",
-      "item": "/Lotus/Powersuits/DemonFrame/DemonFrame",
-      "note": "-1 açıp shift bastığınızda uçarsınız, etrafa ateş topları saçar ve 4ü doldurur\n-2 can yeniler petleri yollar ve bol bol enerji/can orbu düşürmemizi sağlar \nNot: 2 attığınızda petler düşmanı keser ve mini mapte rünler çıkar bu buffı alıp 1 ile uçtuğunuzda >> 1 güçlenir ve 4 çok hızlı bir şekilde dolar (buff arcane concentrationdan etkilenir, buffı aldığınızda 1. skille basarsanız buff sıfırlanır ve etkisi olmaz)\n-3 te roar takılır\n-4, 1 ile uçarak düşman keseriz bunlar 4ü doldurur, Arcane Concentration çalıştırmak için bu skilli atmadan önce 2 basıp 3sn içinde tekrar 4 basın böylece maksimum sürede atmış olursunuz (Arcane Concentration süre buffı diğer skiller içinde geçerlidir)\n‼️1 ile çok hızlı gitmek istiyorsanız, ikincil silahınıza Amalgam Barrel Diffision takın, normal hızdan biraz daha fazla hızlı gitmek istiyorsanız Melee silahınıza evrimlerde parkur hızı seçilmiş Praedos takın, ikisini birden kullanmayın fazla hızlı olur ve çok takılırsınız\n-Madurai takılı ise iki kere dash atıp yetenek gücü ve yetenek hızı kazanabilirsiniz \n\nPet Öneri: [[Panzer Vulpaphyla]]",
-      "imgs": [],
-      "riv": [],
-      "pols": [
-        "madurai",
-        "naramon",
-        "madurai",
-        "naramon",
-        "vazarin",
-        "",
-        "",
-        "vazarin",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-      ],
-      "apol": "naramon",
-      "a2pol": "",
-      "expol": "zenurik",
-      "stpol": "",
-      "shards": [
-        "Crimson|0",
-        "Crimson|0",
-        "Crimson|1",
-        "Crimson|1",
-        "Violet|3"
-      ],
-      "cn": 8,
-      "exs": {
-        "/Lotus/Types/Enemies/Orokin/Entrati/EntratiTech/NechroTech/AbilitySword/NechroTechSwordWeapon": {
-          "cfgs": [
-            {
-              "n": "Config 1",
-              "d": {
-                "slots": [
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null
-                ],
-                "reactor": true,
-                "aura": null,
-                "ex": null,
-                "st": null,
-                "arcs": [],
-                "cn": 8
-              }
-            }
-          ],
-          "ci": 0,
-          "cat": "Melee",
-          "po": {
-            "pols": [
-              "vazarin",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""
-            ],
-            "apol": "",
-            "expol": "",
-            "stpol": ""
-          }
-        }
-      },
-      "cfgs": [
-        {
-          "n": "Genel",
-          "d": {
-            "aura": {
-              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
-              "r": 5
-            },
-            "au2": null,
-            "ex": {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-              "r": 10
-            },
-            "st": null,
-            "slots": [
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Powersuits/DemonFrame/DemonFrameFireBallAugmentCard",
-                "r": 3
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
-                "r": 10
-              },
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "arcs": [
-              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
-              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
-            ],
-            "elem": "",
-            "bonus": 25,
-            "reactor": true,
-            "helm": {
-              "2": "/Lotus/Powersuits/Rhino/Abilities/RhinoRoarAbility"
-            },
-            "evo": [
-              "",
-              "",
-              "",
-              "",
-              ""
-            ],
-            "parts": {},
-            "cn": 8
-          }
-        }
-      ]
-    },
-    {
       "id": "bmw5jqpiq",
       "name": "Jade",
       "cname": "",
@@ -618,7 +256,7 @@
             ],
             "arcs": [
               "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolSpeedOnCrit",
-              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/PowerStrengthOnKill"
             ],
             "elem": "",
             "bonus": 25,
@@ -1932,7 +1570,7 @@
             ],
             "arcs": [
               "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolDamageOnHeadshot",
-              "/Lotus/Upgrades/CosmeticEnhancers/Defensive/GolemArcaneShieldRegenOnDamage"
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AmmoEfficiencyOnPistolHeadshot"
             ],
             "elem": "",
             "bonus": 25,
@@ -2161,6 +1799,368 @@
             "reactor": true,
             "helm": {
               "2": "/Lotus/Powersuits/BrokenFrame/Abilities/BrokenRotAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw4zuykm",
+      "name": "Panzer Vulpaphyla",
+      "cname": "",
+      "cat": "Companion",
+      "item": "/Lotus/Types/Friendly/Pets/CreaturePets/ArmoredInfestedCatbrowPetPowerSuit",
+      "note": "-Düşamana viral atar ve ölümsüzdür",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "penjaga",
+        "",
+        "",
+        "madurai",
+        "naramon",
+        "",
+        "vazarin",
+        "",
+        "naramon",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": 10,
+      "exs": {
+        "claw:/Lotus/Types/Friendly/Pets/CreaturePets/ArmoredInfestedCatbrowPetPowerSuit": {
+          "cfgs": [
+            {
+              "n": "Pençe",
+              "d": {
+                "slots": [
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowCritMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/KubrowHeatConversionMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastPrecisionConditioningMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastCullTheWeakMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/KubrowMeleeDamageMod",
+                    "r": 10
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sentinel/Kubrow/BeastWeapon/BeastWeakenedImmunityMod",
+                    "r": 3
+                  },
+                  {
+                    "u": "/Lotus/Upgrades/Mods/Sets/Hunter/CompanionHunterSynergyMod",
+                    "r": 5
+                  },
+                  {
+                    "u": "/Lotus/Types/Friendly/Pets/CatbrowPetPrecepts/CatbrowSwipePrecept",
+                    "r": 3
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": null,
+                "st": {
+                  "u": "/Lotus/Types/Friendly/Pets/BeastWeapons/Stances/BeastSpreadAttacksStance",
+                  "r": 3
+                },
+                "arcs": [],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Companion Weapon",
+          "po": {
+            "pols": [
+              "madurai",
+              "madurai",
+              "madurai",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "",
+            "stpol": "penjaga"
+          }
+        }
+      },
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Types/Friendly/Pets/CreaturePets/CreaturePrecepts/ArmoredInfestedCatbrowRespawn",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Types/Friendly/Pets/CreaturePets/CreaturePrecepts/InfestedKavatViralQuillsPrecept",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastResourceDoublingMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/BoneSplitter",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/AlacrityField",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/TenaciousPartner",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelShieldMaxMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/VoidBond/VoidClone",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sentinel/SentinelLootRadarEnemyRadarExpertMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Types/Sentinels/SentinelPrecepts/BeastUniversalVacuum",
+                "r": 5
+              },
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw4zlrv1",
+      "name": "Uriel",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/DemonFrame/DemonFrame",
+      "note": "-1 açıp shift bastığınızda uçarsınız, etrafa ateş topları saçar ve 4ü doldurur\n-2 can yeniler petleri yollar ve bol bol enerji/can orbu düşürmemizi sağlar \nNot: 2 attığınızda petler düşmanı keser ve mini mapte rünler çıkar bu buffı alıp 1 ile uçtuğunuzda >> 1 güçlenir ve 4 çok hızlı bir şekilde dolar (buff arcane concentrationdan etkilenir, buffı aldığınızda 1. skille basarsanız buff sıfırlanır ve etkisi olmaz)\n-3 te roar takılır\n-4, 1 ile uçarak düşman keseriz bunlar 4ü doldurur, Arcane Concentration çalıştırmak için bu skilli atmadan önce 2 basıp 3sn içinde tekrar 4 basın böylece maksimum sürede atmış olursunuz (Arcane Concentration süre buffı diğer skiller içinde geçerlidir)\n‼️1 ile çok hızlı gitmek istiyorsanız, ikincil silahınıza Amalgam Barrel Diffision takın, normal hızdan biraz daha fazla hızlı gitmek istiyorsanız Melee silahınıza evrimlerde parkur hızı seçilmiş Praedos takın, ikisini birden kullanmayın fazla hızlı olur ve çok takılırsınız\n-Madurai takılı ise iki kere dash atıp yetenek gücü ve yetenek hızı kazanabilirsiniz \n\nPet Öneri: [[Panzer Vulpaphyla]]",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "naramon",
+        "madurai",
+        "naramon",
+        "vazarin",
+        "",
+        "",
+        "vazarin",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "naramon",
+      "a2pol": "",
+      "expol": "zenurik",
+      "stpol": "",
+      "shards": [
+        "Crimson|0",
+        "Crimson|0",
+        "Crimson|1",
+        "Crimson|1",
+        "Violet|3"
+      ],
+      "cn": 8,
+      "exs": {
+        "/Lotus/Types/Enemies/Orokin/Entrati/EntratiTech/NechroTech/AbilitySword/NechroTechSwordWeapon": {
+          "cfgs": [
+            {
+              "n": "Config 1",
+              "d": {
+                "slots": [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                "reactor": true,
+                "aura": null,
+                "ex": null,
+                "st": null,
+                "arcs": [],
+                "cn": 8
+              }
+            }
+          ],
+          "ci": 0,
+          "cat": "Melee",
+          "po": {
+            "pols": [
+              "vazarin",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "apol": "",
+            "expol": "",
+            "stpol": ""
+          }
+        }
+      },
+      "cfgs": [
+        {
+          "n": "Genel",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Powersuits/DemonFrame/DemonFrameFireBallAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Zariman/WarframeOnShieldUptimePowerDuration",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "2": "/Lotus/Powersuits/Rhino/Abilities/RhinoRoarAbility"
             },
             "evo": [
               "",
