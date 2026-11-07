@@ -166,26 +166,3 @@ body.guiding #guideview{display:block!important}
 #ggal figure{width:100%;margin:0;position:relative}
 #ggal img{width:100%;height:auto;max-height:none;max-width:100%;border-radius:10px;cursor:zoom-in;border:1px solid var(--ln)}
 #ggal img.big{cursor:zoom-out}
-
-/* BUTON EŞİTLEME (Kocaman olmayı engeller, hepsini aynı boyuta getirir) */
-#cfgrow button, .bl button, .bl button[data-gshare], .bl button[data-guide-open] {
-  font-size: 1rem !important;
-  padding: .4rem .8rem !important;
-  height: 38px !important;
-  min-width: auto !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-#cfgrow button[data-cfgcopy] {
-  padding: 0 .5rem !important;
-  min-width: 36px !important;
-  border-radius: 0 6px 6px 0 !important;
-}
-#cfgrow span button:first-child {
-  border-radius: 6px 0 0 6px !important;
-  max-width: 140px !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  }
