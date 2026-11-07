@@ -43,7 +43,7 @@ let CM=[]; if(ADMIN)try{CM=JSON.parse(localStorage.getItem('cmods')||'[]')}catch
 const saveCM=()=>{if(!RO)try{localStorage.setItem('cmods',JSON.stringify(CM))}catch(e){}};
 let CMD=[]; if(ADMIN)try{CMD=JSON.parse(localStorage.getItem('cmodsdel')||'[]')}catch(e){}
 const saveCMD=()=>{if(!RO)try{localStorage.setItem('cmodsdel',JSON.stringify(CMD))}catch(e){}};
-const persist=()=>{if(!RO)try{localStorage.setItem('builds',JSON.stringify(saved))}catch(e){msg('Tarayıcı kaydı yazılamadı. builds.json olarak indirin.')}};
+const persist=()=>{if(!RO)try{localStorage.setItem('builds',JSON.stringify(saved))}catch(e){msg('Tarayıcı kaydı yazılamadı.')}};
 
 const pk=k=>/^\d+$/.test(k)?+k:k, KM={aura:['aura','apol'],au2:['au2','a2pol'],ex:['ex','expol'],st:['st','stpol']};
 const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]], setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
@@ -62,23 +62,27 @@ const special=()=>/\b(Kuva|Tenet|Coda)\b/.test(IT.get(S.item)?.name||''), statsO
 const maxRank=m=>m.fusionLimit??0, isAura=m=>m.custom?m.ck==='aura':(m.baseDrain||0)<0&&/^(Warframe|Companion|Plexus|Railjack) Mod$/.test(m.type||''), isSt=m=>m.custom?m.ck==='stance':/^(Stance|Posture) Mod$/.test(m.type||'');
 const canPlace=(m,k)=>m.custom?true:(k==='aura'||k==='au2')?isAura(m):k==='st'?isSt(m):(isAura(m)||isSt(m))?false:(k==='ex'?(S.cat==='Custom'||!!m.isUtility):true);
 
-async function get(f){let err;for(const s of SRC){try{const r=await fetch(s(f));if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){err=e}}throw new Error(f+' yüklenemedi ('+(err&&err.message)+')')}
+async function get(f){let err;for(const s of SRC){try{const r=await fetch(s(f));if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){err=e}}throw new Error(f+' yüklenemedi')}
 async function init(){
   try{
     const [mods,arc,wf,pri,sec,mel,ag,misc,pets,sen,sw,am]=await Promise.all(['Mods','Arcanes','Warframes','Primary','Secondary','Melee','Arch-Gun','Misc','Pets','Sentinels','SentinelWeapons','Arch-Melee'].map(get));
     DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
-    let wfList=[...new Map(wf.filter(i=>i.type==='Warframe').map(i=>[i.uniqueName,i])).values()];
-    if(!wfList.some(i=>i.uniqueName==='siriusorion'))wfList.unshift({uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe'});
+    
+    let wfList = wf.filter(i => i.type === 'Warframe' && i.uniqueName !== 'siriusorion');
+    wfList.unshift({uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe'});
+    
     const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
     for(const k in DATA.items){DATA.items[k]=DATA.items[k].filter(i=>i.uniqueName&&i.name).sort((a,b)=>a.name.localeCompare(b.name));DATA.items[k].forEach(i=>IT.set(i.uniqueName,i))}
     DATA.mods.forEach(m=>M.set(m.uniqueName,m)); DATA.arcanes.forEach(a=>A.set(a.uniqueName,a));
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     ['venari','venariclaws','sevashadow','sevashadowp'].forEach(u=>IT.set(u,{uniqueName:u,name:u.charAt(0).toUpperCase()+u.slice(1).replace('p',' Prime')}));
+    
     IT.set('siriusorion',{uniqueName:'siriusorion',name:'Sirius & Orion',type:'Warframe',polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],auraPolarity:'naramon',exilusPolarity:'naramon'});
     IT.set('sirius',{uniqueName:'sirius',name:'Sirius',type:'Warframe',polarities:['naramon','naramon','madurai','vazarin','','','','','','','','','',''],auraPolarity:'naramon',exilusPolarity:'naramon'});
     IT.set('orion',{uniqueName:'orion',name:'Orion',type:'Warframe',polarities:['madurai','madurai','naramon','naramon','','','','','','','','','',''],auraPolarity:'madurai',exilusPolarity:'naramon'});
+    
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
     misc.filter(i=>i.type==='Kitgun Component'||i.name==='Sporelacer'||i.name==='Vermisplicer').forEach(i=>{const u=i.uniqueName,k=/Barrel/.test(u)?'Chamber':/Handle/.test(u)?'Grip':/Clip/.test(u)?'Loader':null;if(!k)return;if(k==='Grip'){const sd=/\/Primary\//.test(u)?'Primary':'Secondary';if(!KP.Grip[sd].includes(i.name))KP.Grip[sd].push(i.name)}else if(!KP[k].includes(i.name))KP[k].push(i.name)});
@@ -111,7 +115,14 @@ async function init(){
 
 function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.ceil(d*1.25)}return neg?-d:d}
 function calc(){let cap=S.cat==='Necramech'?(S.reactor?80:40):(S.reactor?60:30),used=0;for(const k of KEYS()){const s=getS(k),m=s&&M.get(s.u);if(!m||(S.cat==='Railjack'&&typeof k==='number'&&k>=8))continue;const d=drainOf(m,s.r,getP(k));if(k==='aura'||k==='au2'||k==='st')cap-=d;else used+=d}return{cap,used}}
-function applyPols(){const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=S.cat==='Warframe'?auraPol(it?.name||''):'';S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||''}
+function applyPols(){
+    const it=IT.get(S.item);
+    S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
+    S.apol=S.cat==='Warframe'?(it?.auraPolarity||auraPol(it?.name||'')):'';
+    S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';
+    S.expol=it?.exilusPolarity||'';
+    S.stpol=it?.stancePolarity||'';
+}
 const fitArcs=()=>S.arcs=arcSlots().map((t,i)=>{const a=A.get(S.arcs[i]);return a&&ARC[t].test(a.type)?a.uniqueName:null});
 function cleanMods(){for(const k of ALLK){const s=getS(k),m=s&&M.get(s.u);if(m&&(!hasK(k)||(!m.custom&&!modRe().test(m.type))))setS(k,null)}}
 function selectCat(c){const changed=S.cat!==c;if(changed){S.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}});S.cn=XC[c]?.n||8}S.cat=c;const list=DATA.items[c]||[];if(!list.some(i=>i.uniqueName===S.item)){S.item=list[0]?.uniqueName||null;applyPols()}if(!special())S.elem='';cleanMods();fitArcs()}
@@ -183,7 +194,7 @@ function renderStats(){
 
 const AUP={madurai:'Ash Atlas Banshee Chroma Cyte-09 Ember Garuda Koumei Mag Mesa Nidus Nokko Oberon Oraxia Orion Rhino Titania Uriel Valkyr Volt Wukong Yareli',vazarin:'Frost Gara Khora Qorvex Saryn Trinity Voruna Zephyr Follie Jade',naramon:'Baruuk Caliban Citrine Equinox Gauss Grendel Gyre Harrow Hildryn Hydroid Inaros Ivara Kullervo Lavos Limbo Loki Mirage Nezha Nova Nyx Octavia Revenant Sirius Styanax Temple Vauban Wisp Xaku',omni:'Dante Protea'};
 function auraPol(n){if(/^Sevagoth (Prime )?Shadow/.test(n)||/^Excalibur (Prime|Umbra)/.test(n))return'madurai';const b=n.replace(/ (Prime|Umbra)$/,'');for(const k in AUP)if(AUP[k].split(' ').includes(b))return k;return''}
-const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?auraPol(n):'';if(k==='au2')return S.cat==='Warframe'&&/^Jade/.test(n)?'omni':'';return(typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
+const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?(it?.auraPolarity||auraPol(n)):'';if(k==='au2')return S.cat==='Warframe'&&/^Jade/.test(n)?'omni':'';return(typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
 
 const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
 function loadCfg(i,skip){if(!skip)stash();const keep=[...PO,'shards','exs'].map(k=>[k,S[k]]);S.ci=i;const d=S.cfgs[i].d||{};S.aura=d.aura??null;S.au2=d.au2??null;S.ex=d.ex??null;S.st=d.st??null;S.arcs=d.arcs?JSON.parse(JSON.stringify(d.arcs)):[];S.elem=d.elem||'';S.bonus=d.bonus??25;S.reactor=d.reactor??true;S.helm=d.helm?JSON.parse(JSON.stringify(d.helm)):{};S.evo=d.evo?JSON.parse(JSON.stringify(d.evo)):['','','','',''];S.parts=(d.parts&&S.cat!=='Zaw'&&S.cat!=='Kitgun')?JSON.parse(JSON.stringify(d.parts)):{};S.cn=d.cn||XC[S.cat]?.n||8;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);keep.forEach(([k,v])=>S[k]=v);S.helm=S.helm||{};fitArcs()}
