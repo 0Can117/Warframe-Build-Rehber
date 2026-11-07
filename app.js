@@ -161,7 +161,15 @@ function renderBuilder(){
 }
 
 function getModLastStats(m){const l=m.levelStats;return l&&l.length?(l[l.length-1].stats||[]).join(' | '):''}
-function getModElements(m){const stats=getModLastStats(m);const els=[];const re=/\b(Heat|Cold|Electricity|Toxin|Blast(?! Range| Radius)|Radiation|Magnetic|Viral|Corrosive|Gas)\b/gi;let match;while((match=re.exec(stats))){els.push(match[1])}return els}
+function getModElements(m){
+  // Yalnızca "+%X Element" biçimindeki hasar bonusu satırları sayılır (örn. "+90% Heat", "+150% Viral and Magnetic Damage").
+  // "Melee kills Blast and stagger...", "Heat Status", "radial blast of Cold" gibi açıklama cümleleri element eklemez.
+  const stats=getModLastStats(m), EL='Heat|Cold|Electricity|Toxin|Blast(?!\\s*(?:Range|Radius))|Radiation|Magnetic|Viral|Corrosive|Gas', T='(?:<[^>]*>\\s*)?';
+  const seg=new RegExp('[+\\-]\\s*\\d+(?:\\.\\d+)?%\\s*('+T+'(?:'+EL+')\\b(?:\\s+and\\s+'+T+'(?:'+EL+')\\b)*)(?!\\s*(?:Status|Proc|Resist))','gi');
+  const one=new RegExp('\\b('+EL+')\\b','gi'), els=[];let a;
+  while((a=seg.exec(stats))){let b;one.lastIndex=0;while((b=one.exec(a[1])))els.push(b[1])}
+  return els
+}
 const getModPrimaryEls=m=>getModElements(m).filter(e=>['Heat','Cold','Electricity','Toxin'].includes(e)), getModSecondaryEls=m=>getModElements(m).filter(e=>['Blast','Radiation','Magnetic','Viral','Corrosive','Gas'].includes(e));
 function getInnateEls(){if(S.cat==='Companion'||S.cat==='Companion Weapon')return[];const it=IT.get(S.item);if(!it)return[];const dmg=it.damage||{};const els=[];['heat','cold','electricity','toxin','blast','radiation','magnetic','viral','corrosive','gas'].forEach(k=>{if(dmg[k]&&dmg[k]>0)els.push(k.charAt(0).toUpperCase()+k.slice(1))});return els}
 function getModAbilityBonus(m){const stats=getModLastStats(m);const result={str:0,dur:0,range:0,eff:0};const re=/([+-]?\d+(?:\.\d+)?)%\s+Ability\s+(Strength|Duration|Range|Efficiency)/gi;let match;while((match=re.exec(stats))){const val=+match[1],type=match[2].toLowerCase();if(type==='strength')result.str+=val;else if(type==='duration')result.dur+=val;else if(type==='range')result.range+=val;else if(type==='efficiency')result.eff+=val}return result}
