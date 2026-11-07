@@ -166,3 +166,8 @@ body.guiding #guideview{display:block!important}
 #ggal figure{width:100%;margin:0;position:relative}
 #ggal img{width:100%;height:auto;max-height:none;max-width:100%;border-radius:10px;cursor:zoom-in;border:1px solid var(--ln)}
 #ggal img.big{cursor:zoom-out}
+#bl .bl button {
+
+font-size: 1rem !important; padding: .4rem .8rem !important; height: 38px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;
+
+}
