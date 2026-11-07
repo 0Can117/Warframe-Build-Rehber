@@ -1,5 +1,6 @@
 :root{--bg:#0b0813;--pn:#150f24;--ln:#3a2b5c;--tx:#efe9fb;--mu:#a99cc7;--gold:#e0b04a;--cy:#b99cff;--bad:#ff6b7a}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.45 "Source Sans 3",system-ui,sans-serif}
 h1,h2{font-family:Rajdhani,system-ui,sans-serif;margin:0}
 h1{font-size:2rem;color:var(--gold);letter-spacing:.02em}
@@ -152,7 +153,6 @@ body.guiding #guideview{display:block!important}
 body.guiding #saved{display:none}
 #guideview h2{color:var(--gold);margin-bottom:.6rem}
 #guideview textarea{width:100%}
-#guideview .gal img{max-width:200px;max-height:160px}
 #gview-ro{margin-top:.6rem}
 #gview-ro .notev{line-height:1.6;font-size:1.08rem}
 #gview-ro .notev a{color:var(--gold)}
@@ -163,3 +163,7 @@ body.guiding #guideview{display:block!important}
 .ro.guiding #browser{display:none!important}
 .ro.guiding #back{display:none!important}
 .ro.guiding #guideview #gview-ro{display:block!important}
+#ggal{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:10px}
+#ggal figure{width:100%;margin:0;position:relative}
+#ggal img{width:100%;height:auto;max-height:none;max-width:100%;border-radius:10px;cursor:zoom-in;border:1px solid var(--ln)}
+#ggal img.big{cursor:zoom-out}
