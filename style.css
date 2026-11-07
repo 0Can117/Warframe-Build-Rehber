@@ -157,3 +157,9 @@ body.guiding #saved{display:none}
 #gview-ro .notev{line-height:1.6;font-size:1.08rem}
 #gview-ro .notev a{color:var(--gold)}
 #gback{margin-bottom:.6rem}
+body.guiding #builder{display:block!important}
+body.guiding #saved{display:none!important}
+body.guiding #guideview{display:block!important}
+.ro.guiding #browser{display:none!important}
+.ro.guiding #back{display:none!important}
+.ro.guiding #guideview #gview-ro{display:block!important}
