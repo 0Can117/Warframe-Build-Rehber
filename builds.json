@@ -1259,7 +1259,7 @@
       "cname": "",
       "cat": "Warframe",
       "item": "/Lotus/Powersuits/Fairy/TitaniaPrime",
-      "note": "-- Titania yeteneğini ayarlardan ters çevrilmiş şekilde kullanın\n--Genel olarak Xata+Blast buildini öneririm\n--Helminth yetenekleri 3. yeteneğe aktarılmıştır\n--Meleede Furax ve Furax Amalgam modu takılı olsun\n--Reinforced Mod çalıştıran bir pet ile kullanın Örn: Huras, Panzer vs.\nMelee Silahınız: [[Furax Wraith]]\nÖrnek Pet: [[Panzer Vulpaphyla]]\n\n-Gausslu build oynanış: Gauss yeteneği ayarlardan ters çevrilmiş olmalıdır(bir kere bastığınızda alandaki düşmanlara ateş uygular düşman gördükçe basın ve uçun), kelebek formunda iken gauss yeteneği kullanarak hızlı-yok etme görevlerinde vs. haritayı hızlıca temizlemenizi sağlar \n",
+      "note": "-- Titania yeteneğini ayarlardan ters çevrilmiş şekilde kullanın\n--Genel olarak Xata+Blast buildini öneririm\n--Helminth yetenekleri 3. yeteneğe aktarılmıştır\n--Meleede Furax ve Furax Amalgam modu takılı olsun\n--Reinforced Mod çalıştıran bir pet ile kullanın Örn: Huras, Panzer vs.\nMelee Silahınız: [[Furax Wraith]]\nÖrnek Pet: [[Panzer Vulpaphyla]]\n\n-Gausslu build oynanış: Gauss yeteneği ayarlardan ters çevrilmiş olmalıdır(bir kere bastığınızda alandaki düşmanlara ateş uygular düşman gördükçe basın ve uçun), kelebek formunda iken gauss yeteneği kullanarak hızlı-yok etme görevlerinde vs. haritayı hızlıca temizlemenizi sağlar \n\n-Shield gate buildi kalkana göre ölümsüzlük sağlar, kalkan biterse/hasar yerseniz>skill kullanın>kalkan fullenir>kısa süre dokunulmazlık kazanırsınız döngü böyledir\n",
       "imgs": [],
       "riv": [],
       "pols": [
@@ -1738,7 +1738,7 @@
           }
         },
         {
-          "n": "Shield Gate",
+          "n": "Shield Gate/Xatas",
           "d": {
             "aura": {
               "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
