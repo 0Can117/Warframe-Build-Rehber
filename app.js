@@ -285,7 +285,7 @@ function renderSaved(){
   }
   if(bcat!=='guide'){
     const rows=saved.filter(b=>(bcat==='all'||bc(b)===bcat)&&(!q||[b.name,IT.get(b.item)?.name,b.elem,b.note].join(' ').toLowerCase().includes(q))).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-    html+=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
+    html+=rows.length?rows.map(b=>`<div class="bl"><span><b>${esc(b.name||'Adsız')}</b> <small class="muted">${esc(b.item==='custom'&&b.cname?b.cname:IT.get(b.item)?.name||'')}${b.elem?' · '+esc(b.elem)+' %'+esc(b.bonus):''}</small></span><button data-load="${b.id}">${ADMIN?'Düzenle':'Aç'}</button><button data-share="${b.id}">Bağlantıyı Kopyala</button>${ADMIN?`<button data-del="${b.id}">Sil</button>`:''}</div>`).join(''):`<p class="muted">${saved.length?'Aramaya uyan build yok.':'Henüz kayıtlı build yok.'}</p>`;
   }
   $('#bl').innerHTML=html;
 }
@@ -308,13 +308,8 @@ function openGuide(g){
   if(RO){
     $('#gname').readOnly=true;
     $('#gnote').readOnly=true;
-    if(!curGuide.note){
-      $('#gnote-row').hidden=true;
-      $('#gview-ro').hidden=true;
-    }else{
-      $('#gnote-row').hidden=true;
-      $('#gview-ro').hidden=false;
-    }
+    $('#gnote-row').hidden=true;
+    $('#gview-ro').hidden=!curGuide.note;
     $('#gsave').hidden=true;
     $('#gdelete').hidden=true;
     $('#gimgrow').hidden=true;
@@ -459,45 +454,4 @@ function shrink(f){return new Promise((ok,bad)=>{const r=new FileReader();r.onlo
 $('#note').addEventListener('input',e=>{if(!RO){S.note=e.target.value;linkSuggest(e.target)}});
 document.addEventListener('click',e=>{if(!e.target.closest('#linkpop,#note'))$('#linkpop').hidden=true});
 $('#addurl').addEventListener('click',()=>{const v=$('#imgurl').value.trim();if(!v)return;S.imgs.push(v);$('#imgurl').value='';renderNote()});
-$('#addfile').addEventListener('click',()=>$('#imgfile').click());
-$('#imgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{S.imgs.push(await shrink(f))}catch(err){msg('Hata: '+f.name)}}e.target.value='';renderNote()});
-$('#bq').addEventListener('input',renderSaved); $('#bgo').addEventListener('click',renderSaved);
-$('#adminoff').addEventListener('click',()=>{try{localStorage.removeItem('admin')}catch(e){}location.href=location.pathname});
-document.addEventListener('input',e=>{const d=e.target.dataset;if(d.evo!==undefined&&!RO)S.evo[+d.evo]=e.target.value});
-$('#cmsave').addEventListener('click',()=>{const n=$('#cmname').value.trim();if(!n){msg('Mod adı gerekli.');return}CM.unshift({id:'c'+Date.now().toString(36),name:n,ck:$('#cmkind').value,polarity:$('#cmpol').value,drain:Math.min(30,Math.abs(+$('#cmdrain').value||0)),rank:Math.max(0,Math.min(30,+$('#cmrank').value||0)),desc:$('#cmdesc').value.trim()});saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Kaydedildi.')});
-
-$('#gcancel').addEventListener('click',()=>{closeGuide()});
-$('#gback').addEventListener('click',()=>{closeGuide();document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})});
-$('#gsave').addEventListener('click',()=>{
-  const name=$('#gname').value.trim();
-  if(!name){msg('Rehber adı gerekli.');return}
-  const g={id:curGuide.id,name,note:$('#gnote').value,imgs:guideImgs.slice()};
-  const i=guides.findIndex(x=>x.id===g.id);
-  i<0?guides.unshift(g):guides[i]=g;
-  persistGuides();renderSaved();msg('Rehber kaydedildi.');closeGuide();
-});
-$('#gdelete').addEventListener('click',()=>{
-  if(!curGuide||!confirm('Rehber silinsin mi?'))return;
-  guides=guides.filter(g=>g.id!==curGuide.id);persistGuides();renderSaved();closeGuide();
-});
-$('#gaddurl').addEventListener('click',()=>{const v=$('#gimgurl').value.trim();if(!v)return;guideImgs.push(v);$('#gimgurl').value='';renderGuideGal()});
-$('#gaddfile').addEventListener('click',()=>$('#gimgfile').click());
-$('#gimgfile').addEventListener('change',async e=>{for(const f of e.target.files){try{guideImgs.push(await shrink(f))}catch(err){msg('Hata: '+f.name)}}e.target.value='';renderGuideGal()});
-
-async function syncToGitHub(){
-  if(!ADMIN) return;
-  const token = localStorage.getItem('gh_token'), repo = localStorage.getItem('gh_repo'), branch = localStorage.getItem('gh_branch') || 'main';
-  if(!token || !repo){ msg('GitHub ayarları eksik.'); return; }
-  const b64content = btoa(unescape(encodeURIComponent(JSON.stringify({builds: saved, cmods: CM, guides}, null, 2))));
-  const url = `https://api.github.com/repos/${repo}/contents/builds.json?ref=${branch}`;
-  try{
-    msg('Senkronize ediliyor...');
-    let sha = '';
-    const getRes = await fetch(url, {headers: {Authorization: `token ${token}`}});
-    if(getRes.ok) sha = (await getRes.json()).sha;
-    const putRes = await fetch(url, {method: 'PUT',headers: {Authorization: `token ${token}`,'Content-Type': 'application/json'},body: JSON.stringify({message: 'Builds auto-sync',content: b64content,sha: sha || undefined,branch: branch})});
-    if(putRes.ok) msg('Başarıyla yüklendi.'); else msg('Hata: ' + ((await putRes.json()).message || 'Bilinmeyen hata'));
-  }catch(e){ msg('Hata: ' + e.message); }
-}
-
-init();
+$('#addfile').addEventListener('click',()
