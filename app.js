@@ -49,11 +49,12 @@ const pk=k=>/^\d+$/.test(k)?+k:k, KM={aura:['aura','apol'],au2:['au2','a2pol'],e
 const getS=k=>typeof k==='number'?S.slots[k]:S[KM[k][0]], setS=(k,v)=>{typeof k==='number'?S.slots[k]=v:S[KM[k][0]]=v};
 const getP=k=>typeof k==='number'?S.pols[k]:S[KM[k][1]], setP=(k,v)=>{typeof k==='number'?S.pols[k]=v:S[KM[k][1]]=v};
 const isNecExalt=()=>!!S.tgt&&S.par?.cat==='Necramech', isClaws=()=>!!S.tgt&&/^claw:/.test(S.tgt);
+const A2=n=>/^Jade/.test(n||''), soT=()=>S.tgt==='sirius'||S.tgt==='orion';
 const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
 const hasK=k=>{
     if(isNecExalt())return typeof k==='number'?k<8:false;
-    if(S.tgt&&(k==='aura'||k==='au2'))return false;
-    return typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&/^Jade/.test(IT.get(S.item)?.name||'')):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
+    if(S.tgt&&(k==='aura'||k==='au2')&&!soT())return false;
+    return typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&A2(IT.get(S.item)?.name)):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
 };
 const ALLK=['aura','au2','ex','st',0,1,2,3,4,5,6,7,8,9,10,11,12,13], KEYS=()=>ALLK.filter(hasK);
 const arcSlots=()=>{if(isNecExalt())return[];let a=S.cat==='Kitgun'?['Kitgun',S.item==='kg-s'?'Secondary':'Primary']:SL[S.cat]||[];if(S.tgt&&S.par?.cat==='Necramech'&&a.length===1)a=[a[0],a[0]];return a};
@@ -72,8 +73,9 @@ async function init(){
     const isSO = i => /^\/Lotus\/Powersuits\/SiriusOrion\//.test(i.uniqueName||'');
     const soSirius = wf.find(i => i.type==='Warframe' && isSO(i) && /Sirius/.test(i.uniqueName) && /SiriusSuit$/.test(i.uniqueName));
     const soOrion  = wf.find(i => i.type==='Warframe' && isSO(i) && /OrionSuit$/.test(i.uniqueName));
+    const soFix = (i,ap) => ({...(i||{}), polarities:((i||{}).polarities||[]).filter(p=>p!=='aura').concat('omni'), auraPolarity:ap});
     let wfList = wf.filter(i => i.type === 'Warframe' && !isSO(i));
-    wfList.push({...(soSirius||{}), uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe', abilities:[]});
+    wfList.push({...soFix(soSirius,'vazarin'), uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe', abilities:[]});
     
     const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
@@ -82,8 +84,8 @@ async function init(){
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     ['venari','venariclaws','sevashadow','sevashadowp'].forEach(u=>IT.set(u,{uniqueName:u,name:u.charAt(0).toUpperCase()+u.slice(1).replace('p',' Prime')}));
     
-    IT.set('sirius', {...(soSirius||{}), uniqueName:'sirius', name:'Sirius', type:'Warframe'});
-    IT.set('orion', {...(soOrion||{}), uniqueName:'orion', name:'Orion', type:'Warframe'});
+    IT.set('sirius', {...soFix(soSirius,'vazarin'), uniqueName:'sirius', name:'Sirius', type:'Warframe'});
+    IT.set('orion', {...soFix(soOrion,'naramon'), uniqueName:'orion', name:'Orion', type:'Warframe'});
     ['sirius','orion'].forEach(u=>(IT.get(u).abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:IT.get(u).name})));
     
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
@@ -122,7 +124,7 @@ function applyPols(){
     const it=IT.get(S.item);
     S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');
     S.apol=S.cat==='Warframe'?(it?.auraPolarity||auraPol(it?.name||'')):'';
-    S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';
+    S.a2pol=S.cat==='Warframe'&&A2(it?.name)?'omni':'';
     S.expol=it?.exilusPolarity||'';
     S.stpol=it?.stancePolarity||'';
 }
@@ -197,7 +199,7 @@ function renderStats(){
 
 const AUP={madurai:'Ash Atlas Banshee Chroma Cyte-09 Ember Garuda Koumei Mag Mesa Nidus Nokko Oberon Oraxia Rhino Titania Uriel Valkyr Volt Wukong Yareli',vazarin:'Frost Gara Khora Qorvex Saryn Trinity Voruna Zephyr Follie Jade',naramon:'Baruuk Caliban Citrine Equinox Gauss Grendel Gyre Harrow Hildryn Hydroid Inaros Ivara Kullervo Lavos Limbo Loki Mirage Nezha Nova Nyx Octavia Revenant Styanax Temple Vauban Wisp Xaku',omni:'Dante Protea'};
 function auraPol(n){if(/^Sevagoth (Prime )?Shadow/.test(n)||/^Excalibur (Prime|Umbra)/.test(n))return'madurai';const b=n.replace(/ (Prime|Umbra)$/,'');for(const k in AUP)if(AUP[k].split(' ').includes(b))return k;return''}
-const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?(it?.auraPolarity||auraPol(n)):'';if(k==='au2')return S.cat==='Warframe'&&/^Jade/.test(n)?'omni':'';return(typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
+const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?(it?.auraPolarity||auraPol(n)):'';if(k==='au2')return S.cat==='Warframe'&&A2(n)?'omni':'';return(typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
 
 const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
 function loadCfg(i,skip){if(!skip)stash();const keep=[...PO,'shards','exs'].map(k=>[k,S[k]]);S.ci=i;const d=S.cfgs[i].d||{};S.aura=d.aura??null;S.au2=d.au2??null;S.ex=d.ex??null;S.st=d.st??null;S.arcs=d.arcs?JSON.parse(JSON.stringify(d.arcs)):[];S.elem=d.elem||'';S.bonus=d.bonus??25;S.reactor=d.reactor??true;S.helm=d.helm?JSON.parse(JSON.stringify(d.helm)):{};S.evo=d.evo?JSON.parse(JSON.stringify(d.evo)):['','','','',''];S.parts=(d.parts&&S.cat!=='Zaw'&&S.cat!=='Kitgun')?JSON.parse(JSON.stringify(d.parts)):{};S.cn=d.cn||XC[S.cat]?.n||8;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);keep.forEach(([k,v])=>S[k]=v);S.helm=S.helm||{};fitArcs()}
@@ -218,10 +220,10 @@ const exList=()=>{
   if(pc==='Companion'&&IT.get('claw:'+pi))return['claw:'+pi];
   return ex;
 };
-const EF=['slots','reactor','aura','ex','st','arcs','cn'];
+const EF=['slots','reactor','aura','au2','ex','st','arcs','cn'];
 function tgtNorm(u){let e=(S.exs=S.exs||{})[u];if(!e)e={cfgs:[{n:'Config 1',d:null}],ci:0};else if(!e.cfgs)e={cat:e.cat,ci:0,cfgs:[{n:e.n||'Config 1',d:{slots:e.slots,reactor:e.reactor,aura:e.aura,ex:e.ex,st:e.st,arcs:e.arcs}}],po:{pols:e.pols,apol:e.apol,expol:e.expol,stpol:e.stpol}};return S.exs[u]=e}
-function tgtLoad(i){const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};const keepShards=S.shards.slice();e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';S.cn=d.cn||XC[S.cat]?.n||8;S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');S.shards=keepShards;fitArcs()}
-function tgtSave(){const e=S.exs[S.tgt];e.cat=S.cat;e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,expol:S.expol,stpol:S.stpol}}
+function tgtLoad(i){const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};const keepShards=S.shards.slice();e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';S.cn=d.cn||XC[S.cat]?.n||8;S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');S.apol=po.apol??(it?.auraPolarity||auraPol(it?.name||''));S.a2pol=po.a2pol??(A2(it?.name)?'omni':'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');S.shards=keepShards;fitArcs()}
+function tgtSave(){const e=S.exs[S.tgt];e.cat=S.cat;e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}
 function enterTgt(u){
   if(S.tgt)leaveTgt();
   S.par=Object.fromEntries(PF.map(k=>[k,S[k]]));
@@ -248,10 +250,10 @@ function autoForma(){
   for(const k of ['aura','au2','st']){if(!hasK(k))continue;const m=modsAt(k)[0];if(m)sp(k,m.polarity)}
   for(let i=0;i<40;i++){const[o0,u0]=tot();if(o0===0)break;let best=null;for(const k of KEYS()){if(k==='aura'||k==='au2'||k==='st')continue;for(const pol of new Set(modsAt(k).map(m=>m.polarity))){if(pol===gp(k))continue;const old=gp(k);sp(k,pol);const[o1,u1]=tot();sp(k,old);const sc=(o0-o1)*1000+(u0-u1);if(o1<o0&&(!best||sc>best.sc))best={k,pol,sc}}}if(!best)break;sp(best.k,best.pol)}
   S.pols=P.pols;S.apol=P.apol;S.a2pol=P.a2pol;S.expol=P.expol;S.stpol=P.stpol;
-  if(isTgt){const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,expol:S.expol,stpol:S.stpol}}else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));S.cfgs[S.ci].d=d}
+  if(isTgt){const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));S.cfgs[S.ci].d=d}
   const fm=KEYS().filter(k=>gp(k)!==baseP(k)).length,o=tot()[0];msg(fm+' forma kullanıldı'+(o>0?' (kapasite aşılıyor).':''))
 }
-function resetPolarities(){if(!confirm('Polariteler sıfırlanacak. Devam?'))return;const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=S.cat==='Warframe'?auraPol(it?.name||''):'';S.a2pol=S.cat==='Warframe'&&/^Jade/.test(it?.name||'')?'omni':'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||'';renderBuilder();msg('Polariteler sıfırlandı.')}
+function resetPolarities(){if(!confirm('Polariteler sıfırlanacak. Devam?'))return;const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=S.cat==='Warframe'?(it?.auraPolarity||auraPol(it?.name||'')):'';S.a2pol=S.cat==='Warframe'&&A2(it?.name)?'omni':'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||'';renderBuilder();msg('Polariteler sıfırlandı.')}
 function resetCurrentBuild(){if(!confirm('Mevcut config sıfırlanacak. Devam?'))return;const isTgt=!!S.tgt;if(isTgt){tgtSave();const e=S.exs[S.tgt],cur=e.cfgs[e.ci].d||{};e.cfgs[e.ci].d={...cur,slots:Array(14).fill(null),arcs:[],aura:null,au2:null,ex:null,st:null,helm:{}};tgtLoad(e.ci)}else{stash();const cur=S.cfgs[S.ci].d||{};S.cfgs[S.ci].d={...cur,slots:Array(14).fill(null),arcs:[],aura:null,au2:null,ex:null,st:null,helm:{}};loadCfg(S.ci,true)}renderBuilder();msg('Sıfırlandı.')}
 
 const CK={normal:'Normal',aura:'Aura',stance:'Stance',exilus:'Exilus'};
@@ -275,7 +277,7 @@ function addArc(u){const a=A.get(u),sl=arcSlots(),ok=t=>ARC[t].test(a.type||'');
 function swapArc(a,b){const sl=arcSlots(),x=S.arcs[a],y=S.arcs[b],ok=(u,i)=>!u||ARC[sl[i]].test(A.get(u)?.type||'');if(ok(x,b)&&ok(y,a)){S.arcs[a]=y;S.arcs[b]=x}else msg('Takılamaz.')}
 function drop(src,t,inBrowser){const tk=t?.dataset?.key,ta=t?.dataset?.ai;if(src.k==='mod'){if(tk!==undefined)place(src.u,pk(tk))}else if(src.k==='slot'){if(tk!==undefined){if(pk(tk)!==src.key)swap(src.key,pk(tk))}else if(inBrowser)setS(src.key,null)}else if(src.k==='arc'){if(ta!==undefined)placeArc(src.u,+ta)}else if(src.k==='aslot'){if(ta!==undefined){if(+ta!==src.i)swapArc(src.i,+ta)}else if(inBrowser)S.arcs[src.i]=null}renderBuilder()}
 const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cname:S.cname,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol,shards:S.shards,cn:S.cn,exs:S.exs,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
-function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(/^Jade/.test(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}if(S.item==='siriusorion'&&!S.tgt)enterTgt('sirius')}
+function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(A2(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}if(S.item==='siriusorion'&&!S.tgt)enterTgt('sirius')}
 const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
 const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
 function startDrag(){drag.on=true;const g=drag.el.cloneNode(true);g.classList.add('ghost');g.style.width=drag.el.offsetWidth+'px';document.body.append(g);drag.g=g;drag.el.classList.add('dragging');moveGhost(drag.x,drag.y)}
