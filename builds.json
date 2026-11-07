@@ -618,7 +618,7 @@
             ],
             "arcs": [
               "/Lotus/Upgrades/CosmeticEnhancers/Offensive/GolemArcanePistolSpeedOnCrit",
-              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/PowerStrengthOnKill"
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
             ],
             "elem": "",
             "bonus": 25,
