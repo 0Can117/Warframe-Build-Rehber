@@ -8,11 +8,11 @@ const SL={Warframe:['Warframe','Warframe'],Primary:['Primary'],Secondary:['Secon
 const POLS=['','madurai','vazarin','naramon','zenurik','unairu','penjaga','umbra','omni'], PSYM={'':'·',madurai:'V',vazarin:'D',naramon:'—',zenurik:'Z',unairu:'U',penjaga:'P',umbra:'Ω',omni:'✦'};
 const polLabel=p=>({madurai:'Madurai',vazarin:'Vazarin',naramon:'Naramon',zenurik:'Zenurik',unairu:'Unairu',penjaga:'Penjaga',umbra:'Umbra',omni:'Omni','':'Nötr'}[p]||p);
 const ZP={Strike:[],Grip:[],Link:[]}, KP={Chamber:[],Grip:{Primary:[],Secondary:[]},Loader:[]}, ELEMS=['Impact','Heat','Cold','Electricity','Toxin','Magnetic','Radiation'];
-const M=new Map(), A=new Map(), IT=new Map(), AB=new Map(), PO=['pols','apol','a2pol','expol','stpol'], CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts','cn'];
+const M=new Map(), A=new Map(), IT=new Map(), AB=new Map(), PO=['pols','apol','a2pol','expol','stpol'], CF=['aura','au2','ex','st','slots','arcs','elem','bonus','reactor','helm','evo','parts','cn','forceSlots'];
 const RIVCAT=['Primary','Secondary','Melee','Zaw','Kitgun','Archgun','Archmelee'], CONV_MODS={'Burning Claws':'Heat','Chilling Claws':'Cold','Shocking Claws':'Electricity','Sepsis Claws':'Toxin'};
 const RS={common:['Damage','Critical Chance','Critical Damage','Multishot','Status Chance','Status Duration','Heat','Cold','Electricity','Toxin','Impact','Puncture','Slash','Damage vs Grineer','Damage vs Corpus','Damage vs Infested'],ranged:['Fire Rate','Reload Speed','Magazine Capacity','Ammo Maximum','Zoom','Punch Through','Projectile Speed','Weapon Recoil'],melee:['Attack Speed','Range','Combo Duration','Initial Combo','Chance for Additional Combo','Critical Chance on Slide Attack','Finisher Damage','Heavy Attack Efficiency'],spl:['Status Damage','Gas Damage','Corrosive Damage','Viral Damage','Radiation Damage','Blast Damage','Magnetic Damage','Damage vs Orokin','Damage vs Techrot','Damage vs Scalda'],splr:['Weak Point Damage','Weak Point Critical Chance','Ammo Efficiency','Magazine Reload While Holstered'],splm:['Heavy Attack Damage']};
 let DATA={mods:[],arcanes:[],items:{}};
-const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),cn:null,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[]});
+const blank=()=>({id:null,name:'',cat:'Warframe',item:null,reactor:true,elem:'',bonus:25,note:'',imgs:[],riv:[],helm:{},shards:Array(5).fill(null),cn:null,cname:'',parts:{},exs:{},evo:['','','','',''],cfgs:[{n:'Config 1',d:null}],ci:0,aura:null,au2:null,a2pol:'',ex:null,st:null,apol:'',expol:'',stpol:'',pols:Array(14).fill(''),slots:Array(14).fill(null),arcs:[],forceSlots:{}});
 let S=blank(), tab='mods', drag=null, sup=false, abPick=null, omniOn=false, bcat='all';
 const msg=t=>$('#msg').textContent=t||'';
 
@@ -55,6 +55,7 @@ const isNecExalt=()=>!!S.tgt&&S.par?.cat==='Necramech', isClaws=()=>!!S.tgt&&/^c
 const A2=n=>/^Jade/.test(n||''), soT=()=>S.tgt==='sirius'||S.tgt==='orion';
 const NG=()=>isNecExalt()?8:((+S.cn)||XC[S.cat]?.n||8);
 const hasK=k=>{
+    if(S.forceSlots?.[k]) return true;
     if(isNecExalt())return typeof k==='number'?k<8:false;
     if(S.tgt&&(k==='aura'||k==='au2')&&!soT())return false;
     return typeof k==='number'?(k<NG()||(S.cat==='Railjack'&&k>=8&&k<14)):k==='aura'?(S.cat==='Warframe'||!!XC[S.cat]?.aura||S.cat==='Custom'):k==='au2'?(S.cat==='Warframe'&&A2(IT.get(S.item)?.name)):k==='st'?(S.cat==='Melee'||S.cat==='Custom'||(S.cat==='Companion Weapon'&&/^claw:/.test(S.tgt||''))):k==='ex'?(S.cat==='Custom'||(!XC[S.cat]&&!['Archgun','Archmelee'].includes(S.cat))):false;
@@ -207,13 +208,13 @@ function auraPol(n){if(/^Sevagoth (Prime )?Shadow/.test(n)||/^Excalibur (Prime|U
 const baseP=k=>{const it=IT.get(S.item),n=it?.name||'';if(k==='aura')return S.cat==='Warframe'?(it?.auraPolarity||auraPol(n)):'';if(k==='au2')return S.cat==='Warframe'&&A2(n)?'omni':'';return(typeof k==='number'?it?.polarities?.[k]:it?.[{ex:'exilusPolarity',st:'stancePolarity'}[k]])||''};
 
 const stash=()=>{leaveTgt();const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d};
-function loadCfg(i,skip){if(!skip)stash();const keep=[...PO,'shards','exs'].map(k=>[k,S[k]]);S.ci=i;const d=S.cfgs[i].d||{};S.aura=d.aura??null;S.au2=d.au2??null;S.ex=d.ex??null;S.st=d.st??null;S.arcs=d.arcs?JSON.parse(JSON.stringify(d.arcs)):[];S.elem=d.elem||'';S.bonus=d.bonus??25;S.reactor=d.reactor??true;S.helm=d.helm?JSON.parse(JSON.stringify(d.helm)):{};S.evo=d.evo?JSON.parse(JSON.stringify(d.evo)):['','','','',''];S.parts=(d.parts&&S.cat!=='Zaw'&&S.cat!=='Kitgun')?JSON.parse(JSON.stringify(d.parts)):{};S.cn=d.cn||XC[S.cat]?.n||8;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);keep.forEach(([k,v])=>S[k]=v);S.helm=S.helm||{};fitArcs()}
+function loadCfg(i,skip){if(!skip)stash();const keep=[...PO,'shards','exs'].map(k=>[k,S[k]]);S.ci=i;const d=S.cfgs[i].d||{};S.aura=d.aura??null;S.au2=d.au2??null;S.ex=d.ex??null;S.st=d.st??null;S.arcs=d.arcs?JSON.parse(JSON.stringify(d.arcs)):[];S.elem=d.elem||'';S.bonus=d.bonus??25;S.reactor=d.reactor??true;S.helm=d.helm?JSON.parse(JSON.stringify(d.helm)):{};S.evo=d.evo?JSON.parse(JSON.stringify(d.evo)):['','','','',''];S.parts=(d.parts&&S.cat!=='Zaw'&&S.cat!=='Kitgun')?JSON.parse(JSON.stringify(d.parts)):{};S.cn=d.cn||XC[S.cat]?.n||8;S.forceSlots=d.forceSlots?JSON.parse(JSON.stringify(d.forceSlots)):{};S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);keep.forEach(([k,v])=>S[k]=v);S.helm=S.helm||{};fitArcs()}
 function renderCfg(){const e=S.tgt?S.exs[S.tgt]:null,L=e?e.cfgs:S.cfgs,ci=e?e.ci:S.ci;$('#cfgrow').innerHTML=L.map((c,i)=>{const name=esc(c.n||('Config '+(i+1)));if(RO||i===ci)return `<button data-cfg="${i}" class="${i===ci?'on':''}">${name}</button>`;return `<span style="display:inline-flex;margin:0;gap:0;"><button data-cfg="${i}" style="border-radius:6px 0 0 6px;">${name}</button><button data-cfgcopy="${i}" title="Kopyala" style="padding:0 .45rem;border-left:0;border-radius:0 6px 6px 0;">⧉</button></span>`}).join('')+(RO?'':`<button data-cfgadd="1">+</button><input type="text" id="cfgname" value="${esc(L[ci].n)}"><button data-cfgdel="1">Sil</button>`)}
 function renderAbil(){const it=IT.get(S.item),box=$('#abil');if(S.cat!=='Warframe'||!it?.abilities){box.innerHTML='';return}box.innerHTML='<div class="abh">Yetenekler</div>'+it.abilities.slice(0,4).map((a,i)=>{const h=AB.get(S.helm[i]),x=h||a;return `<div class="abrow"><span class="abn">${i+1}.</span><button class="ab ${h?'sw':''}" lang="en" data-ab="${i}" title="${esc(x.description||'')}"><img src="${IMG+esc(x.imageName)}" draggable="false">${h?`<s>${esc(a.name)}</s><b>${esc(h.name)}</b>`:`<span>${esc(a.name)}</span>`}</button></div>`}).join('')+(abPick!==null?`<select id="hsel"><option value="">Orijinal</option>${[...AB.values()].filter(x=>x.own!==it.name).sort((a,b)=>a.name.localeCompare(b.name)).map(x=>`<option value="${esc(x.uniqueName)}">${esc(x.name)} (${esc(x.own)})</option>`).join('')}</select>`:'')}
 function renderRiv(){const mel=/Melee|Zaw/.test(S.cat),B=RS.common.concat(mel?RS.melee:RS.ranged),P=RS.spl.concat(mel?RS.splm:RS.splr),o=(p,l)=>l.map(x=>`<option value="${p}|${esc(x)}">${esc(x)}</option>`).join('');const opts=`<option value="">+ Stat Ekle</option><optgroup label="Pozitif">${o('p',B)}</optgroup><optgroup label="Spliced">${o('s',P)}</optgroup><optgroup label="Negatif">${o('n',B)}</optgroup>`;$('#rivs').innerHTML=S.riv.map((r,i)=>`<div class="riv"><div class="row" style="margin:0"><input type="text" data-rivn="${i}" value="${esc(r.n)}" placeholder="Riven Adı"><button class="x2" data-rmriv="${i}">×</button></div><span class="dis">Disposition ×1.20 · S-tier</span>${r.st.map((t,j)=>`<div class="rs ${t.s<0?'neg':''} ${t.sp?'sp':''}"><span>${t.s<0?'−':'+'} ${esc(t.k)}${t.sp?' (spliced)':''}</span><button data-rmst="${i}.${j}">×</button></div>`).join('')}<select data-rivadd="${i}">${opts}</select></div>`).join('')}
-function openByName(n){const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());if(!b){msg('Build bulunamadı: '+n);return}const warn=S.tgt?'Alt formdaki değişiklikler kaybolacak. ':'';if(ADMIN&&!confirm(warn+'Devam?'))return;if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}
+function openByName(n){closeGuide();const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());if(!b){msg('Build bulunamadı: '+n);return}const warn=S.tgt?'Alt formdaki değişiklikler kaybolacak. ':'';if(ADMIN&&!confirm(warn+'Devam?'))return;if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}
 
-const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor','cn'];
+const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor','cn','forceSlots'];
 function guessCat(u){if(u.startsWith('claw:'))return'Companion Weapon';if(u==='sevashadowp'||u==='sevashadow'||u==='sirius'||u==='orion'||u==='siriusorion')return'Warframe';if(u==='venari')return'Companion';if(u==='venariclaws')return'Companion Weapon';if(DATA.items.Archgun.some(i=>i.uniqueName===u))return'Archgun';const n=IT.get(u)?.name||'';return/Bow|Balefire|Neutralizer|Arquebex/.test(n)?'Primary':/Regulators|Pixia|Glory|Noctua/.test(n)?'Secondary':'Melee'}
 const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
@@ -225,9 +226,9 @@ const exList=()=>{
   if(pc==='Companion'&&IT.get('claw:'+pi))return['claw:'+pi];
   return ex;
 };
-const EF=['slots','reactor','aura','au2','ex','st','arcs','cn'];
+const EF=['slots','reactor','aura','au2','ex','st','arcs','cn','forceSlots'];
 function tgtNorm(u){let e=(S.exs=S.exs||{})[u];if(!e)e={cfgs:[{n:'Config 1',d:null}],ci:0};else if(!e.cfgs)e={cat:e.cat,ci:0,cfgs:[{n:e.n||'Config 1',d:{slots:e.slots,reactor:e.reactor,aura:e.aura,ex:e.ex,st:e.st,arcs:e.arcs}}],po:{pols:e.pols,apol:e.apol,expol:e.expol,stpol:e.stpol}};return S.exs[u]=e}
-function tgtLoad(i){const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};const keepShards=S.shards.slice();e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';S.cn=d.cn||XC[S.cat]?.n||8;S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');S.apol=po.apol??(it?.auraPolarity||auraPol(it?.name||''));S.a2pol=po.a2pol??(A2(it?.name)?'omni':'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');S.shards=keepShards;fitArcs()}
+function tgtLoad(i){const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};const keepShards=S.shards.slice();e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';S.cn=d.cn||XC[S.cat]?.n||8;S.forceSlots=d.forceSlots?JSON.parse(JSON.stringify(d.forceSlots)):{};S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');S.apol=po.apol??(it?.auraPolarity||auraPol(it?.name||''));S.a2pol=po.a2pol??(A2(it?.name)?'omni':'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');S.shards=keepShards;fitArcs()}
 function tgtSave(){const e=S.exs[S.tgt];e.cat=S.cat;e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}
 function enterTgt(u){
   if(S.tgt)leaveTgt();
@@ -298,23 +299,38 @@ function openGuide(g){
   guideImgs=[...(curGuide.imgs||[])];
   $('#gname').value=curGuide.name||'';
   $('#gnote').value=curGuide.note||'';
+  $('#gview-ro').innerHTML=`<div class="notev">${guideNoteHTML(curGuide.note||'')}</div>`;
   renderGuideGal();
-  $('#gdelete').hidden=!g||RO;
   if(RO){
-    $('#gname').readOnly=true; $('#gnote').readOnly=true;
-    $('#gview').innerHTML=`<h2>${esc(curGuide.name||'')}</h2><div class="notev">${guideNoteHTML(curGuide.note||'')}</div>`;
-    $('#gview').hidden=false;
-    $('#gsave').hidden=true; $('#gdelete').hidden=true; $('#gimgrow').hidden=true;
-    $('#gnote').style.display='none';
+    $('#gname').readOnly=true;
+    $('#gnote').readOnly=true;
+    $('#gnote-row').hidden=true;
+    $('#gview-ro').hidden=false;
+    $('#gsave').hidden=true;
+    $('#gdelete').hidden=true;
+    $('#gimgrow').hidden=true;
     $('#gcancel').textContent='Kapat';
+    $('#gtitle').textContent=curGuide.name||'Rehber';
   }else{
-    $('#gname').readOnly=false; $('#gnote').readOnly=false;
-    $('#gview').hidden=true;
-    $('#gsave').hidden=false; $('#gimgrow').hidden=false;
-    $('#gnote').style.display='';
+    $('#gname').readOnly=false;
+    $('#gnote').readOnly=false;
+    $('#gnote-row').hidden=false;
+    $('#gview-ro').hidden=true;
+    $('#gsave').hidden=false;
+    $('#gdelete').hidden=!g;
+    $('#gimgrow').hidden=false;
     $('#gcancel').textContent='İptal';
+    $('#gtitle').textContent=g?'Rehberi Düzenle':'Rehber Hazırla';
   }
-  $('#guidemodal').hidden=false;
+  $('#guideview').hidden=false;
+  document.body.classList.add('guiding');
+  scrollTo({top:0,behavior:'smooth'});
+}
+function closeGuide(){
+  $('#guideview').hidden=true;
+  document.body.classList.remove('guiding');
+  curGuide=null;
+  guideImgs=[];
 }
 
 function place(u,k){const m=M.get(u);if(!m)return false;if(!hasK(k)||!canPlace(m,k)){msg('Bu mod bu yuvaya takılamaz.');return false}if(KEYS().some(x=>x!==k&&getS(x)&&M.get(getS(x).u)?.name===m.name)){msg('Aynı mod iki kez kullanılamaz.');return false}if(CONV_MODS[m.name]&&isClaws()){const conflict=KEYS().find(x=>{const s=getS(x),mm=s&&M.get(s.u);return mm&&mm.name!==m.name&&CONV_MODS[mm.name]});if(conflict!==undefined){msg('Sadece 1 dönüşüm modu takılabilir: '+M.get(getS(conflict).u).name);return false}}msg('');setS(k,{u,r:maxRank(m)});return true}
@@ -326,7 +342,7 @@ function addArc(u){const a=A.get(u),sl=arcSlots(),ok=t=>ARC[t].test(a.type||'');
 function swapArc(a,b){const sl=arcSlots(),x=S.arcs[a],y=S.arcs[b],ok=(u,i)=>!u||ARC[sl[i]].test(A.get(u)?.type||'');if(ok(x,b)&&ok(y,a)){S.arcs[a]=y;S.arcs[b]=x}else msg('Takılamaz.')}
 function drop(src,t,inBrowser){const tk=t?.dataset?.key,ta=t?.dataset?.ai;if(src.k==='mod'){if(tk!==undefined)place(src.u,pk(tk))}else if(src.k==='slot'){if(tk!==undefined){if(pk(tk)!==src.key)swap(src.key,pk(tk))}else if(inBrowser)setS(src.key,null)}else if(src.k==='arc'){if(ta!==undefined)placeArc(src.u,+ta)}else if(src.k==='aslot'){if(ta!==undefined){if(+ta!==src.i)swapArc(src.i,+ta)}else if(inBrowser)S.arcs[src.i]=null}renderBuilder()}
 const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cname:S.cname,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol,shards:S.shards,cn:S.cn,exs:S.exs,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
-function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(A2(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}if(S.item==='siriusorion'&&!S.tgt)enterTgt('sirius')}
+function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];S.forceSlots=S.forceSlots||{};if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(A2(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}if(S.item==='siriusorion'&&!S.tgt)enterTgt('sirius')}
 const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
 const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
 function startDrag(){drag.on=true;const g=drag.el.cloneNode(true);g.classList.add('ghost');g.style.width=drag.el.offsetWidth+'px';document.body.append(g);drag.g=g;drag.el.classList.add('dragging');moveGhost(drag.x,drag.y)}
@@ -342,7 +358,7 @@ $('#itembtn').addEventListener('click',()=>{const box=$('#buildlistro');if(!box.
 
 document.addEventListener('click',e=>{
   if(sup)return;
-  const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();$('#guidemodal').hidden=true;openByName(bl.dataset.bl);return}
+  const bl=e.target.closest('[data-bl]');if(bl){e.preventDefault();closeGuide();openByName(bl.dataset.bl);return}
   if(e.target.matches('#gal img, #ggal img')){e.target.classList.toggle('big');return}
   const t=e.target.closest('button');if(!t)return;const d=t.dataset;
   if(RO&&!d.load&&!d.share&&d.cfg===undefined&&d.tgt===undefined&&!d.back&&!d.prevb&&d.bc===undefined&&d.guideOpen===undefined)return;
@@ -351,8 +367,24 @@ document.addEventListener('click',e=>{
   else if(d.mod)addMod(d.mod); else if(d.arc)addArc(d.arc);
   else if(d.pol!==undefined){const k=pk(d.pol);setP(k,omniOn?'omni':POLS[(POLS.indexOf(getP(k))+1)%POLS.length]);renderBuilder()}
   else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
-  else if(d.cadd){S.cn=Math.min(14,NG()+1);cleanMods();renderBuilder()}
-  else if(d.cdel){S.cn=Math.max(1,NG()-1);cleanMods();renderBuilder()}
+  else if(d.cadd){
+    const type=$('#addslottype')?.value||'normal';
+    if(type==='normal'){S.cn=Math.min(14,NG()+1)}
+    else{S.forceSlots=S.forceSlots||{};S.forceSlots[type]=true}
+    cleanMods();renderBuilder()
+  }
+  else if(d.cdel){
+    const type=$('#addslottype')?.value||'normal';
+    if(type==='normal'){S.cn=Math.max(1,NG()-1)}
+    else{
+      if(S.forceSlots)delete S.forceSlots[type];
+      if(type==='aura')S.aura=null;
+      if(type==='au2')S.au2=null;
+      if(type==='ex')S.ex=null;
+      if(type==='st')S.st=null;
+    }
+    cleanMods();renderBuilder()
+  }
   else if(d.cmdel){CM=CM.filter(c=>c.id!==d.cmdel);if(!CMD.includes(d.cmdel))CMD.push(d.cmdel);saveCMD();saveCM();syncCM();renderAll();msg('Custom mod silindi.')}
   else if(d.lk!==undefined){const ta=$('#note'),pos=ta.selectionStart??ta.value.length,pre=ta.value.slice(0,pos),m=pre.match(/\[\[([^\]\n]*)$/);if(m){const ins='[['+d.lk+']]';S.note=pre.slice(0,m.index)+ins+ta.value.slice(pos);renderNote();const np=m.index+ins.length;ta.focus();ta.setSelectionRange(np,np)}$('#linkpop').hidden=true}
   else if(d.prevb){const id=navStack.pop(),b=saved.find(x=>x.id===id);if(b){loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}else msg('Bulunamadı.')}
@@ -422,18 +454,19 @@ $('#adminoff').addEventListener('click',()=>{try{localStorage.removeItem('admin'
 document.addEventListener('input',e=>{const d=e.target.dataset;if(d.evo!==undefined&&!RO)S.evo[+d.evo]=e.target.value});
 $('#cmsave').addEventListener('click',()=>{const n=$('#cmname').value.trim();if(!n){msg('Mod adı gerekli.');return}CM.unshift({id:'c'+Date.now().toString(36),name:n,ck:$('#cmkind').value,polarity:$('#cmpol').value,drain:Math.min(30,Math.abs(+$('#cmdrain').value||0)),rank:Math.max(0,Math.min(30,+$('#cmrank').value||0)),desc:$('#cmdesc').value.trim()});saveCM();syncCM();$('#cmname').value='';$('#cmdesc').value='';renderAll();msg('Kaydedildi.')});
 
-$('#gcancel').addEventListener('click',()=>{$('#guidemodal').hidden=true;curGuide=null});
+$('#gcancel').addEventListener('click',()=>{closeGuide()});
+$('#gback').addEventListener('click',()=>{closeGuide();document.body.classList.remove('open');history.replaceState(null,'',location.pathname+location.search);scrollTo({top:0})});
 $('#gsave').addEventListener('click',()=>{
   const name=$('#gname').value.trim();
   if(!name){msg('Rehber adı gerekli.');return}
   const g={id:curGuide.id,name,note:$('#gnote').value,imgs:guideImgs.slice()};
   const i=guides.findIndex(x=>x.id===g.id);
   i<0?guides.unshift(g):guides[i]=g;
-  persistGuides();renderSaved();$('#guidemodal').hidden=true;curGuide=null;msg('Rehber kaydedildi.');
+  persistGuides();renderSaved();msg('Rehber kaydedildi.');closeGuide();
 });
 $('#gdelete').addEventListener('click',()=>{
   if(!curGuide||!confirm('Rehber silinsin mi?'))return;
-  guides=guides.filter(g=>g.id!==curGuide.id);persistGuides();renderSaved();$('#guidemodal').hidden=true;curGuide=null;
+  guides=guides.filter(g=>g.id!==curGuide.id);persistGuides();renderSaved();closeGuide();
 });
 $('#gaddurl').addEventListener('click',()=>{const v=$('#gimgurl').value.trim();if(!v)return;guideImgs.push(v);$('#gimgurl').value='';renderGuideGal()});
 $('#gaddfile').addEventListener('click',()=>$('#gimgfile').click());
