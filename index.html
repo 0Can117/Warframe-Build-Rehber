@@ -15,6 +15,7 @@
   <button data-fwd="imp">JSON İçe Aktar</button>
   <button data-ghsync="1" class="pri">GitHub'a Gönder</button>
   <button data-ghset="1">GitHub Ayarları</button>
+  <button data-guide="1">Rehber Hazırla</button>
   <button data-fwd="adminoff">Yönetici Modundan Çık</button>
 </div>
 <div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
@@ -33,7 +34,6 @@
     <div class="row"><label><input type="checkbox" id="reactor" checked> Reaktör/Katalizör (60)</label></div>
     <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
     <div class="bar" id="bar"><i></i></div>
-    
     <div class="bwrap"><div>
       <div class="row" id="cfgrow"></div>
       <div class="slots sp3" id="sp"></div>
@@ -41,7 +41,6 @@
       <div id="stats-panel"></div>
       <div class="arcs" id="arcs"></div>
     </div><div id="abil"></div></div>
-    
     <div id="xs"></div>
     <div id="tgtrow"></div>
     <div id="shbox"><h2 style="margin-top:1rem">Archon Shards</h2><div class="shards" id="shards"></div></div>
@@ -53,7 +52,6 @@
     <details id="evbox" open><summary>Incarnon Evrimleri</summary><div id="evs"></div></details>
     <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni Build</button><button id="reset">Tümünü Sıfırla</button><button data-curreset="1">Mevcut Buildi Sıfırla</button><button id="autof">Oto Forma</button><button data-polreset="1">Polarite Sıfırla</button></div>
   </section>
-
   <section id="browser" class="panel">
     <div class="row"><button data-tab="mods" class="on">Modlar</button><button data-tab="arcanes">Arcane'ler</button></div>
     <p class="muted" style="margin:0 0 .6rem">Modu veya arcane'i yuvaya sürükle (dokunmatikte basılı tut) ya da dokun. Yuvadan listeye sürüklersen kaldırılır.</p>
@@ -66,7 +64,6 @@
     <div class="row"><input type="search" id="q" placeholder="Ara..." aria-label="Ara"></div>
     <div class="list" id="list"></div>
   </section>
-
   <section id="saved" class="panel">
     <h2>Kayıtlı Buildler</h2>
     <div class="row" id="bcats"></div>
@@ -75,6 +72,26 @@
     <div id="bl"></div>
   </section>
 </main>
+<div id="guidemodal" hidden>
+  <div class="gm-box">
+    <h2>Rehber</h2>
+    <div class="row"><input type="text" id="gname" placeholder="Rehber adı"></div>
+    <textarea id="gnote" rows="6" placeholder="Not... [[Build adı]] ile başka build'e köprü kurabilirsin."></textarea>
+    <div id="gview" hidden></div>
+    <div class="row" id="gimgrow" style="margin-top:.5rem">
+      <input type="text" id="gimgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)">
+      <button id="gaddurl">Bağlantıyı Ekle</button>
+      <button id="gaddfile">Görsel Yükle</button>
+      <input type="file" id="gimgfile" accept="image/*" multiple hidden>
+    </div>
+    <div class="gal" id="ggal"></div>
+    <div class="row" style="margin-top:.8rem">
+      <button class="pri" id="gsave">Kaydet</button>
+      <button id="gcancel">İptal</button>
+      <button id="gdelete" hidden>Sil</button>
+    </div>
+  </div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>
