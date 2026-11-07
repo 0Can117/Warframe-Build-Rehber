@@ -69,7 +69,8 @@ async function init(){
     DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
     
-    let wfList = wf.filter(i => i.type === 'Warframe');
+    let wfList = wf.filter(i => i.type === 'Warframe' && i.uniqueName !== 'siriusorion');
+    wfList.push({uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe'});
     
     const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
@@ -202,7 +203,7 @@ function renderRiv(){const mel=/Melee|Zaw/.test(S.cat),B=RS.common.concat(mel?RS
 function openByName(n){const b=saved.find(x=>(x.name||'').trim().toLowerCase()===n.trim().toLowerCase());if(!b){msg('Build bulunamadı: '+n);return}const warn=S.tgt?'Alt formdaki değişiklikler kaybolacak. ':'';if(ADMIN&&!confirm(warn+'Devam?'))return;if(S.id&&S.id!==b.id)navStack.push(S.id);loadBuild(b);openView();renderAll();scrollTo({top:0,behavior:'smooth'})}
 
 const PF=['cat','item','slots','pols','aura','au2','a2pol','ex','st','apol','expol','stpol','arcs','elem','bonus','reactor','cn'];
-function guessCat(u){if(u.startsWith('claw:'))return'Companion Weapon';if(u==='sevashadowp'||u==='sevashadow'||u==='sirius'||u==='orion')return'Warframe';if(u==='venari')return'Companion';if(u==='venariclaws')return'Companion Weapon';if(DATA.items.Archgun.some(i=>i.uniqueName===u))return'Archgun';const n=IT.get(u)?.name||'';return/Bow|Balefire|Neutralizer|Arquebex/.test(n)?'Primary':/Regulators|Pixia|Glory|Noctua/.test(n)?'Secondary':'Melee'}
+function guessCat(u){if(u.startsWith('claw:'))return'Companion Weapon';if(u==='sevashadowp'||u==='sevashadow'||u==='sirius'||u==='orion'||u==='siriusorion')return'Warframe';if(u==='venari')return'Companion';if(u==='venariclaws')return'Companion Weapon';if(DATA.items.Archgun.some(i=>i.uniqueName===u))return'Archgun';const n=IT.get(u)?.name||'';return/Bow|Balefire|Neutralizer|Arquebex/.test(n)?'Primary':/Regulators|Pixia|Glory|Noctua/.test(n)?'Secondary':'Melee'}
 const exList=()=>{
   const pc=S.tgt?S.par.cat:S.cat,pi=S.tgt?S.par.item:S.item,it=IT.get(pi),nm=it?.name||'';
   if(pi==='siriusorion') return ['sirius','orion'];
@@ -217,7 +218,16 @@ const EF=['slots','reactor','aura','ex','st','arcs','cn'];
 function tgtNorm(u){let e=(S.exs=S.exs||{})[u];if(!e)e={cfgs:[{n:'Config 1',d:null}],ci:0};else if(!e.cfgs)e={cat:e.cat,ci:0,cfgs:[{n:e.n||'Config 1',d:{slots:e.slots,reactor:e.reactor,aura:e.aura,ex:e.ex,st:e.st,arcs:e.arcs}}],po:{pols:e.pols,apol:e.apol,expol:e.expol,stpol:e.stpol}};return S.exs[u]=e}
 function tgtLoad(i){const e=S.exs[S.tgt],it=IT.get(S.tgt),d=JSON.parse(JSON.stringify(e.cfgs[i].d||{})),po=e.po||{};const keepShards=S.shards.slice();e.ci=i;S.slots=(d.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.reactor=d.reactor??true;S.aura=d.aura||null;S.au2=d.au2||null;S.ex=d.ex||null;S.st=d.st||null;S.arcs=d.arcs||[];S.elem='';S.cn=d.cn||XC[S.cat]?.n||8;S.pols=po.pols||Array.from({length:14},(_,k)=>it?.polarities?.[k]||'');S.apol=po.apol??auraPol(it?.name||'');S.expol=po.expol??(it?.exilusPolarity||'');S.stpol=po.stpol??(it?.stancePolarity||'');S.shards=keepShards;fitArcs()}
 function tgtSave(){const e=S.exs[S.tgt];e.cat=S.cat;e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,expol:S.expol,stpol:S.stpol}}
-function enterTgt(u){if(S.tgt)leaveTgt();S.par=Object.fromEntries(PF.map(k=>[k,S[k]]));const e=tgtNorm(u),gc=guessCat(u);if(!e.cat||(e.cat==='Warframe'&&gc!=='Warframe')||IT.get(u)?.name==='Glory')e.cat=gc;S.tgt=u;S.item=u;S.cat=e.cat;tgtLoad(e.ci||0)}
+function enterTgt(u){
+  if(S.tgt)leaveTgt();
+  S.par=Object.fromEntries(PF.map(k=>[k,S[k]]));
+  const e=tgtNorm(u);
+  let gc = (u === 'sirius' || u === 'orion') ? 'Warframe' : guessCat(u);
+  if(!e.cat || (e.cat==='Warframe'&&gc!=='Warframe') || IT.get(u)?.name==='Glory' || gc==='Warframe'){
+    e.cat = gc;
+  }
+  S.tgt=u; S.item=u; S.cat=e.cat; tgtLoad(e.ci||0);
+}
 function leaveTgt(){if(!S.tgt)return;tgtSave();Object.assign(S,S.par);S.par=null;S.tgt=null}
 function renderTgt(){const l=exList(),box=$('#tgtrow'),cur=S.tgt?S.par.item:S.item;$('#builder').classList.toggle('intgt',!!S.tgt);if(!l.length){box.innerHTML='';return}box.innerHTML='<h2 style="margin-top:.8rem">Diğer</h2><div class="row">'+(cur==='siriusorion'?'':`<button data-tgt="" class="${S.tgt?'':'on'}" lang="en">${esc(IT.get(cur)?.name||'')}</button>`)+l.map(u=>`<button data-tgt="${esc(u)}" class="${S.tgt===u?'on':''}" lang="en">${esc(IT.get(u).name)}</button>`).join('')+(S.tgt&&!RO&&!/^(venari|sevashadow|claw:|sirius|orion)/.test(S.tgt)?`<select id="excat">${['Melee','Primary','Secondary','Archgun'].map(c=>`<option ${c===S.cat?'selected':''}>${c}</option>`).join('')}</select>`:'')+'</div>'}
 function renderEvo(){$('#evbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.evo.some(Boolean));$('#evs').innerHTML=S.evo.map((t,i)=>`<label class="evl">Evo ${i+1}<textarea data-evo="${i}" rows="2" placeholder="Evo ${i+1} açıklaması">${esc(t)}</textarea></label>`).join('');if(RO)document.querySelectorAll('#evs textarea').forEach(n=>n.readOnly=true)}
