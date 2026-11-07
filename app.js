@@ -313,7 +313,6 @@ function openGuide(g){
     $('#gsave').hidden=true;
     $('#gdelete').hidden=true;
     $('#gimgrow').hidden=true;
-    $('#gcancel').textContent='Kapat';
     $('#gtitle').textContent=curGuide.name||'Rehber';
   }else{
     $('#gname').readOnly=false;
@@ -323,7 +322,6 @@ function openGuide(g){
     $('#gsave').hidden=false;
     $('#gdelete').hidden=!g;
     $('#gimgrow').hidden=false;
-    $('#gcancel').textContent='İptal';
     $('#gtitle').textContent=g?'Rehberi Düzenle':'Rehber Hazırla';
   }
   try{ if(g) history.replaceState(null,'',location.pathname+location.search+'#g='+encodeURIComponent(g.id)) }catch(e){}
