@@ -69,8 +69,11 @@ async function init(){
     DATA.mods=mods.filter(m=>m.uniqueName&&m.name&&!/Riven/i.test(m.type||'')).sort((a,b)=>a.name.localeCompare(b.name));
     DATA.arcanes=arc.filter(a=>a.uniqueName&&a.name).sort((a,b)=>a.name.localeCompare(b.name));
     
-    let wfList = wf.filter(i => i.type === 'Warframe' && i.uniqueName !== 'siriusorion');
-    wfList.push({uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe'});
+    const isSO = i => /^\/Lotus\/Powersuits\/SiriusOrion\//.test(i.uniqueName||'');
+    const soSirius = wf.find(i => i.type==='Warframe' && isSO(i) && /Sirius/.test(i.uniqueName) && /SiriusSuit$/.test(i.uniqueName));
+    const soOrion  = wf.find(i => i.type==='Warframe' && isSO(i) && /OrionSuit$/.test(i.uniqueName));
+    let wfList = wf.filter(i => i.type === 'Warframe' && !isSO(i));
+    wfList.push({...(soSirius||{}), uniqueName:'siriusorion', name:'Sirius & Orion', type:'Warframe', abilities:[]});
     
     const necList=wf.filter(i=>i.type==='Necramech'&&/^(Bonewidow|Voidrig|Culverin)( Prime)?$/.test(i.name));
     DATA.items={Warframe:wfList,Primary:pri,Secondary:sec,Melee:mel.filter(i=>i.type==='Melee'),Archgun:ag,Archmelee:am,Zaw:[{uniqueName:'zaw',name:'Zaw (modüler)'}],Kitgun:[{uniqueName:'kg-p',name:'Kitgun (birincil)'},{uniqueName:'kg-s',name:'Kitgun (ikincil)'}],Companion:sen.concat(pets.filter(i=>i.type==='Pets')),'Companion Weapon':sw,Necramech:necList,'K-Drive':[{uniqueName:'kdrive',name:'K-Drive'}],Railjack:[{uniqueName:'plexus',name:'Plexus'}],Custom:[{uniqueName:'custom',name:'Custom (kendin tanımla)'}]};
@@ -79,8 +82,9 @@ async function init(){
     misc.filter(i=>i.type==='Exalted Weapon'&&i.uniqueName&&i.name).forEach(i=>IT.set(i.uniqueName,i));
     ['venari','venariclaws','sevashadow','sevashadowp'].forEach(u=>IT.set(u,{uniqueName:u,name:u.charAt(0).toUpperCase()+u.slice(1).replace('p',' Prime')}));
     
-    IT.set('sirius', {uniqueName:'sirius', name:'Sirius', type:'Warframe'});
-    IT.set('orion', {uniqueName:'orion', name:'Orion', type:'Warframe'});
+    IT.set('sirius', {...(soSirius||{}), uniqueName:'sirius', name:'Sirius', type:'Warframe'});
+    IT.set('orion', {...(soOrion||{}), uniqueName:'orion', name:'Orion', type:'Warframe'});
+    ['sirius','orion'].forEach(u=>(IT.get(u).abilities||[]).forEach(a=>AB.set(a.uniqueName,{...a,own:IT.get(u).name})));
     
     DATA.items.Companion.filter(i=>/Kubrow|Kavat|Vulpaphyla|Predasite|Charger/.test(i.name)).forEach(i=>IT.set('claw:'+i.uniqueName,{uniqueName:'claw:'+i.uniqueName,name:i.name+' Claws'}));
     mel.filter(i=>i.type==='Zaw Component'&&!/PvPVariant/.test(i.uniqueName)).forEach(i=>{const l=i.uniqueName.split('/').pop(),k=/Tip/.test(l)?'Strike':/Handle/.test(l)?'Grip':'Link';if(!ZP[k].includes(i.name))ZP[k].push(i.name)});
@@ -271,7 +275,7 @@ function addArc(u){const a=A.get(u),sl=arcSlots(),ok=t=>ARC[t].test(a.type||'');
 function swapArc(a,b){const sl=arcSlots(),x=S.arcs[a],y=S.arcs[b],ok=(u,i)=>!u||ARC[sl[i]].test(A.get(u)?.type||'');if(ok(x,b)&&ok(y,a)){S.arcs[a]=y;S.arcs[b]=x}else msg('Takılamaz.')}
 function drop(src,t,inBrowser){const tk=t?.dataset?.key,ta=t?.dataset?.ai;if(src.k==='mod'){if(tk!==undefined)place(src.u,pk(tk))}else if(src.k==='slot'){if(tk!==undefined){if(pk(tk)!==src.key)swap(src.key,pk(tk))}else if(inBrowser)setS(src.key,null)}else if(src.k==='arc'){if(ta!==undefined)placeArc(src.u,+ta)}else if(src.k==='aslot'){if(ta!==undefined){if(+ta!==src.i)swapArc(src.i,+ta)}else if(inBrowser)S.arcs[src.i]=null}renderBuilder()}
 const cur=()=>{const t=S.tgt;stash();const o=JSON.parse(JSON.stringify({id:S.id||('b'+Date.now().toString(36)),name:S.name,cname:S.cname,cat:S.cat,item:S.item,note:S.note,imgs:S.imgs,riv:S.riv,pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol,shards:S.shards,cn:S.cn,exs:S.exs,cfgs:S.cfgs}));if(t)enterTgt(t);return o};
-function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(/^Jade/.test(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}}
+function loadBuild(b){const c=JSON.parse(JSON.stringify(b));S={...blank(),...c};if(c.cfgs?.length)Object.assign(S,c.cfgs[0].d||{});else S.cfgs=[{n:'Config 1',d:null}];S.ci=0;S.slots=(S.slots||[]).concat(Array(14).fill(null)).slice(0,14);S.arcs=S.arcs||[];S.helm=S.helm||{};S.shards=S.shards||Array(5).fill(null);S.exs=S.exs||{};S.evo=S.evo||['','','','',''];S.riv=S.riv||[];if(!c.cfgs&&!c.pols){S.item=c.item;applyPols()}selectCat(S.cat);if(S.cat!=='Zaw'&&S.cat!=='Kitgun')S.parts={};if(S.cat==='Warframe'&&!S.apol){const n0=IT.get(S.item)?.name||'';S.apol=auraPol(n0);if(/^Jade/.test(n0)&&!S.a2pol)S.a2pol='omni'}try{if(S.id)history.replaceState(null,'',location.pathname+location.search+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]})))))}catch(e){}if(S.item==='siriusorion'&&!S.tgt)enterTgt('sirius')}
 const link=b=>location.origin+location.pathname+'#b='+btoa(unescape(encodeURIComponent(JSON.stringify({...b,imgs:[]}))));
 const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
 function startDrag(){drag.on=true;const g=drag.el.cloneNode(true);g.classList.add('ghost');g.style.width=drag.el.offsetWidth+'px';document.body.append(g);drag.g=g;drag.el.classList.add('dragging');moveGhost(drag.x,drag.y)}
@@ -337,7 +341,7 @@ document.addEventListener('change',e=>{
   if(t.dataset.rank!==undefined){const k=pk(t.dataset.rank),s=getS(k),m=M.get(s.u);s.r=Math.max(0,Math.min(maxRank(m),+t.value||0));renderBuilder()}
 });
 
-$('#item').addEventListener('change',e=>{const nv=e.target.value;if(S.id){const c=S.cat;S=blank();S.cat=c;msg('Yeni build.')}S.item=nv;applyPols();cleanMods();S.parts={};if(!special())S.elem='';fitArcs();renderAll()});
+$('#item').addEventListener('change',e=>{const nv=e.target.value;if(S.id){const c=S.cat;S=blank();S.cat=c;msg('Yeni build.')}S.item=nv;applyPols();cleanMods();S.parts={};if(!special())S.elem='';if(nv==='siriusorion')enterTgt('sirius');fitArcs();renderAll()});
 $('#elem').addEventListener('change',e=>{S.elem=e.target.value;renderStats()});
 $('#bonus').addEventListener('change',e=>{S.bonus=Math.max(25,Math.min(60,+e.target.value||25));e.target.value=S.bonus;renderStats()});
 $('#reactor').addEventListener('change',e=>{S.reactor=e.target.checked;renderBuilder()});
