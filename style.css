@@ -166,32 +166,14 @@ body.guiding #guideview{display:block!important}
 #ggal figure{width:100%;margin:0;position:relative}
 #ggal img{width:100%;height:auto;max-height:none;max-width:100%;border-radius:10px;cursor:zoom-in;border:1px solid var(--ln)}
 #ggal img.big{cursor:zoom-out}
+#ggal img:hover{border-color:var(--gold)}
 
-.bl button, 
-#bl button,
-#cfgrow button {
+.list-btn {
   font-size: 1rem !important;
   height: 38px !important;
-  padding: 0 .9rem !important;
+  padding: 0 1rem !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-family: Rajdhani, system-ui, sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: .02em !important;
-  line-height: 1 !important;
   box-sizing: border-box !important;
-}
-
-#cfgrow button[data-cfgcopy] {
-  padding: 0 .5rem !important;
-  min-width: 36px !important;
-  border-radius: 0 6px 6px 0 !important;
-}
-#cfgrow span button:first-child {
-  border-radius: 6px 0 0 6px !important;
-  max-width: 140px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-     }
+  }
