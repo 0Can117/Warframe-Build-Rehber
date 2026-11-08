@@ -1244,7 +1244,7 @@
         "",
         ""
       ],
-      "apol": "zenurik",
+      "apol": "omni",
       "a2pol": "",
       "expol": "vazarin",
       "stpol": "",
@@ -1329,7 +1329,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         },
         {
@@ -1403,7 +1404,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         }
       ]
