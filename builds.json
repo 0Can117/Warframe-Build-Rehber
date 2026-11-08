@@ -1,6 +1,270 @@
 {
   "builds": [
     {
+      "id": "bmw7x1qku",
+      "name": "Nidus Prime",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Infestation/InfestationPrime",
+      "note": "‼️ Endo farm yapmayacaksanız formaları 1. ve 2. builde göre atın, fazla UMBRA ve OMNI forma atılmıştır ‼️ \n-1. skill pasifteki stacklerimizi kasmaya yarar\n-2 düşmanları çeker\n-3 düşmana bağlarsak hasar azaltma sağlar biz kendimize veya takım arkadaşımıza kullanırız genelde, etrafta kimse yoksa petimizede kullanabiliriz, pete kullanmak için ayrıca kendimize 3. skille basılı tutun kendi otomatik kullanır\n-4 alan açar ve regen verir\n-Huras kubrow veya panzer tavsiye ederim\nPet buildleri: [[Huras Kubrow]]---[[Panzer Vulpaphyla]]\n__\nOynanış:\n1. build heryerde kullanabilirsiniz 2 ve 1 ile biraz stack kasın sonra 3e basılı tutun kendinize buff verin, 4 açıkken 2+1 ile stack kasarsanız çok hızlı pasifiniz dolar, genel olarak tank buildidir hasarı güzeldir\n\n2. build arkadaşlarımıza yüksek miktarda buff vermemizi sağlar, 4te nokko yeteneği takılı bunları Arcane Concenteration ile 3sn içinde tetikleyip süresini uzatırız (yani 3 kere atınca 2 mantarda ekstra %60 süre alır) sonra mantarlara ağır silahtan kuşandığımız Arbucep ile mantarlara sıkarız, mantarlar güçlenir takımda wisp varsa bellicose  için önce onun can mote u atmasını bekleyin, biraz daha fazla güç ile mantarları atmış olursunuz son olarak 3ile DPS takım arkadaşımıza bağlanırız 4 bittikçe 4 atın 3 kopunca 3 atın bu kadar\n\n3. build endo farmı içindir özel olarak endo farm yapıyorsanız, 2 tane süre taşını çıkarın ve diğer işlevsel modlardan takın, yetenek hızı, başangıç enerji vs. gibi, Tenet Glaxion ile oynanır (enerji orb augmenti ile), 1 de mag yeteneği takılı, eşyaları üzerinize çeker",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "madurai",
+        "madurai",
+        "naramon",
+        "vazarin",
+        "omni",
+        "omni",
+        "umbra",
+        "umbra",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "naramon",
+      "a2pol": "",
+      "expol": "vazarin",
+      "stpol": "",
+      "shards": [
+        "Crimson|0|t",
+        "Crimson|0|t",
+        "Crimson|1|t",
+        "Crimson|1|t",
+        "Amber|3|t"
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Genel/Tank",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Hunter/WarframeHunterAdrenalineMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Powersuits/Infestation/InfestPodsAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Powersuits/Infestation/InfestLinkAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModB",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AbilityStrengthForMaxHealth",
+              "/Lotus/Upgrades/CosmeticEnhancers/Defensive/MaxDPSTakenForArmour"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        },
+        {
+          "n": "Buffer",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/EnemyArmorReductionAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurMessageMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModA",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Offensive/AbilityStrengthForMaxHealth",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityDurationOnCast"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "3": "/Lotus/Powersuits/Nokko/Abilities/NokkoPowerShroomAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        },
+        {
+          "n": "Arena Endo Farm (+Glaxion)",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/PlayerEnemyRadarAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/OrokinChallenge/OrokinChallengeModCunning",
+              "r": 5
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityRangeMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Powersuits/Mag/PullAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedEfficiencyDurationWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarEnergyRegenMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModA",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModB",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/GolemArcaneRadialEnergyOnEnergyPickup",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/NoCostCastChanceAbility1Listener"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "0": "/Lotus/Powersuits/Mag/Abilities/PullAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw5jqpiq",
       "name": "Jade",
       "cname": "",
