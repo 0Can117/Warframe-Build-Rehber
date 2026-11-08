@@ -121,7 +121,7 @@ async function init(){
   }catch(e){msg('Veri alınamadı: '+e.message)}
 }
 
-function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.ceil(d*1.25)}return neg?-d:d}
+function drainOf(m,r,sp){const b=m.baseDrain||0,neg=b<0;let d=Math.abs(b)+r;if(sp&&m.polarity){if(sp==='omni'||sp===m.polarity)d=neg?d*2:Math.ceil(d/2);else if(!neg)d=Math.floor(d*1.25)}return neg?-d:d}
 function calc(){let cap=S.cat==='Necramech'?(S.reactor?80:40):(S.reactor?60:30),used=0;for(const k of KEYS()){const s=getS(k),m=s&&M.get(s.u);if(!m||(S.cat==='Railjack'&&typeof k==='number'&&k>=8))continue;const d=drainOf(m,s.r,getP(k));if(k==='aura'||k==='au2'||k==='st')cap-=d;else used+=d}return{cap,used}}
 function applyPols(){
     const it=IT.get(S.item);
