@@ -3,104 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Build Rehberi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<title>Shawzin Kod Dönüştürücü</title>
+<style>
+:root{--bg:#eef1f4;--card:#fff;--fg:#1b2430;--mut:#5d6b7a;--bd:#cfd7df;--ac:#1f6f8b;--acfg:#fff;--warn:#9a5b00}
+@media(prefers-color-scheme:dark){:root{--bg:#10161c;--card:#18212a;--fg:#e6ebf0;--mut:#93a1b0;--bd:#2b3846;--ac:#5fb4d1;--acfg:#08161d;--warn:#e0a84a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 16px 64px}
+h1{font:600 30px/1.2 Georgia,"Iowan Old Style",serif;margin:0 0 4px}
+h2{font:600 18px/1.3 Georgia,serif;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 24px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+label{display:block;font-size:14px;color:var(--mut)}
+label.row{display:flex;gap:8px;align-items:center;color:var(--fg);margin:4px 0}
+input[type=number],input[type=text],select,textarea{width:100%;margin-top:4px;padding:8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit}
+textarea{font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+small,.hint{color:var(--mut);font-size:13px}
+.tabs{display:flex;gap:18px;margin-bottom:12px}
+button{padding:8px 14px;border:1px solid var(--ac);border-radius:6px;background:var(--ac);color:var(--acfg);font:inherit;cursor:pointer}
+button.alt{background:transparent;color:var(--ac)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.btns{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+#warn{color:var(--warn)}
+#chans label{padding:4px 0}
+#code{min-height:120px;word-break:break-all}
+footer{margin-top:8px;color:var(--mut);font-size:13px;text-align:center}
+footer a,.hint a{color:var(--ac)}
+label small{display:block;margin-top:2px}
+</style>
 </head>
 <body>
-<header><h1>Build Rehberi</h1></header>
-<div class="row" id="admtop" style="max-width:1300px;margin:auto;padding:.4rem 1rem">
-  <button data-fwd="exp">builds.json İndir</button>
-  <button data-fwd="imp">JSON İçe Aktar</button>
-  <button data-ghsync="1" class="pri">GitHub'a Gönder</button>
-  <button data-ghset="1">GitHub Ayarları</button>
-  <button data-guide="1">Rehber Hazırla</button>
-  <button data-fwd="adminoff">Yönetici Modundan Çık</button>
-</div>
-<div id="msg" style="max-width:1300px;margin:auto;padding-inline:1rem">Veri yükleniyor...</div>
 <main>
-  <section id="builder" class="panel">
-    <div id="guideview" hidden>
-      <button id="gback">← Kayıtlı Buildlere Dön</button>
-      <h2 id="gtitle" style="margin-top:.6rem">Rehber</h2>
-      <div class="row"><input type="text" id="gname" placeholder="Rehber adı" style="flex:1"></div>
-      <div id="gview-ro" hidden></div>
-      <div class="row" id="gnote-row"><textarea id="gnote" rows="8" placeholder="Not... [[Build adı]] ile bağlantı kurabilirsin."></textarea></div>
-      <div class="row" id="gimgrow">
-        <input type="text" id="gimgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)">
-        <button id="gaddurl">Bağlantıyı Ekle</button>
-        <button id="gaddfile">Görsel Yükle</button>
-        <input type="file" id="gimgfile" accept="image/*" multiple hidden>
-      </div>
-      <div class="gal" id="ggal"></div>
-      <div class="row" id="gactions" style="margin-top:.8rem">
-        <button class="pri" id="gsave">Kaydet</button>
-        <button id="gdelete" hidden>Sil</button>
-      </div>
-    </div>
-    <button id="prevb" data-prevb="1" hidden>← Önceki Build'e Dön</button>
-    <button id="back" data-back="1">← Kayıtlı Buildlere Dön</button>
-    <h2>Build</h2>
-    <div class="row topbar"><button data-fwd="save" class="pri">Kaydet</button><button data-fwd="new">Yeni Build</button><button data-fwd="reset">Tümünü Sıfırla</button><button data-curreset="1">Mevcut Buildi Sıfırla</button><button data-fwd="autof">Oto Forma</button><button data-polreset="1">Polarite Sıfırla</button></div>
-    <div class="row" id="cats"></div>
-    <div class="row"><img id="timg" class="ti" alt="" hidden><select id="item" aria-label="Warframe veya Silah"></select><button id="itembtn" hidden></button></div>
-    <div id="buildlistro" hidden></div>
-    <div id="partbox"></div>
-    <div class="row" id="custrow">
-      <label style="display:flex;align-items:center;gap:.3rem">Yuva Tipi
-        <select id="addslottype">
-          <option value="normal">Normal</option>
-          <option value="aura">Aura</option>
-          <option value="ex">Exilus</option>
-          <option value="st">Stance</option>
-        </select>
-      </label>
-      <button data-cadd="1">+ Yuva Ekle</button>
-      <button data-cdel="1">− Yuva Çıkar</button>
-    </div>
-    <div class="row" id="elrow" hidden><select id="elem" aria-label="Bonus Element"></select><label>Bonus % <input type="number" id="bonus" min="25" max="60" value="25"></label></div>
-    <div class="row"><label><input type="checkbox" id="reactor" checked> Reaktör/Katalizör (60)</label></div>
-    <div class="capt"><span>Kapasite</span><span id="capn"></span></div>
-    <div class="bar" id="bar"><i></i></div>
-    <div class="bwrap"><div>
-      <div class="row" id="cfgrow"></div>
-      <div class="slots sp3" id="sp"></div>
-      <div class="slots" id="slots"></div>
-      <div id="stats-panel"></div>
-      <div class="arcs" id="arcs"></div>
-    </div><div id="abil"></div></div>
-    <div id="xs"></div>
-    <div id="tgtrow"></div>
-    <div id="shbox"><h2 style="margin-top:1rem">Archon Shards</h2><div class="shards" id="shards"></div></div>
-    <div id="notebox"><h2 style="margin-top:1rem">Not</h2>
-      <div id="notewrap" style="position:relative"><div id="linkpop" hidden></div><textarea id="note" rows="16" placeholder="Build notu. Başka build'e köprü için [[Build adı]] yaz."></textarea></div><div id="notev" class="notev"></div>
-      <div class="row" id="noteimgrow" style="margin-top:.5rem"><button id="noteaddimg" type="button">Nota Görsel Ekle</button><input type="file" id="noteimgfile" accept="image/*" multiple hidden></div>
-      <div class="row" id="imgctl" style="margin-top:.5rem"><input type="text" id="imgurl" placeholder="Görsel bağlantısı (https://... veya img/dosya.png)"><button id="addurl">Bağlantıyı Ekle</button><button id="addfile">Görsel Yükle</button><input type="file" id="imgfile" accept="image/*" multiple hidden></div>
-      <div class="gal" id="gal"></div></div>
-    <div id="rivbox"><h2 style="margin-top:1rem">Riven Önerileri</h2><div class="rivs" id="rivs"></div><button data-addriv="1" id="addriv">+ Riven Ekle</button></div>
-    <details id="evbox" open><summary>Incarnon Evrimleri</summary><div id="evs"></div></details>
-    <div class="row" style="margin-top:1rem"><button class="pri" id="save">Kaydet</button><button id="new">Yeni Build</button><button id="reset">Tümünü Sıfırla</button><button data-curreset="1">Mevcut Buildi Sıfırla</button><button id="autof">Oto Forma</button><button data-polreset="1">Polarite Sıfırla</button></div>
-  </section>
-  <section id="browser" class="panel">
-    <div class="row"><button data-tab="mods" class="on">Modlar</button><button data-tab="arcanes">Arcane'ler</button></div>
-    <p class="muted" style="margin:0 0 .6rem">Modu veya arcane'i yuvaya sürükle (dokunmatikte basılı tut) ya da dokun. Yuvadan listeye sürüklersen kaldırılır.</p>
-    <details id="cmbox"><summary style="font-size:1.05rem;margin-top:0">+ Custom Mod Oluştur</summary>
-      <div class="row"><input type="text" id="cmname" placeholder="Mod Adı"><select id="cmkind"><option value="normal">Normal Yuva</option><option value="aura">Aura</option><option value="stance">Stance</option><option value="exilus">Exilus</option></select></div>
-      <div class="row"><select id="cmpol"><option value="">Nötr</option><option value="madurai">Madurai</option><option value="vazarin">Vazarin</option><option value="naramon">Naramon</option><option value="zenurik">Zenurik</option><option value="unairu">Unairu</option><option value="penjaga">Penjaga</option><option value="umbra">Umbra</option></select>
-        <label>Drain <input type="number" id="cmdrain" min="0" max="30" value="4" style="width:4.5rem"></label><label>Maks Rank <input type="number" id="cmrank" min="0" max="30" value="10" style="width:4.5rem"></label></div>
-      <div class="row"><input type="text" id="cmdesc" placeholder="Açıklama (isteğe bağlı)"><button class="pri" id="cmsave">Kaydet</button></div>
-      <div id="cmlist"></div></details>
-    <div class="row"><input type="search" id="q" placeholder="Ara..." aria-label="Ara"></div>
-    <div class="list" id="list"></div>
-  </section>
-  <section id="saved" class="panel">
-    <h2>Kayıtlı Buildler</h2>
-    <div class="row" id="bcats"></div>
-    <div class="row"><input type="search" id="bq" placeholder="Build Ara" aria-label="Build Ara"><button id="bgo">Ara</button></div>
-    <div class="row" id="admrow"><button id="exp">builds.json İndir (Yayınlamak İçin)</button><button id="imp">JSON İçe Aktar</button><button id="adminoff">Yönetici Modundan Çık</button><input type="file" id="file" accept=".json" hidden></div>
-    <div id="bl"></div>
-  </section>
+<h1>Shawzin Kod Dönüştürücü</h1>
+<p class="sub">MIDI dosyasını ya da yazdığın notaları Warframe Shawzin koduna çevirir. Hız ve boşlukları ayarlayıp sonucu dinleyebilirsin.</p>
+
+<section>
+<h2>Kaynak</h2>
+<div class="tabs">
+<label class="row"><input type="radio" name="src" value="midi" checked> MIDI / MusicXML</label>
+<label class="row"><input type="radio" name="src" value="text"> Nota metni</label>
+<label class="row"><input type="radio" name="src" value="simple"> Basit nota</label>
+<label class="row"><input type="radio" name="src" value="code"> Shawzin kodu</label>
+</div>
+<div id="midiBox">
+<input type="file" id="file" accept=".mid,.midi,.mxl,.musicxml,.xml">
+<p class="hint">MIDI ya da MusicXML (.mxl, .musicxml) yükle. Melodiyi taşıyan kanalı seç, birden fazla seçebilirsin. Ana kanal çalarken diğer kanallar yalnızca ana kanalın sustuğu yerleri doldurur. MusicXML'de tekrarlar ve 1./2. kapılar otomatik açılır. Nota görselin varsa <a href="https://github.com/Audiveris/audiveris">Audiveris</a> ile .mxl ya da .xml dosyasına çevirip buraya yükleyebilirsin.</p>
+<div class="btns"><button type="button" id="auto" class="alt">Kanalları otomatik seç</button></div>
+<div id="chans"></div>
+</div>
+<div id="textBox" hidden>
+<textarea id="txt" rows="5" class="c" placeholder="E5:1 E5:1 F5:1 D5:1 D5:2 r:2 C5:2 B4:1 A4:1 ~:4"></textarea>
+<p class="hint">Her nota <b>isim+oktav:süre</b> biçiminde (E5, F#4, Mi5, Sol4). Süre 16'lık nota cinsinden, yazılmazsa 1. <b>r</b> sessizlik, <b>~</b> bağlı uzatma. Tekrar için <b>|:</b> ve <b>:|</b>, kapılar için <b>[1</b> ve <b>[2</b> yaz. 100% hızda çeyrek nota 1 saniyedir.</p>
+</div>
+<div id="simpleBox" hidden>
+<textarea id="simpleIn" rows="5" class="c" placeholder="mi mi mi mi mi re mi_ | re re do si la"></textarea>
+<label>Başlangıç oktavı
+<input type="number" id="startOct" class="c" value="4" min="1" max="7" step="1"><small>İlk notanın oktavı. Sonraki notalar bir öncekine en yakın oktavda alınır. 4 iyi bir başlangıçtır.</small></label>
+<p class="hint">Notaları Do Re Mi Fa Sol La Si ya da C D E F G A B olarak yaz, oktav ve süre yazmana gerek yok. Notalar eşit uzunlukta sayılır, <b>_</b> notayı uzatır, <b>r</b> sessizliktir, <b>|</b> ölçü çizgisidir. Diyez için <b>fa#</b>, bemol için <b>sib</b> yaz. Oktavı kendin belirtmek istersen <b>re5</b> yaz.</p>
+</div>
+<div id="codeBox" hidden>
+<textarea id="codeIn" rows="4" class="c" placeholder="5hAAhADiAF..."></textarea>
+<p class="hint">Hazır bir kodu yapıştır, hızını ve boşluklarını değiştirip yeni kod al. %100 hız kodu aynen verir. Akorlar da okunur.</p>
+</div>
+</section>
+
+<section>
+<h2>Ayarlar</h2>
+<div class="grid">
+<label>Ölçek
+<select id="scale" class="c"><option value="-1">Otomatik (en uygun)</option></select><small>Notaların oyundaki ölçeği. Otomatik, şarkıya en uygun ölçeği seçer.</small></label>
+<label>Hız (%)
+<input type="number" id="speed" class="c" value="60" min="10" max="300" step="1"><small>Küçüldükçe şarkı yavaşlar. .mid dosyaları için %55-75 uygun aralıktır.</small></label>
+<label>Oyun modu
+<select id="mode" class="c"><option value="0.125">Normal (yavaş)</option><option value="0.0625">Hızlı</option></select><small>Kodun çalınacağı oyun modu. Hızlı mod notaları yarı sürede çalar.</small></label>
+<label>Boşlukları azalt
+<select id="cap" class="c"><option value="0">Kapalı</option><option value="2">Hafif</option><option value="1.5" selected>Orta</option><option value="1">Güçlü</option></select><small>İki nota arasındaki sessizliği kısaltır. Hafif 2, Orta 1.5, Güçlü 1 vuruşa indirir. Çoğu şarkı için Orta uygundur.</small></label>
+<label>En uzun nota (vuruş, 0 = kapalı)
+<input type="number" id="maxdur" class="c" value="0" min="0" step="0.5"><small>Bu vuruştan uzun notaları (uzun bas notaları) eler. 2-4 uygun aralıktır, 0 kapatır.</small></label>
+<label>Shawzin türü
+<select id="stype" class="c"><option value="std" selected>Standart</option><option value="ari">Aristei Prime / Void's Song</option><option value="cor">Corbu</option><option value="tia">Tiamat</option></select><small>Armoni için gerekir. Standart: Dax's, Nelumbo, Narmer gibi. Corbu ve Tiamat'ta akorlar farklı olduğu için armoni kapanır.</small></label>
+<label>Armoni
+<select id="harm" class="c"><option value="0">Kapalı</option><option value="0.5" selected>Hafif</option><option value="0.25">Orta</option><option value="0.01">Güçlü</option></select><small>Melodi notasını, 2-3 perdeye aynı anda basılarak çalınan 3 notalı bir akora çevirir. Melodi notası akorun en üst notası olur. Hafif yalnızca uzun notalara, Orta daha kısa notalara, Güçlü tüm notalara uygular ve daha gergin akorları da kullanır. Pentatonic, Major, Minor ve Yo ölçeklerinde çalışır. En alçak 3 ve en yüksek 2 nota tek nota kalır. Tiamat ve Corbu'da akorlar farklıdır.</small></label>
+<label>Temiz ses
+<select id="clean" class="c"><option value="0">Kapalı</option><option value="0.2" selected>Hafif</option><option value="0.3">Orta</option><option value="0.45">Güçlü</option></select><small>Birbirine çok yakın notalardan birini eler. Hafif çoğu şarkıya yeter, Güçlü hızlı melodileri seyreltir.</small></label>
+<label>Şarkıyı uzat (kat)
+<input type="number" id="rep" class="c" value="1" min="1" max="10" step="1"><small>Şarkıyı yazdığın kat kadar art arda tekrarlar. Kısa şarkılar için 2-3 uygun aralıktır.</small></label>
+<label>Başlangıç vuruşu
+<input type="number" id="from" class="c" value="0" min="0" step="1"><small>Şarkıyı bu vuruştan başlatır. Vuruş numarası yaz, örnek: 32.</small></label>
+<label>Bitiş vuruşu (0 = sona kadar)
+<input type="number" id="to" class="c" value="0" min="0" step="1"><small>Şarkıyı bu vuruşta bitirir. Örnek: 120, 0 sonuna kadar alır.</small></label>
+<label>Oktav kaydırma (başlangıç-bitiş:oktav)
+<input type="text" id="shifts" class="c" placeholder="23-57:-1, 340-410:1"><small>Vuruş aralığındaki notaları oktav kaydırır. -1 bir oktav aşağı, 1 bir oktav yukarıdır. Örnek: 23-57:-1.</small></label>
+</div>
+<label class="row"><input type="checkbox" id="trim" class="c" checked> <span>Baştaki sessizliği kırp<small>İlk nota hemen başlasın diye baştaki boşluğu siler.</small></span></label>
+<label class="row"><input type="checkbox" id="tidy" class="c" checked> <span>Aykırı notaları düzelt<small>Çevresinden bir oktavdan fazla uzaklaşan ani tiz ya da pes notaları yakına indirir.</small></span></label>
+<label class="row"><input type="checkbox" id="snap" class="c"> <span>Ritmi ızgaraya oturt (16'lık nota tam sayı konum olsun)<small>16'lık notaları eşit aralıklara yuvarlar, ritim düzgünleşir.</small></span></label>
+<label class="row"><input type="checkbox" id="mono" class="c" checked> <span>Aynı anda gelen notalardan en tizini al<small>Aynı anda çalan notalardan yalnızca en tiz olanı bırakır.</small></span></label>
+<div class="btns"><button type="button" id="reset" class="alt">Varsayılan ayarlara dön</button></div>
+</section>
+
+<section>
+<h2>Sonuç</h2>
+<textarea id="code" readonly rows="5" aria-label="Shawzin kodu"></textarea>
+<div class="btns">
+<button id="copy">Kopyala</button>
+<button id="play" class="alt">Dinle</button>
+<button id="stop" class="alt">Durdur</button>
+</div>
+<p id="stats"></p>
+<p id="warn"></p>
+<details><summary>Pozisyon+Harf Listesi</summary>
+<textarea id="list" readonly rows="4"></textarea></details>
+</section>
+<footer>
+<p>Kod biçimi için <a href="https://github.com/DANser-freelancer/Warframe-shawzin">Warframe-shawzin</a> projesi (DANser-freelancer) referans alındı. MIDI okuma, ölçek seçimi ve dönüştürme bu projede bağımsız olarak yazıldı.</p>
+<p>Shawzinler ve sitenin oluşmasındaki katkıları için --LumiNescenCe--'e teşekkürler.</p>
+<p>Bu araç resmî değildir ve Digital Extremes ile bağlantısı yoktur. Warframe, Shawzin ve ilgili tüm isimler ile oyun içeriği Digital Extremes Ltd.'ye aittir. Araç oyun içeriği barındırmaz ya da dağıtmaz.</p>
+</footer>
 </main>
 <script src="app.js"></script>
 </body>
