@@ -1,6 +1,115 @@
 {
   "builds": [
     {
+      "id": "bmwclvkcw",
+      "name": "Acrid",
+      "cname": "",
+      "cat": "Secondary",
+      "item": "/Lotus/Weapons/ClanTech/Bio/AcidDartPistol",
+      "note": "",
+      "imgs": [],
+      "riv": [
+        {
+          "n": "",
+          "st": [
+            {
+              "k": "Slash",
+              "s": 1,
+              "sp": false
+            },
+            {
+              "k": "Puncture",
+              "s": 1,
+              "sp": false
+            },
+            {
+              "k": "Cold",
+              "s": 1,
+              "sp": false
+            },
+            {
+              "k": "Projectile Speed",
+              "s": -1,
+              "sp": false
+            }
+          ]
+        }
+      ],
+      "pols": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "",
+      "a2pol": "",
+      "expol": "madurai",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Config 1",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              null
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        }
+      ]
+    },
+    {
       "id": "bmwc5n0fg",
       "name": "Vauban Prime",
       "cname": "",
