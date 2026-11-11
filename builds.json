@@ -1609,35 +1609,7 @@
       "item": "/Lotus/Weapons/Tenno/Melee/Fist/FuraxWraith",
       "note": "-Bu silahta yalnızca Amalagam Furax Body Count modu gereklidir, takılı olduğunda tüm ikincil silahların atış hızını artırır",
       "imgs": [],
-      "riv": [
-        {
-          "n": "",
-          "st": [
-            {
-              "k": "Slash",
-              "s": 1,
-              "sp": false,
-              "alt": [
-                {
-                  "k": "Range",
-                  "sp": false
-                }
-              ]
-            },
-            {
-              "k": "Damage vs Grineer",
-              "s": 1,
-              "sp": false,
-              "alt": [
-                {
-                  "k": "Range",
-                  "sp": false
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      "riv": [],
       "pols": [
         "",
         "",
@@ -1733,8 +1705,7 @@
               ""
             ],
             "parts": {},
-            "cn": 8,
-            "forceSlots": {}
+            "cn": 8
           }
         }
       ]
