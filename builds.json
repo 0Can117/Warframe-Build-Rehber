@@ -1,6 +1,197 @@
 {
   "builds": [
     {
+      "id": "bmwc5n0fg",
+      "name": "Vauban Prime",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/Trapper/TrapperPrime",
+      "note": "-Vauban yeteneklerini ayarlardan ters çevrilmiş şekilde oynayın\n-4 tek ile toplama yapar, basılı tutunca alandakilere kitle kontrol oynar ve zırhlarını çalar, 4 e yönelik oynanır",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "naramon",
+        "madurai",
+        "vazarin",
+        "omni",
+        "",
+        "",
+        "zenurik",
+        "madurai",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "zenurik",
+      "a2pol": "",
+      "expol": "vazarin",
+      "stpol": "",
+      "shards": [
+        "Azure|2|t",
+        "Azure|2|t",
+        "Amber|3|t",
+        "Amber|0|t",
+        "Crimson|1|t"
+      ],
+      "cn": 8,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Tank",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityRangeMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/FixedShieldAndShieldGatingDuration",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarShieldRechargeRateMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Vigilante/WarframeVigilanteVigorMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurReachMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Powersuits/Trapper/LevTrapAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Defensive/GolemArcaneShieldRegenOnDamage",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityEfficiencyOnAbilityObjectCreation"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "1": "/Lotus/Powersuits/Devourer/Abilities/DevourerConsumeAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        },
+        {
+          "n": "Range",
+          "d": {
+            "aura": {
+              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+              "r": 5
+            },
+            "au2": null,
+            "ex": {
+              "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarKnockdownResistanceModExpert",
+              "r": 10
+            },
+            "st": null,
+            "slots": [
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityRangeMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Sets/Augur/WarframeAugurReachMod",
+                "r": 5
+              },
+              {
+                "u": "/Lotus/Powersuits/Trapper/LevTrapAugmentCard",
+                "r": 3
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/GolemArcaneRadialEnergyOnEnergyPickup",
+              "/Lotus/Upgrades/CosmeticEnhancers/Utility/AbilityEfficiencyOnAbilityObjectCreation"
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {
+              "1": "/Lotus/Powersuits/Rhino/Abilities/RhinoRoarAbility"
+            },
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": 8,
+            "forceSlots": {}
+          }
+        }
+      ]
+    },
+    {
       "id": "bmw7x1qku",
       "name": "Nidus Prime",
       "cname": "",
