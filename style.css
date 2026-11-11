@@ -70,7 +70,8 @@ textarea{width:100%;font:inherit;color:var(--tx);background:#0b0813;border:1px s
 .rivs{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.6rem}.riv{flex:1 1 200px;border:1px solid var(--gold);border-radius:8px;padding:.5rem;display:flex;flex-direction:column;gap:.35rem}
 .dis{font-size:.78rem;color:var(--cy)}.rs{display:flex;justify-content:space-between;background:#241a3d;border-radius:4px;padding:.15rem .4rem;font-size:.85rem}
 .rs.neg{color:var(--bad)}.rs.sp{border:1px solid var(--cy)}.rs button,.riv .x2{border:0;background:none;padding:0 .3rem;color:var(--mu)}
-.ro .x2,.ro .rs button,.ro #addriv,.ro #omni{display:none}
+.ro .x2,.ro .rs button,.ro #addriv,.ro #omni,.ro .rs select{display:none}
+.rs{align-items:center;gap:.3rem}.rs>span{flex:1}.rs select{max-width:6.5rem;font-size:.75rem;padding:0}
 .shards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.6rem}.shd{font-size:.85rem;color:var(--mu);margin-top:.25rem;line-height:1.35}
 .ro #custrow{display:none}.shards select{width:100%}.shards>div{border-left:4px solid var(--ln);padding-left:.4rem}
 .intgt #cats,.intgt #item,.intgt #elrow,.intgt #timg,.intgt #itembtn,.intgt #buildlistro{display:none!important}
