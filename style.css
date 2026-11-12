@@ -181,3 +181,5 @@ body.guiding #guideview{display:block!important}
 
 .notev .ninl{display:block;margin:.5rem 0;position:relative;width:fit-content;max-width:100%}.notev .ninl img{display:block;max-width:100%;max-height:480px;border-radius:6px;border:1px solid var(--ln);cursor:zoom-in}.notev .ninl img.big{max-height:none;cursor:zoom-out}.notev .ninl .x{position:absolute;right:4px;top:4px;background:#0b0813cc;border:1px solid var(--ln);border-radius:4px;padding:0 .4rem}
 .ro #noteimgrow{display:none}
+
+.rivt{font:700 1.15rem Rajdhani,sans-serif;color:var(--gold)}
