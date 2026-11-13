@@ -101,7 +101,7 @@ button,select,input,textarea{font-size:1rem;font-weight:600}
 .shards>div{min-height:0!important;padding:.4rem .7rem!important}.shd{font-size:1.08rem!important;font-weight:600!important;line-height:1.4!important}
 .bl{font-size:1.05rem}.bl b{font-weight:700;font-size:1.15rem}.ab{font-size:.85rem;font-weight:600}.rs{font-size:1rem;font-weight:600}.dis{font-size:.9rem}
 .ro #admtop{display:none}
-.ro [data-curreset],.ro [data-polreset]{display:none}
+.ro [data-curreset],.ro [data-polreset],.ro [data-autoplace]{display:none}
 #cmbox{margin-bottom:.8rem}.ro #cmbox{display:none}
 *{scrollbar-color:#5a4690 #0b0813}
 body{background:radial-gradient(1100px 560px at 15% -8%,#2d1b55 0%,transparent 62%),radial-gradient(900px 480px at 100% 0,#3b2a0e 0%,transparent 55%),#0b0813;background-attachment:fixed}
