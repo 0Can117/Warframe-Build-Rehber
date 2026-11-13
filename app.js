@@ -150,7 +150,8 @@ function renderBuilder(){
   $('#bar i').style.width=Math.min(100,cap?Math.max(0,used)/cap*100:0)+'%';
   const cell=k=>{
     const s=getS(k),m=s&&M.get(s.u),pv=getP(k),sp=typeof k==='string',lab=k==='ex'&&/Melee|Zaw/.test(S.cat)?'Exilus / Tennokai':({aura:'Aura',au2:'Aura 2',ex:'Exilus',st:'Stance'}[k]||'Boş');
-    const pb=`<select class="pb${pv!==baseP(k)?' fm':''}" data-pol="${k}">${POLS.map(p=>`<option value="${p}" ${p===pv?'selected':''}>${PSYM[p]} ${polLabel(p)}</option>`).join('')}</select>`;
+    const pbs=`<select class="pb${pv!==baseP(k)?' fm':''}" data-pol="${k}">${POLS.map(p=>`<option value="${p}" ${p===pv?'selected':''}>${PSYM[p]} ${polLabel(p)}</option>`).join('')}</select>`;
+    const pb=omniOn?`<span class="pbrow">${pbs}<button class="omnib" data-omnislot="${k}" title="Bu yuvaya omni forma">✦</button></span>`:pbs;
     if(!m)return `<div class="slot ${sp?'sp':''}" data-key="${k}">${pb}<span class="muted">${lab}</span></div>`;
     return `<div class="slot f ${sp?'sp':''}" data-key="${k}" title="${esc(statsOf(m))}">${pb}<button class="x" data-rm="${k}">×</button><div>${m.imageName?`<img src="${IMG+esc(m.imageName)}" loading="lazy" draggable="false">`:''}<b lang="en">${esc(m.name)}</b></div><span class="pol">${polLabel(m.polarity||'')}</span><label>Rank <input type="number" min="0" max="${maxRank(m)}" value="${s.r}" data-rank="${k}"></label></div>`};
   renderNote();
@@ -248,19 +249,145 @@ function renderEvo(){$('#evbox').hidden=S.cat==='Warframe'||!!S.tgt||(RO&&!S.evo
 function renderParts(){const box=$('#partbox'),spec=S.cat==='Zaw'?[['Strike',ZP.Strike],['Grip',ZP.Grip],['Link',ZP.Link]]:S.cat==='Kitgun'?[['Chamber',KP.Chamber],['Grip',KP.Grip[S.item==='kg-s'?'Secondary':'Primary']],['Loader',KP.Loader]]:null;if(!spec||S.tgt){box.innerHTML='';return}box.innerHTML=`<div class="row">${spec.map(([k,l])=>`<label>${k} <select data-part="${k}"><option value="">—</option>${l.map(n=>`<option ${S.parts[k]===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`).join('')}</div><div class="notev">${spec.map(([k,l])=>l.includes(S.parts[k])?`<b>${esc(S.parts[k])}</b> <span class="muted">(${k})</span>`:'').filter(Boolean).join(' · ')}</div>`}
 
 function calcWith(d,P){const keep=Object.fromEntries([...CF,...PO].map(k=>[k,S[k]]));Object.assign(S,d,P);const r=calc();Object.assign(S,keep);return r}
+// ==== FORMA V2 START ====
+// Oto Forma: tum configleri ayni anda degerlendirip EN AZ forma sayisiyla
+// polarite atayan cozucu. Omni forma destekler, bos yuvaya forma harcamaz,
+// her configin kapasite icinde kalmasi icin optimize eder.
+const FORMA_SPECIALS=['aura','au2','st','ex'];
+const FORMA_PN={aura:'apol',au2:'a2pol',ex:'expol',st:'stpol'};
+const formaModAt=(cfg,k)=>{const s=(typeof k==='number')?(cfg.slots?.[k]):cfg[k];return s?(M.get(s.u)||null):null};
+const formaDrain=(cfg,k,p)=>{const s=(typeof k==='number')?(cfg.slots?.[k]):cfg[k];if(!s)return 0;const m=M.get(s.u);if(!m)return 0;return drainOf(m,s.r,p)};
+// aday polariteler: yuvanin varsayilani + configlerdeki modlarin polariteleri + omni
+const formaCands=(k,cfgs)=>{const l=[baseP(k)];for(const c of cfgs){const m=formaModAt(c,k);if(m&&m.polarity&&!l.includes(m.polarity))l.push(m.polarity)}if(!l.includes('omni'))l.push('omni');return l};
+function formaKeys(){const keys=KEYS(),o=[];for(const k of FORMA_SPECIALS)if(keys.includes(k))o.push(k);for(const k of keys)if(typeof k==='number')o.push(k);return o}
+
+// feasible=true: sadece HEPSI kapasite icinde olan cozumler (en az forma)
+// feasible=false: mumkun degilse kapasite asiminin en az oldugu cozum
+function formaSolve(cfgs,feasible){
+  const n=cfgs.length;if(!n)return null;
+  const order=formaKeys(),ns=order.length;if(!ns)return null;
+  const cands=order.map(k=>formaCands(k,cfgs)),bases=order.map(k=>baseP(k));
+  const dr=order.map((k,ci)=>cands[ci].map(p=>cfgs.map(c=>formaDrain(c,k,p))));
+  const minSuf=[];{let acc=cfgs.map(()=>0);minSuf[ns]=acc.slice();for(let ci=ns-1;ci>=0;ci--){const row=cfgs.map((_,c)=>acc[c]+Math.min.apply(null,dr[ci].map(r=>r[c])));minSuf[ci]=row;acc=row}}
+  const capSlots=order.filter(k=>k==='aura'||k==='au2'||k==='st').length;
+  const cap0=cfgs.map(c=>S.cat==='Necramech'?(c.reactor?80:40):(c.reactor?60:30));
+  const MAXN=800000,MAXALL=4000000;let nodes=0,allNodes=0;const asg=new Array(ns);
+  // mevcut polariteler (cozum esitse elle yapilani bozmamak icin)
+  const curP=order.map(k=>(typeof k==='number')?S.pols[k]:S[FORMA_PN[k]]);
+  // B: kullanilabilecek en fazla forma sayisi. Sirayla denenerek EN AZ forma bulunur.
+  const runBudget=B=>{
+    let best=null;
+    // sirali karsilastirma: en az forma > en cok bosluk > elle yapilana sadik > en az drain
+    const score=cd=>feasible?[cd.cost,cd.ratio,cd.chg,cd.tot]:[cd.over,cd.cost,cd.ratio,cd.chg,cd.tot];
+    const betterCd=(a,b)=>{if(!b)return true;const sa=score(a),sb=score(b);for(let i=0;i<sa.length;i++){if(sa[i]!==sb[i])return sa[i]<sb[i]}return false};
+    const dfs=(ci,cost,cap,used)=>{
+      if(nodes++>MAXN||allNodes++>MAXALL)return;
+      if(cost>B)return;
+      if(ci===ns){
+        let over=0,ratio=0,tot=0,chg=0;
+        for(let c=0;c<n;c++){const ex=used[c]-cap[c];if(ex>0)over+=ex;const r=cap[c]?used[c]/cap[c]:0;if(r>ratio)ratio=r;tot+=used[c]}
+        for(let i=0;i<ns;i++)if(asg[i]!==curP[i])chg++;
+        if(feasible&&over>0)return;
+        const cd={cost,over,ratio,tot,chg,pols:asg.slice()};
+        if(betterCd(cd,best))best=cd;
+        return;
+      }
+      const k=order[ci];
+      for(let j=0;j<cands[ci].length;j++){
+        const p=cands[ci][j],nc=cost+(p===bases[ci]?0:1);
+        if(nc>B)continue;
+        if(feasible&&best&&nc>best.cost)continue;
+        const ncap=cap.slice(),nused=used.slice();
+        for(let c=0;c<n;c++){const d=dr[ci][j][c];if(k==='aura'||k==='au2'||k==='st')ncap[c]-=d;else nused[c]+=d}
+        if(ci>=capSlots){
+          if(feasible){let bad=false;for(let c=0;c<n;c++){if(nused[c]>ncap[c]||nused[c]+minSuf[ci+1][c]>ncap[c]){bad=true;break}}if(bad)continue}
+          else if(best){let opt=0;for(let c=0;c<n;c++){const ex=nused[c]+minSuf[ci+1][c]-ncap[c];if(ex>0)opt+=ex}if(opt>best.over)continue}
+        }
+        asg[ci]=p;dfs(ci+1,nc,ncap,nused);
+      }
+    };
+    dfs(0,0,cap0.slice(),cfgs.map(()=>0));
+    return best;
+  };
+  let best=null;
+  if(feasible){for(let B=0;B<=ns&&!best;B++){nodes=0;best=runBudget(B)}}
+  else{nodes=0;allNodes=0;best=runBudget(ns)}
+  if(best){const o={};order.forEach((k,i)=>o[k]=best.pols[i]);best.pols=o}
+  return best;
+}
+
+// configleri kaydet + polarite cozumunu uygula
+function formaApply(res){
+  const pn=FORMA_PN;
+  for(const k in res.pols){const p=res.pols[k],kk=/^\d+$/.test(k)?+k:k;if(typeof kk==='number')S.pols[kk]=p;else S[pn[kk]]=p}
+  const isTgt=!!S.tgt;
+  if(isTgt){const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}
+  else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));S.cfgs[S.ci].d=d}
+}
 function autoForma(){
   const isTgt=!!S.tgt;
   if(isTgt)tgtSave();else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d}
-  const cfgs=isTgt?S.exs[S.tgt].cfgs:S.cfgs,ds=cfgs.map(c=>c.d).filter(Boolean),pn={aura:'apol',au2:'a2pol',ex:'expol',st:'stpol'};
-  const P={pols:S.pols.slice(),apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol},gp=k=>typeof k==='number'?P.pols[k]:P[pn[k]],sp=(k,v)=>{typeof k==='number'?P.pols[k]=v:P[pn[k]]=v};
-  const modsAt=k=>ds.map(d=>typeof k==='number'?d.slots?.[k]:d[k]).filter(Boolean).map(x=>M.get(x.u)).filter(m=>m&&m.polarity);
-  const tot=()=>ds.reduce((a,d)=>{const r=calcWith(d,P);return[a[0]+Math.max(0,r.used-r.cap),a[1]+r.used]},[0,0]);
-  for(const k of ['aura','au2','st']){if(!hasK(k))continue;const m=modsAt(k)[0];if(m)sp(k,m.polarity)}
-  for(let i=0;i<40;i++){const[o0,u0]=tot();if(o0===0)break;let best=null;for(const k of KEYS()){if(k==='aura'||k==='au2'||k==='st')continue;for(const pol of new Set(modsAt(k).map(m=>m.polarity))){if(pol===gp(k))continue;const old=gp(k);sp(k,pol);const[o1,u1]=tot();sp(k,old);const sc=(o0-o1)*1000+(u0-u1);if(o1<o0&&(!best||sc>best.sc))best={k,pol,sc}}}if(!best)break;sp(best.k,best.pol)}
-  S.pols=P.pols;S.apol=P.apol;S.a2pol=P.a2pol;S.expol=P.expol;S.stpol=P.stpol;
-  if(isTgt){const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));S.cfgs[S.ci].d=d}
-  const fm=KEYS().filter(k=>gp(k)!==baseP(k)).length,o=tot()[0];msg(fm+' forma kullanıldı'+(o>0?' (kapasite aşılıyor).':''))
+  const cfgs=isTgt?S.exs[S.tgt].cfgs:S.cfgs,ds=cfgs.map(c=>c.d).filter(Boolean);
+  let res=formaSolve(ds,true);
+  if(!res)res=formaSolve(ds,false);
+  if(!res){msg('Polarite atanamadi.');return}
+  formaApply(res);
+  const om=formaKeys().filter(k=>res.pols[k]==='omni'&&baseP(k)!=='omni').length;
+  const tot=KEYS().filter(k=>getP(k)!==baseP(k)).length;
+  const bad=ds.map((c,i)=>{const r=calcWith(c,{pols:S.pols.slice(),apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol});return Math.max(0,r.used-r.cap)}).filter(x=>x>0).length;
+  msg(tot+' forma kullanildi'+(om?' ('+om+' omni)':'')+' - '+(bad?bad+' config kapasite asiliyor.':'tum configler kapasite icinde.'));
 }
+// Macaristan (Hungarian) algoritmasi: k x m maliyet matrisinde minimum toplam esleme
+function hungarian(cost){
+  const n=cost.length,m=cost[0].length,INF=Infinity;
+  const u=new Array(n+1).fill(0),v=new Array(m+1).fill(0),p=new Array(m+1).fill(0),way=new Array(m+1).fill(0);
+  for(let i=1;i<=n;i++){
+    p[0]=i;let j0=0;const minv=new Array(m+1).fill(INF),used=new Array(m+1).fill(false);
+    do{
+      used[j0]=true;const i0=p[j0];let delta=INF,j1=-1;
+      for(let j=1;j<=m;j++)if(!used[j]){const cur=cost[i0-1][j-1]-u[i0]-v[j];if(cur<minv[j]){minv[j]=cur;way[j]=j0}if(minv[j]<delta){delta=minv[j];j1=j}}
+      for(let j=0;j<=m;j++){if(used[j]){u[p[j]]+=delta;v[j]-=delta}else minv[j]-=delta}
+      j0=j1;
+    }while(p[j0]!==0);
+    do{const j1=way[j0];p[j0]=p[j1];j0=j1}while(j0);
+  }
+  const res=new Array(n).fill(-1);
+  for(let j=1;j<=m;j++)if(p[j]>0)res[p[j]-1]=j-1;
+  return res;
+}
+// Modlari kendi polaritelerine gore otomatik yerlestir (her config bagimsiz)
+function autoPlaceMods(){
+  const isTgt=!!S.tgt;
+  if(isTgt)tgtSave();else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));if(S.cat!=='Zaw'&&S.cat!=='Kitgun'){d.parts={};S.cfgs.forEach(g=>{if(g.d)g.d.parts={}})}S.cfgs[S.ci].d=d}
+  const cfgs=isTgt?S.exs[S.tgt].cfgs:S.cfgs,N=NG();
+  let moved=0;
+  for(const c of cfgs){
+    const d=c.d;if(!d||!d.slots)continue;
+    const slots=d.slots.slice(),lock=new Set(),mods=[];
+    slots.forEach((s,i)=>{if(!s)return;if(/AugmentCard$/.test(s.u)){lock.add(i);return}mods.push({s,from:i})});
+    if(mods.length<2)continue;
+    const free=[];for(let i=0;i<N;i++)if(!lock.has(i))free.push(i);
+    if(!free.length)continue;
+    const cost=mods.map(m=>{const mm=M.get(m.s.u);if(!mm)return free.map(()=>1e9);return free.map(i=>canPlace(mm,i)?drainOf(mm,m.s.r,getP(i))*1000+(i===m.from?0:1):1e9)});
+    const asg=hungarian(cost);
+    // yalnizca gercekten drain dusuren bir yerlesim varsa uygula (bos degisiklik yapma)
+    const drainAt=(m,slot)=>{const mm=M.get(m.s.u);return mm?drainOf(mm,m.s.r,getP(slot)):0};
+    const curT=mods.reduce((a,m)=>a+drainAt(m,m.from),0);
+    let newT=0;mods.forEach((m,i)=>{const j=asg[i];newT+=j>=0&&free[j]!==undefined?drainAt(m,free[j]):drainAt(m,m.from)});
+    if(newT>=curT)continue;
+    const ns=slots.slice();
+    mods.forEach(m=>{ns[m.from]=null});
+    mods.forEach((m,i)=>{const j=asg[i];if(j>=0&&free[j]>=0)ns[free[j]]={u:m.s.u,r:m.s.r}});
+    let diff=false;for(let i=0;i<Math.max(ns.length,slots.length);i++){const a=slots[i]?slots[i].u:null,b=ns[i]?ns[i].u:null;if(a!==b){diff=true;break}}
+    if(diff){d.slots=ns;moved++}
+  }
+  const isT2=!!S.tgt;
+  if(isT2){const e=S.exs[S.tgt];e.cfgs[e.ci].d=Object.fromEntries(EF.map(k=>[k,S[k]]));e.po={pols:S.pols,apol:S.apol,a2pol:S.a2pol,expol:S.expol,stpol:S.stpol}}
+  else{const d=Object.fromEntries(CF.map(k=>[k,S[k]]));S.cfgs[S.ci].d=d}
+  renderBuilder();
+  msg(moved?moved+' configte modlar polariteye gore yerlestirildi.':'Modlar zaten dogru yuvalarda.');
+}
+// ==== FORMA V2 END ====
 function resetPolarities(){if(!confirm('Polariteler sıfırlanacak. Devam?'))return;const it=IT.get(S.item);S.pols=Array.from({length:14},(_,i)=>it?.polarities?.[i]||'');S.apol=S.cat==='Warframe'?(it?.auraPolarity||auraPol(it?.name||'')):'';S.a2pol=S.cat==='Warframe'&&A2(it?.name)?'omni':'';S.expol=it?.exilusPolarity||'';S.stpol=it?.stancePolarity||'';renderBuilder();msg('Polariteler sıfırlandı.')}
 function resetCurrentBuild(){if(!confirm('Mevcut config sıfırlanacak. Devam?'))return;const isTgt=!!S.tgt;if(isTgt){tgtSave();const e=S.exs[S.tgt],cur=e.cfgs[e.ci].d||{};e.cfgs[e.ci].d={...cur,slots:Array(14).fill(null),arcs:[],aura:null,au2:null,ex:null,st:null,helm:{}};tgtLoad(e.ci)}else{stash();const cur=S.cfgs[S.ci].d||{};S.cfgs[S.ci].d={...cur,slots:Array(14).fill(null),arcs:[],aura:null,au2:null,ex:null,st:null,helm:{}};loadCfg(S.ci,true)}renderBuilder();msg('Sıfırlandı.')}
 
@@ -352,7 +479,7 @@ const SELQ='[data-mod],[data-arc],.slot.f,.aslot.f';
 function startDrag(){drag.on=true;const g=drag.el.cloneNode(true);g.classList.add('ghost');g.style.width=drag.el.offsetWidth+'px';document.body.append(g);drag.g=g;drag.el.classList.add('dragging');moveGhost(drag.x,drag.y)}
 function moveGhost(x,y){drag.g.style.left=x-drag.g.offsetWidth/2+'px';drag.g.style.top=y-20+'px';document.querySelectorAll('.over').forEach(n=>n.classList.remove('over'));document.elementFromPoint(x,y)?.closest('.slot,.aslot')?.classList.add('over')}
 function endDrag(){if(!drag)return;clearTimeout(drag.tm);drag.g?.remove();drag.el.classList.remove('dragging');document.querySelectorAll('.over').forEach(n=>n.classList.remove('over'));drag=null}
-document.addEventListener('pointerdown',e=>{if(RO)return;const el=e.target.closest(SELQ);if(!el||e.target.closest('input,.x,.pb'))return;const d=el.dataset;const src=d.mod?{k:'mod',u:d.mod}:d.arc?{k:'arc',u:d.arc}:d.key!==undefined?{k:'slot',key:pk(d.key)}:{k:'aslot',i:+d.ai};drag={el,src,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=='mouse'};if(drag.touch)drag.tm=setTimeout(()=>{if(drag)startDrag()},300)});
+document.addEventListener('pointerdown',e=>{if(RO)return;const el=e.target.closest(SELQ);if(!el||e.target.closest('input,.x,.pb,.omnib'))return;const d=el.dataset;const src=d.mod?{k:'mod',u:d.mod}:d.arc?{k:'arc',u:d.arc}:d.key!==undefined?{k:'slot',key:pk(d.key)}:{k:'aslot',i:+d.ai};drag={el,src,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=='mouse'};if(drag.touch)drag.tm=setTimeout(()=>{if(drag)startDrag()},300)});
 document.addEventListener('pointermove',e=>{if(!drag)return;if(!drag.on){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<(drag.touch?12:6))return;if(drag.touch){endDrag();return}startDrag()}moveGhost(e.clientX,e.clientY)});
 document.addEventListener('pointerup',e=>{if(!drag)return;if(drag.on){const t=document.elementFromPoint(e.clientX,e.clientY);drop(drag.src,t?.closest('.slot,.aslot'),!!t?.closest('#browser'));sup=true;setTimeout(()=>sup=false,50)}endDrag()});
 document.addEventListener('pointercancel',endDrag);
@@ -369,6 +496,7 @@ document.addEventListener('click',e=>{
   if(d.cat){if(S.id&&d.cat!==S.cat){S=blank();msg('Yeni build başladı.')}if(d.cat!==S.cat)navStack.length=0;selectCat(d.cat);renderAll()}
   else if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));renderList()}
   else if(d.mod)addMod(d.mod); else if(d.arc)addArc(d.arc);
+  else if(d.omnislot!==undefined){setP(pk(d.omnislot),'omni');renderBuilder()}
   else if(d.pol!==undefined){const k=pk(d.pol);setP(k,omniOn?'omni':POLS[(POLS.indexOf(getP(k))+1)%POLS.length]);renderBuilder()}
   else if(d.rm!==undefined){setS(pk(d.rm),null);renderBuilder()}
   else if(d.cadd){
@@ -405,10 +533,11 @@ document.addEventListener('click',e=>{
   else if(d.tgt!==undefined){d.tgt?enterTgt(d.tgt):leaveTgt();fitArcs();renderAll()}
   else if(d.cfg!==undefined){if(S.tgt){tgtSave();tgtLoad(+d.cfg)}else loadCfg(+d.cfg);renderBuilder()}
   else if(d.polreset){resetPolarities()} else if(d.curreset){resetCurrentBuild()}
+  else if(d.autoplace){autoPlaceMods()}
   else if(d.cfgcopy!==undefined){const srcIdx=+d.cfgcopy,isTgt=!!S.tgt,L=isTgt?S.exs[S.tgt].cfgs:S.cfgs,srcD=L[srcIdx].d;if(!srcD){msg('Boş.');return}if(!confirm('Kopyalanacak. Devam?'))return;if(isTgt){tgtSave();const e=S.exs[S.tgt];e.cfgs[e.ci].d=JSON.parse(JSON.stringify(srcD));tgtLoad(e.ci)}else{stash();S.cfgs[S.ci].d=JSON.parse(JSON.stringify(srcD));loadCfg(S.ci,true)}renderBuilder();msg('Kopyalandı.')}
   else if(d.cfgadd){if(S.tgt){tgtSave();const e=S.exs[S.tgt];e.cfgs.push({n:'Config '+(e.cfgs.length+1),d:null});tgtLoad(e.cfgs.length-1)}else{stash();S.cfgs.push({n:'Config '+(S.cfgs.length+1),d:null});loadCfg(S.cfgs.length-1)}renderBuilder()}
   else if(d.cfgdel){if(S.tgt){const e=S.exs[S.tgt];if(e.cfgs.length<2){msg('En az 1.');return}e.cfgs.splice(e.ci,1);tgtLoad(0)}else{if(S.cfgs.length<2){msg('En az 1.');return}S.cfgs.splice(S.ci,1);loadCfg(0,true)}renderBuilder()}
-  else if(d.omni){omniOn=!omniOn;t.classList.toggle('on',omniOn);t.textContent='Omni Forma Modu: '+(omniOn?'Açık':'Kapalı')}
+  else if(d.omni){omniOn=!omniOn;document.querySelectorAll('.omnitog').forEach(b=>{b.classList.toggle('on',omniOn);b.textContent='Omni Forma Modu: '+(omniOn?'Açık':'Kapalı')});renderBuilder()}
   else if(d.ab!==undefined){abPick=+d.ab;renderAbil()}
   else if(d.addriv){S.riv.push({n:'',st:[]});renderNote()}
   else if(d.rmriv!==undefined){S.riv.splice(+d.rmriv,1);renderNote()}
