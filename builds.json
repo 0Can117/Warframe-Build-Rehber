@@ -1977,7 +1977,7 @@
           "n": "Xatas Whisper",
           "d": {
             "aura": {
-              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
+              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
               "r": 5
             },
             "au2": null,
@@ -1988,8 +1988,8 @@
             "st": null,
             "slots": [
               {
-                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
-                "r": 10
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarShieldRechargeRateMod",
+                "r": 5
               },
               {
                 "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityEfficiencyMod",
@@ -2044,7 +2044,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         },
         {
