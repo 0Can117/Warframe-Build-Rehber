@@ -1721,14 +1721,14 @@
       "imgs": [],
       "riv": [],
       "pols": [
-        "vazarin",
-        "naramon",
         "naramon",
         "madurai",
+        "madurai",
+        "vazarin",
+        "omni",
+        "vazarin",
+        "naramon",
         "",
-        "vazarin",
-        "madurai",
-        "umbra",
         "",
         "",
         "",
@@ -1738,13 +1738,13 @@
       ],
       "apol": "omni",
       "a2pol": "",
-      "expol": "zenurik",
+      "expol": "",
       "stpol": "",
       "shards": [
         "Crimson|0",
         "Crimson|0",
-        "Crimson|0",
-        "Crimson|0",
+        "Amber|0|t",
+        "Amber|0|t",
         "Violet|3|t"
       ],
       "cn": 8,
@@ -1977,30 +1977,30 @@
           "n": "Xatas Whisper",
           "d": {
             "aura": {
-              "u": "/Lotus/Upgrades/Mods/Aura/FairyQuest/FairyQuestAbilityToShieldsAuraMod",
+              "u": "/Lotus/Upgrades/Mods/Aura/WarframeAuraVerticalityMod",
               "r": 5
             },
             "au2": null,
             "ex": {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-              "r": 10
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
             },
             "st": null,
             "slots": [
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarShieldRechargeRateMod",
-                "r": 5
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityEfficiencyMod",
-                "r": 5
-              },
               {
                 "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
                 "r": 10
               },
               {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
                 "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
                 "r": 10
               },
               {
@@ -2012,8 +2012,8 @@
                 "r": 10
               },
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
-                "r": 10
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarAbilityEfficiencyMod",
+                "r": 5
               },
               {
                 "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
@@ -2057,25 +2057,25 @@
             },
             "au2": null,
             "ex": {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-              "r": 10
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
             },
             "st": null,
             "slots": [
-              {
-                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Beginner/AvatarAbilityEfficiencyModBeginner",
-                "r": 3
-              },
               {
                 "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
                 "r": 10
               },
               {
                 "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Nemesis/AvatarSentientArmourMod",
                 "r": 10
               },
               {
@@ -2087,8 +2087,8 @@
                 "r": 10
               },
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
-                "r": 10
+                "u": "/Lotus/Upgrades/Mods/Warframe/Beginner/AvatarAbilityEfficiencyModBeginner",
+                "r": 3
               },
               {
                 "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
@@ -2119,7 +2119,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         },
         {
@@ -2131,17 +2132,25 @@
             },
             "au2": null,
             "ex": {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-              "r": 10
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
             },
             "st": null,
             "slots": [
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedEfficiencyDurationWarframe",
                 "r": 5
               },
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedEfficiencyDurationWarframe",
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedRangePowerWarframe",
                 "r": 5
               },
               {
@@ -2149,20 +2158,12 @@
                 "r": 5
               },
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarAbilityDurationModExpert",
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
                 "r": 10
               },
               {
                 "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
                 "r": 3
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarHealthMaxMod",
-                "r": 10
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerStrengthPowerDurationWarframe",
-                "r": 10
               },
               {
                 "u": "/Lotus/Upgrades/Mods/Sets/Umbra/WarframeUmbraModC",
@@ -2193,7 +2194,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         },
         {
@@ -2205,26 +2207,26 @@
             },
             "au2": null,
             "ex": {
-              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarSpawnEnergyMod",
-              "r": 10
+              "u": "/Lotus/Upgrades/Mods/Warframe/AvatarDamageReductionInAir",
+              "r": 3
             },
             "st": null,
             "slots": [
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/FixedShieldAndShieldGatingDuration",
-                "r": 3
-              },
-              {
-                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
-                "r": 10
-              },
               {
                 "u": "/Lotus/Upgrades/Mods/Warframe/Expert/AvatarPowerMaxModExpert",
                 "r": 10
               },
               {
+                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "r": 10
+              },
+              {
                 "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/CorruptedPowerEfficiencyWarframe",
                 "r": 10
+              },
+              {
+                "u": "/Lotus/Upgrades/Mods/Warframe/DualStat/FixedShieldAndShieldGatingDuration",
+                "r": 3
               },
               {
                 "u": "/Lotus/Powersuits/Fairy/FairyFlightAugmentCard",
@@ -2235,7 +2237,7 @@
                 "r": 10
               },
               {
-                "u": "/Lotus/Upgrades/Mods/Warframe/Kahl/KahlAvatarAbilityDurationMod",
+                "u": "/Lotus/Upgrades/Mods/Warframe/AvatarPickupBonusMod",
                 "r": 10
               },
               {
@@ -2267,7 +2269,8 @@
               ""
             ],
             "parts": {},
-            "cn": 8
+            "cn": 8,
+            "forceSlots": {}
           }
         }
       ]
