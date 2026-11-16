@@ -1,6 +1,90 @@
 {
   "builds": [
     {
+      "id": "bmwj91lco",
+      "name": "Qorvex",
+      "cname": "",
+      "cat": "Warframe",
+      "item": "/Lotus/Powersuits/ConcreteFrame/ConcreteFrame",
+      "note": "-1 alan açmanızı sağlar ve belirli bufflar verir\n-2 de roar takılı 2. buildde nourish takılı\n-3 statü bağışık yapar\n-4 sürekli ışın atmanızı sağlar<< bu yeteneğe yönelik oynanır\n-Equilibrium modu opsiyoneldir hiç enerji sıkıntısı yaşamamak için kullanabilirsiniz, alternatifleri Augur modlarıdır \n-1. buildde Arcane Universal Fallout yoksa Arcane Sculptor kullanın, ikiside olur\n__\nOynanış: 1. build ile 2. builde nerdeyse aynıdır 2.de ekstra enerji ve viral için nourish var, 1. buildde de roar ile 4ten daha fazla hasar çıkarmamızı sağlıyor\n1. Buildi genel olarak oynayabilirsiniz, 4 ile Universal fallout tetikleyip veya equilibrium ile enerjinizi doldurun 1 2 3 kullanıp 4 açık gezerek düşmanları kesebilirsiniz\n2. Build yine aynı sadece Arcane Sculptor tetiklemek için 4 atmadan önce 1 atın",
+      "imgs": [],
+      "riv": [],
+      "pols": [
+        "naramon",
+        "vazarin",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "apol": "vazarin",
+      "a2pol": "",
+      "expol": "",
+      "stpol": "",
+      "shards": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "cn": null,
+      "exs": {},
+      "cfgs": [
+        {
+          "n": "Config 1",
+          "d": {
+            "aura": null,
+            "au2": null,
+            "ex": null,
+            "st": null,
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "arcs": [
+              null,
+              null
+            ],
+            "elem": "",
+            "bonus": 25,
+            "reactor": true,
+            "helm": {},
+            "evo": [
+              "",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "parts": {},
+            "cn": null,
+            "forceSlots": {}
+          }
+        }
+      ]
+    },
+    {
       "id": "bmwc5n0fg",
       "name": "Vauban Prime",
       "cname": "",
